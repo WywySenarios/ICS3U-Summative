@@ -1,0 +1,184 @@
+package ics3u.summative;
+
+
+/*
+ * Data
+ * 12/20/2023 7:33PM
+ * Eric Zhu
+ */
+
+// import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+// import org.json.simple.*;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+public abstract class Data {
+	public final String TYPE;
+	public final String PATH;
+	protected JSONObject file;
+	private FileWriter fileWrite;
+	private PrintWriter fileOut;
+	private String output;
+	private boolean isEmpty;
+	
+	public Data(String type_, String path_) {
+		this.TYPE = type_;
+		this.PATH = path_;
+		isEmpty = false;
+		initailizeFile(); // this will throw ParseException when the END OF FILE token is at position 0
+	}
+	
+	private boolean initailizeFile() {
+		try {
+			Object o;
+			o = new JSONParser().parse(new FileReader(PATH));
+			
+			file = (JSONObject) o;
+			
+		} catch (FileNotFoundException e) { // in the case the file does not exist,
+			File a = new File(PATH);
+			
+			try { // try to create it :))
+				a.createNewFile();
+				fileWrite = new FileWriter(PATH);
+				fileOut = new PrintWriter(fileWrite);
+				
+				fileOut.print("{}");
+				isEmpty = true;
+				
+				fileOut.close();
+				fileWrite.close();
+				
+				return initailizeFile();
+			} catch (IOException e1) {}
+		} catch (IOException e) {
+			System.out.println("ERROR: Something weird happened with files.\n");
+			e.printStackTrace();
+		} catch (ParseException e) {
+			System.out.println("ERROR: Something weird happened with the JSON package");
+			e.printStackTrace();
+		}
+		
+		return true;
+	}
+	
+	public String getData() {
+		String output = "";
+		
+		for (Object o : file.entrySet()) {
+			output += file.get(o.toString().split("=")[0]) + "\n";
+		}
+		
+		return output.substring(0, output.length() - 1);
+	}
+	
+	public Object[] getDatapoints() {
+		int size = file.entrySet().size();
+		int index = 0;
+		Object[] output = new Object[size];
+		
+		//String printing = file.entrySet().toString();
+		//System.out.println(printing);
+		
+		for (Object o : file.entrySet()) {
+			output[index] = o;
+			index++;
+		}
+		
+		return output;
+	}
+	
+	public void pushData() {
+		try {
+			fileWrite = new FileWriter(PATH);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println("ERROR: Something weird happened with files.\n");
+			e.printStackTrace();
+		}
+		fileOut = new PrintWriter(fileWrite);
+		output = file.toString();
+		fileOut.print(output);
+		try {
+			fileWrite.close();
+			fileOut.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println("ERROR: Something went wrong while closing the fileWriter.\n");
+			e.printStackTrace();
+		}
+	}
+	
+	public Object isolateObject(String path_) {
+		// the String keys uses similar notation to file paths
+		// find and break up the different 
+		int length = 0;
+		
+		for (char i : path_.toCharArray()) {
+			if (i == '\\') {
+				length++;
+			}
+		}
+		
+		// if the path length is 0 we can skip straight to the return value
+		if (length == 0) {
+			return file.get(path_);
+		}
+		
+		// break up the path into different keys
+		String temp = "";
+		String[] keys = new String[length + 1];
+		// length will now be used as a counter variable
+		length = 0;
+		
+		for (char i : path_.toCharArray()) {
+			if (i == '\\') {
+				keys[length++] = temp;
+				temp = "";
+			} else {temp += i;}
+		}
+		
+		// the loop doesn't account for the last key. rip
+		keys[length] = temp;
+		
+		try {
+			// try to follow the path the user gave
+			JSONObject o = (JSONObject) file.get(keys[0]);
+			for (int i = 1; i < keys.length - 1; i++) {
+				System.out.println(i);
+				o = (JSONObject) o.get(keys[i]);
+			}
+			
+			return o.get(keys[keys.length - 1]);
+		} catch (Exception e) {
+			//e.printStackTrace();
+			// if one of the keys screwed up and gave null (thus making the next JSONObject.get() return an error),
+			return null; // mark that there was nothing valid at the given location
+		}
+	}
+	
+	public boolean containsKey(Object key) {
+		if (file.get(key) == null) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	public boolean isEmpty() { // accessor for isEmpty
+		return isEmpty;
+	}
+	
+	protected void writeDatapoint(String key, Object o) {
+		file.putIfAbsent(key, o);
+		file.replace(key, o);
+	}
+}
