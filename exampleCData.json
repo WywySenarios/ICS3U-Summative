@@ -22,7 +22,7 @@
 		
 		"abilities": [
 			"placeholder1",
-			"placeholder2"
+			"placeholder1"
 		]
 	},
 	
@@ -49,7 +49,7 @@
 		
 		"abilities": [
 			"placeholder1",
-			"placeholder2"
+			"placeholder1"
 		]
 	},
 	
@@ -60,7 +60,7 @@
 			"placeholder1"
 		],
 		
-		"cost": 1,
+		"cost": 2,
 		"rarity": "Common",
 		"charges": 1,
 		"chargeRegen": 0,
@@ -72,7 +72,7 @@
 		
 		"abilities": [
 			"placeholder1",
-			"placeholder2"
+			"placeholder1"
 		]
 	},
 	
@@ -83,7 +83,7 @@
 			"placeholder1"
 		],
 		
-		"cost": 1,
+		"cost": 2,
 		"rarity": "Common",
 		"charges": 1,
 		"chargeRegen": 0,
@@ -96,7 +96,7 @@
 		
 		"abilities": [
 			"placeholder1",
-			"placeholder2"
+			"placeholder1"
 		]
 	},
 	

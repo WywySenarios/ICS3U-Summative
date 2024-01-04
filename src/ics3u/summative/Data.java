@@ -15,6 +15,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import org.json.simple.JSONArray;
 // import org.json.simple.*;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -85,9 +86,6 @@ public abstract class Data {
 		int index = 0;
 		Object[] output = new Object[size];
 		
-		//String printing = file.entrySet().toString();
-		//System.out.println(printing);
-		
 		for (Object o : file.entrySet()) {
 			output[index] = o;
 			index++;
@@ -153,7 +151,6 @@ public abstract class Data {
 			// try to follow the path the user gave
 			JSONObject o = (JSONObject) file.get(keys[0]);
 			for (int i = 1; i < keys.length - 1; i++) {
-				System.out.println(i);
 				o = (JSONObject) o.get(keys[i]);
 			}
 			
@@ -163,6 +160,102 @@ public abstract class Data {
 			// if one of the keys screwed up and gave null (thus making the next JSONObject.get() return an error),
 			return null; // mark that there was nothing valid at the given location
 		}
+	}
+	
+	public String isolateString(String path_) {
+		return (String) isolateObject(path_);
+	}
+	
+	public int isolateInt(String path_) {
+		return (int) (long) isolateObject(path_);
+	}
+	
+	public boolean isolateBoolean(String path_) {
+		return (boolean) isolateObject(path_);
+	}
+	
+	public long isolateLong(String path_) {
+		return (long) isolateObject(path_);
+	}
+	
+	public double isolateDouble(String path_) {
+		Object output = isolateObject(path_);
+		
+		try {
+			return (double) output;
+		} catch (ClassCastException e) {
+			return (double) (long) 0;
+		}
+	}
+	
+	public Object[] isolateArray(String path_) {
+		JSONArray JSONContents = isolateJSONArray(path_);
+		
+		Object[] output = new Object[JSONContents.size()];
+		for (int i = 0; i < JSONContents.size(); i++) {
+			output[i] = JSONContents.get(i);
+		}
+		
+		return output;
+	}
+	
+	public JSONArray isolateJSONArray(String path_) {
+		return (JSONArray) isolateObject(path_);
+	}
+	
+	public String[] isolateStringArray(String path_) {
+		JSONArray JSONContents = isolateJSONArray(path_);
+		
+		String[] output = new String[JSONContents.size()];
+		for (int i = 0; i < JSONContents.size(); i++) {
+			output[i] = (String) JSONContents.get(i);
+		}
+		
+		return output;
+	}
+	
+	public int[] isolateIntArray(String path_) {
+		JSONArray JSONContents = isolateJSONArray(path_);
+		
+		int[] output = new int[JSONContents.size()];
+		for (int i = 0; i < JSONContents.size(); i++) {
+			output[i] = (int) JSONContents.get(i);
+		}
+		
+		return output;
+	}
+	
+	public boolean[] isolateBooleanArray(String path_) {
+		JSONArray JSONContents = isolateJSONArray(path_);
+		
+		boolean[] output = new boolean[JSONContents.size()];
+		for (int i = 0; i < JSONContents.size(); i++) {
+			output[i] = (boolean) JSONContents.get(i);
+		}
+		
+		return output;
+	}
+	
+	public long[] isolateLongArray(String path_) {
+		JSONArray JSONContents = isolateJSONArray(path_);
+		
+		long[] output = new long[JSONContents.size()];
+		for (int i = 0; i < JSONContents.size(); i++) {
+			output[i] = (long) JSONContents.get(i);
+		}
+		
+		return output;
+	}
+	
+	public double[] isolateDoubleArray(String path_) {
+		JSONArray JSONContents = isolateJSONArray(path_);
+		
+		double[] output = new double[JSONContents.size()];
+		for (int i = 0; i < JSONContents.size(); i++) {
+			output[i] = (double) JSONContents.get(i);
+		}
+		
+		return output;
 	}
 	
 	public boolean containsKey(Object key) {
@@ -177,6 +270,7 @@ public abstract class Data {
 		return isEmpty;
 	}
 	
+	@SuppressWarnings("unchecked")
 	protected void writeDatapoint(String key, Object o) {
 		file.putIfAbsent(key, o);
 		file.replace(key, o);
