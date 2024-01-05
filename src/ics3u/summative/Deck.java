@@ -110,24 +110,26 @@ public class Deck extends Data {
 	private Ability[] isolateAbilities(String cardID) {
 		return null;
 	}
-	
-	// this is a DEBUG function---this function lets me know what's REALLY inside a given deck.
+
+	// this is a DEBUG function---this function lets me know what's REALLY inside a
+	// given deck.
 	public String originalDeckToString() {
 		String output = "[";
 		for (Card i : originalDeck) {
 			output += i.id + ", ";
 		}
-		
+
 		return output.substring(0, output.length() - 2) + "]";
 	}
-	
-	// this is a DEBUG function---this function lets me know what's REALLY inside a given deck.
+
+	// this is a DEBUG function---this function lets me know what's REALLY inside a
+	// given deck.
 	public String currentDeckToString() {
 		String output = "[";
 		for (Card i : currentDeck) {
 			output += i.id + ", ";
 		}
-		
+
 		return output.substring(0, output.length() - 2) + "]";
 	}
 

@@ -6,12 +6,13 @@ package ics3u.summative;
  */
 public class ICS3USummative {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-    	@SuppressWarnings("unused")
-		Board b = new Board(true, "exampleEvilDeck", "exampleGoodDeck");
-    }
-    
+	/**
+	 * @param args the command line arguments
+	 */
+	public static void main(String[] args) {
+		@SuppressWarnings("unused")
+		Board b = new Board(true, "exampleEvilDeck", "exampleGoodDeck", "evilPlayerUsername", "stickmanLeader",
+				"goodPlayerUsername", "wywyLeader");
+	}
+
 }

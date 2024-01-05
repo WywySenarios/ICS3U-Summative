@@ -1,4 +1,18 @@
 {
+	"stickmanLeader": {
+		"type": [
+			"stickman",
+			"placeholder1"
+		]
+	},
+	
+	"wywyLeader": {
+		"type": [
+			"wywy",
+			"placeholder1"
+		]
+	},
+	
 	"ens1": {
 		"name": "StickmanEntity",
 		"type": [

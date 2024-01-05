@@ -7,6 +7,8 @@ public class Entity {
 	public int attackModifier;
 	public int shield;
 	public boolean aggressive;
+	public String[] statusEffects = new String[0];
+	//public int[] statusPotency = new int[0];
 	public Move[] moves;
 	public Ability[] abilities;
 	
@@ -17,6 +19,14 @@ public class Entity {
 		this.aggressive = aggressive_;
 		this.moves = moves_;
 		this.abilities = abilities_;
+	}
+	
+	public boolean isAlive() {
+		if (health > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }
