@@ -3,10 +3,12 @@ package ics3u.summative;
 public class Board extends Data {
 
 	public static String fileLocation = "C:\\Java\\ICS3U Summative";
-	private Player evilPlayer;
-	private Player goodPlayer;
-	private Entity[] evilEntities = new Entity[5];
-	private Entity[] goodEntities = new Entity[5];
+	public Player evilPlayer;
+	public Player goodPlayer;
+	public Entity[] evilEntities = new Entity[5];
+	private int[] evilAttacks = new int[5];
+	public Entity[] goodEntities = new Entity[5];
+	private int[] goodAttacks = new int[5];
 	private Environment[] environments = new Environment[5];
 	private Deck evilDeck;
 	private Deck goodDeck;
@@ -42,60 +44,81 @@ public class Board extends Data {
 		}
 	}
 
-	public void receiveAttack(int damage, String statusEffects[], int lane, boolean evil) {
-
+	public void preturns() {
 		/*
-		 * Attacking an entity consist of two primary parts: 1) applying the given
-		 * attack, kill the Entity if necessary, 2) applying status effects, applying
-		 * environment effects, applying abilities kill the Entity if necessary.
-		 * 
-		 * REMEMBER THAT REGENERATION ONLY APPLIES AT THE START OF A TURN
+		 * Preturns handle: Card drawing. And literally nothing else lmao
 		 */
 
-		if (evil) {
-			if (goodEntities[lane] == null) { // if the given lane is empty,
+		int nextSlot = evilPlayer.nextAvailableInventorySlot();
+		if (nextSlot != -1) {
+			evilPlayer.inventory[nextSlot] = evilDeck.drawCard();
+		}
 
-			} else { // if the given lane is occupied,
-				// COMPUTE GIVEN ATTACK
-
-				// apply given damage
-				goodEntities[lane].health -= damage;
-
-				// kill Entity if necessary
-
-				if (goodEntities[lane].isAlive()) { // STEP 2
-					// apply status effects
-					for (String i : statusEffects) {
-						
-					}
-
-					// apply environment effects
-					if (environments[lane] != null) {
-						// apply environment moves
-						for (Move i : environments[lane].moves) {}
-						
-						// apply environment abilities
-						for (Ability i : environments[lane].abilities) {}
-					}
-
-					// kill Entity if necessary
-					if (!goodEntities[lane].isAlive()) {
-						goodEntities[lane] = null;
-					}
-
-				} else {
-					goodEntities[lane] = null;
-				}
-			}
-		} else {
+		nextSlot = goodPlayer.nextAvailableInventorySlot();
+		if (nextSlot != 1) {
+			goodPlayer.inventory[nextSlot] = goodDeck.drawCard();
 		}
 	}
 
-	public void receiveAttack(int damage, int lane, boolean evil) {
-		receiveAttack(damage, new String[0], lane, evil);
+	public void endTurn() {
+
+		/*
+		 * Here's the thing with end turns: apply/compute status effects apply/compute
+		 * environmental hazards attack kill necessary cards
+		 * 
+		 * Remember that DRAWING CARDS is reserved for the START OF A TURN Remember that
+		 * one lane FINISHES ALL ITS TASKS BEFORE MOVING ON TO THE NEXT LANE
+		 */
+
+		for (int i = 0; i < 5; i++) {
+			// compute status effects
+			computeStatusEffects(evilEntities[i]);
+			computeStatusEffects(goodEntities[i]);
+
+			// compute environmental hazards
+			// apply environment effects
+			if (environments[i] != null) {
+				// apply environment moves
+				for (Move a : environments[i].moves) {
+					if (a instanceof ChoiceMove) {
+					} else {
+					}
+				}
+
+				// apply environment abilities
+				for (Ability a : environments[i].abilities) {
+				}
+			}
+
+			// attack (how fun!)
+
+		}
+
 	}
 
-	public void receiveAttack(String[] statusEffects, int lane, boolean evil) {
-		receiveAttack(0, statusEffects, lane, evil);
+	private void computeStatusEffects(Entity givenEntity) {
+		String[] statusEffects = givenEntity.statusEffects;
+
+		String effectName;
+		char effectType;
+		int effectPotentcy;
+		int effectDuration; // in turns
+		for (int i = 0; i < statusEffects.length; i++) {
+			effectType = statusEffects[i].charAt(statusEffects[i].indexOf(":") + 1);
+			switch (effectType) {
+			case 't':
+				break;
+			case 'd':
+				effectName = statusEffects[i].substring(0, statusEffects[i].indexOf(":"));
+				effectPotentcy = Integer.parseInt(
+						statusEffects[i].substring(statusEffects[i].indexOf(":") + 2, statusEffects[i].indexOf("/")));
+				effectDuration = Integer.parseInt(statusEffects[i].substring(statusEffects[i].indexOf("/") + 1));
+
+				givenEntity.health -= Integer
+						.parseInt(statusEffects[i].substring(statusEffects[i].charAt(statusEffects[i].indexOf(":")),
+								statusEffects[i].charAt(statusEffects[i].indexOf("/"))));
+				statusEffects[i] = effectName + ':' + effectType + effectPotentcy + (effectDuration - 1);
+			}
+		}
 	}
 }
