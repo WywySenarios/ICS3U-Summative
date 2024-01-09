@@ -1,12 +1,11 @@
 package ics3u.summative;
 
-public class AttackLeader implements ChoiceMove {
+public class AttackLeader extends Move implements ChoiceMove {
 	public int damage;
-	public boolean evil;
 	
 	public AttackLeader(int damage_, boolean evil_) {
+		super("AttackLeader", evil_);
 		this.damage = damage_;
-		this.evil = evil_;
 	}
 	
 	public void move(Entity attacker, Board b, int selection) {
