@@ -1,4 +1,9 @@
-package ics3u.summative;
+package Move;
+
+import ics3u.summative.Board;
+import ics3u.summative.ChoiceMove;
+import ics3u.summative.Entity;
+import ics3u.summative.Move;
 
 public class AttackDirect extends Move implements ChoiceMove {
 	public int damage;
@@ -35,7 +40,7 @@ public class AttackDirect extends Move implements ChoiceMove {
 			new AttackLeader(this.damage, this.evil).move(attacker, b, selection);
 		} else { // if the given lane is NOT empty,
 			// apply damage
-			attackedEntity.health -= damage;
+			attackedEntity.receiveDamage(attacker, damage);
 
 			// add status effects if necessary
 			if (statusEffects != null) {

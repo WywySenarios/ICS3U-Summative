@@ -1,4 +1,10 @@
-package ics3u.summative;
+package Move;
+
+import ics3u.summative.Board;
+import ics3u.summative.ChoiceMove;
+import ics3u.summative.Entity;
+import ics3u.summative.Move;
+import ics3u.summative.Player;
 
 public class AttackLeader extends Move implements ChoiceMove {
 	public int damage;
