@@ -1,9 +1,9 @@
 package Move;
 
-import ics3u.summative.Board;
-import ics3u.summative.ChoiceMove;
-import ics3u.summative.Entity;
-import ics3u.summative.Move;
+import gameElements.Board;
+import gameElements.ChoiceMove;
+import gameElements.Entity;
+import gameElements.Move;
 
 public class AttackLane extends Move implements ChoiceMove {
 	public int damage;

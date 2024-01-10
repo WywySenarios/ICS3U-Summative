@@ -1,8 +1,8 @@
 package Ability;
 
-import ics3u.summative.Ability;
-import ics3u.summative.Board;
-import ics3u.summative.Entity;
+import gameElements.Ability;
+import gameElements.Board;
+import gameElements.Entity;
 
 public class Resistance extends Ability {
 	
