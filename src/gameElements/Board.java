@@ -9,12 +9,14 @@ public class Board extends Data {
 	public Player goodPlayer;
 	public Entity[] evilEntities = new Entity[5];
 	private int[] evilAttacks = new int[5];
+	private int[] evilSelection = {0,1,2,3,4}; // added
 	public Entity[] goodEntities = new Entity[5];
 	private int[] goodAttacks = new int[5];
-	private Environment[] environments = new Environment[5];
+	private int[] goodSelection = {0,1,2,3,4}; // added
+	public Environment[] environments = new Environment[5];
 	private Deck evilDeck;
 	private Deck goodDeck;
-	private Server server;
+	public Server server;
 
 	public Board(boolean experimentalDeck, String evilDeckName, String goodDeckName, String evilUsername,
 			String evilName, String goodUsername, String goodName) {
@@ -63,6 +65,45 @@ public class Board extends Data {
 		}
 	}
 
+	public void fight() {
+		Move temp;
+		// good Cards fight first
+		
+		
+		// Entities fight first, then environments.
+		// each lane is calculated individually.
+		for (int i = 0; i < 5; i++) {
+			// good Entity does its move
+			temp = goodEntities[i].moves[goodAttacks[i]];
+			if (temp instanceof ChoiceMove) {
+				((ChoiceMove) temp).move(goodEntities[i], this, goodSelection[i]);
+			} else {
+				((NoChoiceMove) temp).move(goodEntities[i], this);
+			}
+			
+			// evil Entity does its move
+			temp = evilEntities[i].moves[evilAttacks[i]];
+			if (temp instanceof ChoiceMove) {
+				((ChoiceMove) temp).move(evilEntities[i], this, evilSelection[i]);
+			} else {
+				((NoChoiceMove) temp).move(evilEntities[i], this);
+			}
+			
+			// environments trigger
+			
+			// kill necessary entities
+			if (goodEntities[i].health < 0) {
+				goodEntities[i] = null;
+				server.updateEntity(null, i);
+			}
+			
+			if (evilEntities[i].health < 0) {
+				evilEntities[i] = null;
+				server.updateEntity(null, i + 5);
+			}
+		}
+	}
+	
 	public void endTurn() {
 
 		/*
@@ -75,8 +116,23 @@ public class Board extends Data {
 
 		for (int i = 0; i < 5; i++) {
 			// compute status effects
-			computeStatusEffects(evilEntities[i]);
-			computeStatusEffects(goodEntities[i]);
+			try {
+				computeStatusEffects(evilEntities[i]);
+			} catch (Exception e) {
+				// this looks weird, but i'm just trying to handle one specific exception.
+				if (! e.getLocalizedMessage().equals("Cannot read field \"statusEffects\" because \"givenEntity\" is null")) {
+					throw e;
+				}
+			}
+			
+			try {
+				computeStatusEffects(goodEntities[i]);
+			} catch (Exception e) {
+				// this looks weird, but i'm just trying to handle one specific exception.
+				if (! e.getLocalizedMessage().equals("Cannot read field \"statusEffects\" because \"givenEntity\" is null")) {
+					throw e;
+				}
+			}
 
 			// compute environmental hazards
 			// apply environment effects
@@ -89,8 +145,7 @@ public class Board extends Data {
 				}
 
 				// apply environment abilities
-				for (Ability a : environments[i].abilities) {
-				}
+				//for (Ability a : environments[i].abilities) {}
 			}
 
 			// attack (how fun!)

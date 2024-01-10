@@ -30,9 +30,13 @@ public class AttackDirect extends Move implements ChoiceMove {
 		Entity attackedEntity;
 
 		if (evil) { // if the attacker is EVIL,
-			attackedEntity = b.goodEntities[selection];
+			attackedEntity = b.goodEntities[selection - 5];
+			String[] argsInput = {"damage"};
+			b.server.updateEntity(argsInput, selection);
 		} else { // if the attacker is GOOD,
 			attackedEntity = b.evilEntities[selection];
+			String[] argsInput = {"damage"};
+			b.server.updateEntity(argsInput, selection);
 		}
 
 		if (attackedEntity == null) { // if the given lane is empty,
