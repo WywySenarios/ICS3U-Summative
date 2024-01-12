@@ -15,7 +15,7 @@ public class Deck extends Data {
 	private final Random RNG = new Random();
 	private boolean evil;
 
-	public Deck(Board board_, String path_, boolean evil_) throws java.lang.NullPointerException {
+	public Deck(Board board_, String path_, boolean evil_) throws NullPointerException {
 		super("Deck", path_);
 		
 		this.evil = evil_;

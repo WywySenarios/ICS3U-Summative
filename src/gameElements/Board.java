@@ -24,15 +24,15 @@ public class Board extends Data {
 		this.evilDeck = new Deck(this, fileLocation + "\\DeckData\\" + evilDeckName + ".JSON", true);
 		this.goodDeck = new Deck(this, fileLocation + "\\DeckData\\" + goodDeckName + ".JSON", false);
 
-		Card[] evilPlayerInventory = new Card[5];
-		for (int i = 0; i < 5; i++) {
+		Card[] evilPlayerInventory = new Card[4];
+		for (int i = 0; i < 4; i++) {
 			evilPlayerInventory[i] = this.evilDeck.drawCard();
 		}
 		this.evilPlayer = new Player(evilUsername, evilName, evilPlayerInventory,
 				this.isolateStringArray(evilName + "\\type"));
 
-		Card[] goodPlayerInventory = new Card[5];
-		for (int i = 0; i < 5; i++) {
+		Card[] goodPlayerInventory = new Card[4];
+		for (int i = 0; i < 4; i++) {
 			goodPlayerInventory[i] = this.goodDeck.drawCard();
 		}
 		this.goodPlayer = new Player(goodUsername, goodName, goodPlayerInventory,
@@ -53,7 +53,7 @@ public class Board extends Data {
 		/*
 		 * Preturns handle: Card drawing. And literally nothing else lmao
 		 */
-		
+
 		String[] args = new String[1];
 		args[0] = "inventory";
 
@@ -61,7 +61,7 @@ public class Board extends Data {
 			// broadcast that a new Card has been added to the Evil Player's inventory
 			server.updatePlayer(args, true);
 		}
-		
+
 		if (goodPlayer.insertCard(goodDeck.drawCard())) {
 			// broadcast that a new Card has been added to the Good Player's inventory
 			server.updatePlayer(args, false);
@@ -76,32 +76,48 @@ public class Board extends Data {
 		// each lane is calculated individually.
 		for (int i = 0; i < 5; i++) {
 			// good Entity does its move
-			temp = goodEntities[i].moves[goodAttacks[i]];
-			if (temp instanceof ChoiceMove) {
-				((ChoiceMove) temp).move(goodEntities[i], this, goodSelection[i]);
-			} else {
-				((NoChoiceMove) temp).move(goodEntities[i], this);
+			try {
+				temp = goodEntities[i].moves[goodAttacks[i]];
+				if (temp instanceof ChoiceMove) {
+					((ChoiceMove) temp).move(goodEntities[i], this, goodSelection[i]);
+				} else {
+					((NoChoiceMove) temp).move(goodEntities[i], this);
+				}
+			} catch (NullPointerException e) {
+				// this happens when there is no good Entity in the lane
 			}
 
 			// evil Entity does its move
-			temp = evilEntities[i].moves[evilAttacks[i]];
-			if (temp instanceof ChoiceMove) {
-				((ChoiceMove) temp).move(evilEntities[i], this, evilSelection[i]);
-			} else {
-				((NoChoiceMove) temp).move(evilEntities[i], this);
+			try {
+				temp = evilEntities[i].moves[evilAttacks[i]];
+				if (temp instanceof ChoiceMove) {
+					((ChoiceMove) temp).move(evilEntities[i], this, evilSelection[i]);
+				} else {
+					((NoChoiceMove) temp).move(evilEntities[i], this);
+				}
+			} catch (NullPointerException e) {
+				// this happens when there is no evil Entity in the lane
 			}
 
 			// environments trigger
 
 			// kill necessary entities
-			if (goodEntities[i].health < 0) {
-				goodEntities[i] = null;
-				server.updateEntity(null, i);
+			try {
+				if (goodEntities[i].health < 0) {
+					goodEntities[i] = null;
+					server.updateEntity(null, i);
+				}
+			} catch (NullPointerException e) {
+				// this happens when there is no good Entity in the lane
 			}
 
-			if (evilEntities[i].health < 0) {
-				evilEntities[i] = null;
-				server.updateEntity(null, i + 5);
+			try {
+				if (evilEntities[i].health < 0) {
+					evilEntities[i] = null;
+					server.updateEntity(null, i + 5);
+				}
+			} catch (NullPointerException e) {
+				// this happens when there is no evil Entity in the lane
 			}
 		}
 	}
@@ -209,9 +225,9 @@ public class Board extends Data {
 
 		// place the Card
 		String[] args;
-		//args = new String[1];
-		//args[0] = "";
-		//server.updatePlayer(args, evil);
+		// args = new String[1];
+		// args[0] = "";
+		// server.updatePlayer(args, evil);
 		switch (currentCard.getType()) {
 		case "en": // the Card is an Entity
 			// ensure there's an available slot to place the Entity
@@ -240,7 +256,7 @@ public class Board extends Data {
 			args = new String[1];
 			args[0] = "inventory";
 			server.updatePlayer(args, evil);
-			
+
 			args = new String[1];
 			args[0] = "place";
 			if (evil) {

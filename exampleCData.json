@@ -85,6 +85,7 @@
 		"rarity": "Common",
 		"charges": 1,
 		"chargeRegen": 0,
+		"sacrificial": "StickmanEntity",
 		"move": {
 			"AttackDirect": {
 				"damage": 100,

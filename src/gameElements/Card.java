@@ -75,7 +75,7 @@ public class Card {
 		case "sp":
 			return "sp:" + this.special.toString();
 		case "ev":
-			return "ev" + this.environment.toString();
+			return "ev:" + this.environment.toString();
 		default:
 			return null;
 		}

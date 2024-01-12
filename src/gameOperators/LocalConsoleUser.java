@@ -1,6 +1,5 @@
 package gameOperators;
 
-import gameElements.Card;
 import gameElements.Entity;
 import gameElements.Player;
 
@@ -10,41 +9,42 @@ public class LocalConsoleUser extends User {
 		super("console", evil_);
 	}
 
-	public void updateEntity(String[] args, int entityUpdated) {
+	public void updateEntity(String[] args, int entityUpdated, boolean evil) {
 		Entity originalEntity = null;
 		Entity finalEntity = null;
-		if (entityUpdated < 0) {
-		} else if (entityUpdated < 5) { // evil entity
+		
+		if (evil) { // evil entity
 			originalEntity = this.evilEntities[entityUpdated];
 			this.evilEntities[entityUpdated] = server.b.evilEntities[entityUpdated];
 			finalEntity = this.evilEntities[entityUpdated];
-		} else if (entityUpdated < 10) { // good entity
-			originalEntity = this.goodEntities[entityUpdated - 5];
-			this.evilEntities[entityUpdated - 5] = server.b.evilEntities[entityUpdated - 5];
-			finalEntity = this.evilEntities[entityUpdated - 5];
+		} else {
+			originalEntity = this.goodEntities[entityUpdated];
+			this.goodEntities[entityUpdated] = server.b.goodEntities[entityUpdated];
+			finalEntity = this.goodEntities[entityUpdated];
 		}
+		
 		switch (args[0]) {
 		case "kill":
-			if (entityUpdated < 5) { // evil entity
+			if (evil) { // evil entity
 				printOut("The evil entity at lane " + entityUpdated + " has been slain!", true);
 			} else { // good entity
-				printOut("The good entity at lane " + (entityUpdated - 5) + " has been slain!", true);
+				printOut("The good entity at lane " + entityUpdated + " has been slain!", true);
 			}
 			break;
 		case "damage":
-			if (entityUpdated < 5) { // evil entity
+			if (evil) { // evil entity
 				printOut("The evil entity at lane " + entityUpdated + " has changed in health by "
 						+ (finalEntity.health - originalEntity.health) + "!", true);
 			} else { // good entity
-				printOut("The good entity at lane " + (entityUpdated - 5) + " has changed in health by "
+				printOut("The good entity at lane " + entityUpdated + " has changed in health by "
 						+ (finalEntity.health - originalEntity.health) + "!", true);
 			}
 			break;
 		case "place":
-			if (entityUpdated < 5) { // evil entity
+			if (evil) { // evil entity
 				printOut("The evil entity at lane " + entityUpdated + " has been placed!", true);
 			} else { // good entity
-				printOut("The good entity at lane " + (entityUpdated - 5) + " has been placed!", true);
+				printOut("The good entity at lane " + entityUpdated + " has been placed!", true);
 			}
 			break;
 		}
@@ -67,7 +67,7 @@ public class LocalConsoleUser extends User {
 		switch (args[0]) {
 		case "damage":
 			int damageTaken = finalPlayer.health - originalPlayer.health;
-			
+
 			if (evil) {
 				printOut(finalPlayer.username + "(the evil player) has received " + damageTaken + " damage!", true);
 			} else {
@@ -92,9 +92,7 @@ public class LocalConsoleUser extends User {
 
 	private void printOut(String message, boolean acknowledgement) {
 		/*
-		 * GameStatus:
-		 * Evil player:
-		 * Good player:
+		 * GameStatus: Evil player: Good player:
 		 * 
 		 * Lane 1: \tGood Card: \tEvil Card:
 		 * 
@@ -118,12 +116,12 @@ public class LocalConsoleUser extends User {
 			System.out.print("GoodUser;");
 		}
 		System.out.println(" GameStatus: " + this.gameStatus + "\n");
-		
+
 		// print out players
 		// evilPlayer
-		
+
 		System.out.println("Evil Player: " + evilPlayer.toString());
-		
+
 		// goodPlayer
 		System.out.println("Good Player: " + goodPlayer.toString());
 
@@ -135,9 +133,9 @@ public class LocalConsoleUser extends User {
 			} catch (NullPointerException e) {
 				laneOutput += "N/A";
 			}
-			
+
 			laneOutput += "\n\tGood: ";
-			
+
 			try {
 				laneOutput += goodEntities[i].toString();
 			} catch (NullPointerException e) {
@@ -146,16 +144,15 @@ public class LocalConsoleUser extends User {
 			System.out.println(laneOutput);
 		}
 
-		String inventoryOutput = "YOUR INVENTORY: [";
+		String inventoryOutput = "YOUR INVENTORY:\n";
 
-		for (Card i : currentPlayer.inventory) {
+		for (int i = 0; i < currentPlayer.inventory.length; i++) {
 			try {
-				inventoryOutput += i.toString() + ", ";
+				inventoryOutput += "\t" + (i) + ") " + currentPlayer.inventory[i].toString() + "\n";
 			} catch (NullPointerException e) {
+
 			}
 		}
-
-		inventoryOutput = inventoryOutput.substring(0, inventoryOutput.length() - 2) + "]\n";
 
 		System.out.println(inventoryOutput);
 
@@ -176,13 +173,13 @@ public class LocalConsoleUser extends User {
 			console.nextLine();
 		}
 	}
-	
+
 	public String getCommand() {
 		return getCommand("N/A");
 	}
 
 	public String getCommand(String message) {
-		//clearConsole();
+		// clearConsole();
 		printOut("getCommand() has been called. Message: " + message, false);
 		System.out.println("Enter your input: ");
 		return console.nextLine();

@@ -49,9 +49,9 @@ public class Server implements UI {
 		logFile.createNewFile();
 	}
 
-	public void updateEntity(String[] args, int entityUpdated) {
-		evilUser.updateEntity(args, entityUpdated);
-		goodUser.updateEntity(args, entityUpdated);
+	public void updateEntity(String[] args, int entityUpdated, boolean evil) {
+		evilUser.updateEntity(args, entityUpdated, evil);
+		goodUser.updateEntity(args, entityUpdated, evil);
 		log("Updated Entity at location \"" + entityUpdated + "\".");
 	}
 
@@ -186,6 +186,7 @@ public class Server implements UI {
 			} while (thinking);
 
 			// fighting
+			b.fight();
 
 			// post-turn
 			b.endTurn();

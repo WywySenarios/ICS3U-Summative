@@ -27,17 +27,24 @@ public class AttackLeader extends Move implements ChoiceMove {
 		 */
 		
 		Player attackedPlayer;
+		boolean evil;
 		
 		if (selection == 0) { // attack the evil leader
 			attackedPlayer = b.evilPlayer;
+			evil = true;
 		} else if (selection == 1) { // attack the good leader
 			attackedPlayer = b.goodPlayer;
+			evil = false;
 		} else {
 			throw new NullPointerException("Invalid target (the selected target was not 0 or 1)");
 		}
 
 		// apply damage
 		attackedPlayer.health -= damage;
+		
+		// broadcast damage
+		String[] args = {"damage"};
+		b.server.updatePlayer(args, evil);
 
 		// if (attackedPlayer.health < 0) { gameEnd() }
 	}

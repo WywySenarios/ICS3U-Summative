@@ -39,10 +39,10 @@ public class Data {
 		this.TYPE = type_;
 		this.PATH = path_;
 		isEmpty = false;
-		initailizeFile(); // this will throw ParseException when the END OF FILE token is at position 0
+		initializeFile(); // this will throw ParseException when the END OF FILE token is at position 0
 	}
 
-	private boolean initailizeFile() {
+	private boolean initializeFile() {
 		try {
 			Object o;
 			o = new JSONParser().parse(new FileReader(PATH));
@@ -63,7 +63,7 @@ public class Data {
 				fileOut.close();
 				fileWrite.close();
 
-				return initailizeFile();
+				return initializeFile();
 			} catch (IOException e1) {
 			}
 		} catch (IOException e) {
