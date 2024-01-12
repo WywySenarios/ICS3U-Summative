@@ -9,10 +9,10 @@ public class Board extends Data {
 	public Player goodPlayer;
 	public Entity[] evilEntities = new Entity[5];
 	private int[] evilAttacks = new int[5];
-	private int[] evilSelection = {0,1,2,3,4}; // added
+	private int[] evilSelection = { 0, 1, 2, 3, 4 }; // added
 	public Entity[] goodEntities = new Entity[5];
 	private int[] goodAttacks = new int[5];
-	private int[] goodSelection = {0,1,2,3,4}; // added
+	private int[] goodSelection = { 0, 1, 2, 3, 4 }; // added
 	public Environment[] environments = new Environment[5];
 	private Deck evilDeck;
 	private Deck goodDeck;
@@ -68,8 +68,7 @@ public class Board extends Data {
 	public void fight() {
 		Move temp;
 		// good Cards fight first
-		
-		
+
 		// Entities fight first, then environments.
 		// each lane is calculated individually.
 		for (int i = 0; i < 5; i++) {
@@ -80,7 +79,7 @@ public class Board extends Data {
 			} else {
 				((NoChoiceMove) temp).move(goodEntities[i], this);
 			}
-			
+
 			// evil Entity does its move
 			temp = evilEntities[i].moves[evilAttacks[i]];
 			if (temp instanceof ChoiceMove) {
@@ -88,22 +87,22 @@ public class Board extends Data {
 			} else {
 				((NoChoiceMove) temp).move(evilEntities[i], this);
 			}
-			
+
 			// environments trigger
-			
+
 			// kill necessary entities
 			if (goodEntities[i].health < 0) {
 				goodEntities[i] = null;
 				server.updateEntity(null, i);
 			}
-			
+
 			if (evilEntities[i].health < 0) {
 				evilEntities[i] = null;
 				server.updateEntity(null, i + 5);
 			}
 		}
 	}
-	
+
 	public void endTurn() {
 
 		/*
@@ -120,16 +119,18 @@ public class Board extends Data {
 				computeStatusEffects(evilEntities[i]);
 			} catch (Exception e) {
 				// this looks weird, but i'm just trying to handle one specific exception.
-				if (! e.getLocalizedMessage().equals("Cannot read field \"statusEffects\" because \"givenEntity\" is null")) {
+				if (!e.getLocalizedMessage()
+						.equals("Cannot read field \"statusEffects\" because \"givenEntity\" is null")) {
 					throw e;
 				}
 			}
-			
+
 			try {
 				computeStatusEffects(goodEntities[i]);
 			} catch (Exception e) {
 				// this looks weird, but i'm just trying to handle one specific exception.
-				if (! e.getLocalizedMessage().equals("Cannot read field \"statusEffects\" because \"givenEntity\" is null")) {
+				if (!e.getLocalizedMessage()
+						.equals("Cannot read field \"statusEffects\" because \"givenEntity\" is null")) {
 					throw e;
 				}
 			}
@@ -145,7 +146,7 @@ public class Board extends Data {
 				}
 
 				// apply environment abilities
-				//for (Ability a : environments[i].abilities) {}
+				// for (Ability a : environments[i].abilities) {}
 			}
 
 			// attack (how fun!)
@@ -179,7 +180,7 @@ public class Board extends Data {
 			}
 		}
 	}
-	
+
 	public boolean addServer(Server server_) { // returns true upon successful server change.
 		if (this.server == null) { // if there is not a server registered on this Board yet,
 			this.server = server_;
@@ -187,5 +188,124 @@ public class Board extends Data {
 		} else {
 			return false;
 		}
+	}
+
+	public boolean placeCard(int inventorySlot, int lane, boolean evil) throws Exception, ClassCastException { // returns
+																												// true
+																												// upon
+		// successful Card placement
+		// the ClassCastException is for if the currentCard.get() returns something
+		// invalid and the given exception occurs.
+
+		Card currentCard; // this stores the Card that will be placed
+		if (evil) { // evil Player is placing a Card
+			currentCard = evilPlayer.inventory[inventorySlot];
+		} else { // good Player is placing a Card
+			currentCard = goodPlayer.inventory[inventorySlot];
+		}
+
+		// place the Card
+		String[] args;
+		switch (currentCard.getType()) {
+		case "en": // the Card is an Entity
+			// ensure there's an available slot to place the Entity
+			if (evil) {
+				if (evilEntities[lane] == null) {
+					return false;
+				} else { // place the Entity
+					evilEntities[lane] = (Entity) currentCard.get();
+				}
+			} else {
+				if (goodEntities[lane] == null) {
+					return false;
+				} else { // place the Entity
+					goodEntities[lane] = (Entity) currentCard.get();
+				}
+			}
+
+			// take away the Card from the player's inventory
+			if (evil) {
+				evilPlayer.inventory[inventorySlot] = null;
+			} else {
+				goodPlayer.inventory[inventorySlot] = null;
+			}
+
+			// broadcast changes
+			args = new String[1];
+			args[0] = "inventory";
+			server.updatePlayer(args, evil);
+			
+			args = new String[1];
+			args[0] = "place";
+			if (evil) {
+				server.updateEntity(args, lane);
+			} else {
+				server.updateEntity(args, lane + 5);
+			}
+			break;
+		case "sp": // the Card is a special
+			Special currentSpecial = (Special) currentCard.get();
+
+			// execute the move
+			Move move = (currentSpecial).move;
+
+			if (move == null) { // ensure validity
+				throw new Exception("Invalid Card: the Special's \"move\" parameter is null.");
+			} else if (move instanceof ChoiceMove) {
+				((ChoiceMove) move).move(null, this, lane);
+			} else if (move instanceof NoChoiceMove) {
+				((NoChoiceMove) move).move(null, this);
+			} else {
+				throw new Exception("Invalid Card: the Special does not have a valid Move.");
+			}
+
+			// take away the Card from the player's inventory if needed
+			if (currentSpecial.charges == 0 && currentSpecial.chargeRegen <= 0
+					&& (currentSpecial.sacrificial == null || currentSpecial.sacrificial.equals(""))) {
+				if (evil) {
+					evilPlayer.inventory[inventorySlot] = null;
+				} else {
+					goodPlayer.inventory[inventorySlot] = null;
+				}
+
+				// broadcast changes
+				args = new String[1];
+				args[0] = "inventory";
+				server.updatePlayer(args, evil);
+			}
+
+			// broadcast changes
+			// there are no changes to broadcast (that's handled by the Special's move)
+			break;
+		case "ev":
+			// ensure there's an available spot to place the Environment
+
+			if (environments[lane] != null && environments[lane].PERMANENT) {
+				return false;
+			} else {
+				environments[lane] = (Environment) currentCard.get();
+			}
+
+			// take away the Card from the player's inventory
+			if (evil) {
+				evilPlayer.inventory[inventorySlot] = null;
+			} else {
+				goodPlayer.inventory[inventorySlot] = null;
+			}
+
+			// broadcast changes
+			args = new String[1];
+			args[0] = "inventory";
+			server.updatePlayer(args, evil);
+
+			args = new String[1];
+			args[0] = "environment";
+			// server.updateEnvironment(args, lane);
+			break;
+		default:
+			throw new Exception("Invalid Card (from Board's perspective): cannot compute Card type.");
+		}
+
+		return true;
 	}
 }

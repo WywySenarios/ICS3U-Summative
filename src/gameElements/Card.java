@@ -55,4 +55,16 @@ public class Card {
 			return null;
 		}
 	}
+	
+	public Object get() {
+		if (this.entity != null) {
+			return this.entity;
+		} else if (this.special != null) {
+			return this.special;
+		} else if (this.environment != null) {
+			return environment;
+		} else { // invalid card,
+			return null;
+		}
+	}
 }

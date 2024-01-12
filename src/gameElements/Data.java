@@ -20,7 +20,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-public abstract class Data {
+public class Data {
 	public final String TYPE;
 	public final String PATH;
 	protected JSONObject file;
@@ -28,6 +28,12 @@ public abstract class Data {
 	private PrintWriter fileOut;
 	private String output;
 	private boolean isEmpty;
+	
+	public Data(JSONObject file_) {
+		this.file = file_;
+		this.TYPE = null;
+		this.PATH = null;
+	}
 
 	public Data(String type_, String path_) {
 		this.TYPE = type_;
@@ -163,6 +169,10 @@ public abstract class Data {
 			// JSONObject.get() return an error),
 			return null; // mark that there was nothing valid at the given location
 		}
+	}
+	
+	public JSONObject isolateJSONObject(String path_) {
+		return (JSONObject) isolateObject(path_);
 	}
 
 	public String isolateString(String path_) {

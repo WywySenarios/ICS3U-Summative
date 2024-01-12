@@ -73,51 +73,48 @@ public class Server implements UI {
 		System.out.println(logPath);
 	}
 
-	public void play() {
-		
-		// when Board initializes, they already hand out starting hands, so no need to worry about drawing Cards here
-		
+	public void play() throws Exception {
+
+		// when Board initializes, they already hand out starting hands, so no need to
+		// worry about drawing Cards here
+
 		// immediately broadcast who has what
-		
+
 		/*
 		 * 
-	private Deck evilDeck;
-	private Deck goodDeck;
+		 * private Deck evilDeck; private Deck goodDeck;
 		 */
-		
+
 		// Players
 		// evil Player
 		evilUser.evilPlayer = this.b.evilPlayer;
 		goodUser.evilPlayer = this.b.evilPlayer;
-		
+
 		// good Player
 		evilUser.goodPlayer = this.b.goodPlayer;
 		goodUser.goodPlayer = this.b.goodPlayer;
-		
-		
+
 		// Entities
 		// evil Entities
 		evilUser.evilEntities = this.b.evilEntities;
 		goodUser.evilEntities = this.b.evilEntities;
-		
+
 		// good Entities
 		evilUser.goodEntities = this.b.goodEntities;
 		goodUser.goodEntities = this.b.goodEntities;
-		
-		
+
 		// Moves
 		// N/A, the Moves are private lmao
-		
+
 		// N/A, the selections are private lmao
-		
-		
+
 		// Environments
 		evilUser.environments = this.b.environments;
 		goodUser.environments = this.b.environments;
-		
+
 		// Decks
 		// N/A, the Decks are private lmao
-		
+
 		boolean thinking = false;
 		String evilCommand;
 		String goodCommand;
@@ -128,8 +125,17 @@ public class Server implements UI {
 			// evil turn
 			do {
 				evilCommand = evilUser.getCommand();
-				switch (evilCommand) {
-				case "place1":
+				switch (evilCommand.toLowerCase()) {
+				case "place", "placecard":
+					try {
+						b.placeCard(Integer.parseInt(evilUser.getCommand("inventorySlot")),
+								Integer.parseInt(evilUser.getCommand("lane")), true);
+					} catch (ClassCastException e) {
+					} catch (NumberFormatException e) {
+						// from the evilUser.getCommand()s inside the b.placeCard() method parameter
+						// input
+					}
+
 					break;
 				default:
 					break;
@@ -139,12 +145,23 @@ public class Server implements UI {
 			// good turn
 			do {
 				goodCommand = goodUser.getCommand();
-				switch (goodCommand) {
+				switch (goodCommand.toLowerCase()) {
+				case "place", "placecard":
+					try {
+						b.placeCard(Integer.parseInt(goodUser.getCommand("inventorySlot")),
+								Integer.parseInt(goodUser.getCommand("lane")), false);
+					} catch (ClassCastException e) {
+					} catch (NumberFormatException e) {
+						// from the evilUser.getCommand()s inside the b.placeCard() method parameter
+						// input
+					}
+
+					break;
 				default:
 					break;
 				}
 			} while (thinking);
-			
+
 			// fighting
 
 			// post-turn

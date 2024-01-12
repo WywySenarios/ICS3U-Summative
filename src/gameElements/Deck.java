@@ -5,8 +5,8 @@ import java.util.Random;
 
 public class Deck extends Data {
 
-	private Card[] originalDeck = new Card[40];
-	private Card[] currentDeck;
+	private String[] originalDeck = new String[40];
+	private String[] currentDeck = new String[40];
 	private Board thisBoard;
 	private final Random RNG = new Random();
 
@@ -14,7 +14,7 @@ public class Deck extends Data {
 		super("Deck", path_);
 
 		// mark which board this is on
-		thisBoard = board_;
+		this.thisBoard = board_;
 
 		// create and populate arrays storing the contents of the given file
 		JSONArray JSONContents = this.isolateJSONArray("contents"); // you could say that it's "optimized" to just run
@@ -37,75 +37,70 @@ public class Deck extends Data {
 		if (sum != 40) {
 			throw new NullPointerException("Invalid deck size.");
 		} // END ensure validity
-
-		/*
-		 * // debug printing System.out.println(Arrays.toString(potentialCards));
-		 * System.out.println(Arrays.toString(amountOfCards)); // END debug printing
-		 */
+		
 
 		// create Decks
 		int currentIndex = 0;
-		Card currentCard;
 		for (int a = 0; a < potentialCards.length; a++) {
-			// initialize the Card
-			switch (potentialCards[a].substring(0, 2)) {
-			case "en":
-				currentCard = new Card(potentialCards[a], thisBoard.isolateString(potentialCards[a] + "\\name"),
-						thisBoard.isolateStringArray(potentialCards[a] + "\\type"),
-						thisBoard.isolateInt(potentialCards[a] + "\\cost"),
-						thisBoard.isolateString(potentialCards[a] + "\\rarity"),
-						thisBoard.isolateInt(potentialCards[a] + "\\health"),
-						thisBoard.isolateInt(potentialCards[a] + "\\hpr"),
-						thisBoard.isolateInt(potentialCards[a] + "\\shield"),
-						thisBoard.isolateBoolean(potentialCards[a] + "\\aggressive"),
-						this.isolateMoves(potentialCards[a]), this.isolateAbilities(potentialCards[a]));
-				break;
-			case "sp":
-				currentCard = new Card(potentialCards[a], thisBoard.isolateString(potentialCards[a] + "\\name"),
-						thisBoard.isolateStringArray(potentialCards[a] + "\\type"),
-						thisBoard.isolateInt(potentialCards[a] + "\\cost"),
-						thisBoard.isolateString(potentialCards[a] + "\\rarity"),
-						thisBoard.isolateInt(potentialCards[a] + "\\charges"),
-						thisBoard.isolateInt(potentialCards[a] + "\\chargeRegen"),
-						thisBoard.isolateString(potentialCards[a] + "\\sacrificial"),
-						this.isolateMove(potentialCards[a]), this.isolateAbilities(potentialCards[a]));
-				break;
-			case "ev":
-				currentCard = new Card(potentialCards[a], thisBoard.isolateString(potentialCards[a] + "\\name"),
-						thisBoard.isolateStringArray(potentialCards[a] + "\\type"),
-						thisBoard.isolateInt(potentialCards[a] + "\\cost"),
-						thisBoard.isolateString(potentialCards[a] + "\\rarity"), this.isolateMoves(potentialCards[a]),
-						this.isolateAbilities(potentialCards[a]),
-						thisBoard.isolateBoolean(potentialCards[a] + "\\permanent"));
-				break;
-			default: // in the case that an actually invalid Card ID is given,
-				throw new NullPointerException("Invalid Card ID");
-			}
-
-			// fill all the required positions of the deck
+			// loop through the necessary
 			for (int b = 0; b < amountOfCards[a]; b++) {
-				originalDeck[currentIndex++] = currentCard;
+				this.originalDeck[currentIndex++] = potentialCards[a];
 			}
 		}
 
-		this.currentDeck = this.originalDeck;
+		// copy originalDeck over to currentDeck
+		for (int i = 0; i < this.currentDeck.length; i++) {
+			this.currentDeck[i] = this.originalDeck[i];
+		}
 	}
 
-	public void addCard(String card_) {
+	public void addCard(String cardID) {
+		String[] temp = currentDeck;
+		currentDeck = new String[currentDeck.length + 1];
+		int currentIndex = 0;
+		
+		// re-populate array with the contents of the old array
+		for (String i : temp) {
+			currentDeck[currentIndex++] = i;
+		}
+		
+		// add new card
+		currentDeck[currentIndex] = cardID;
 	}
 
-	public void addCards(String[] cards_) {
+	public void addCards(String[] cardIDs) {
+		String[] temp = currentDeck;
+		currentDeck = new String[currentDeck.length + cardIDs.length];
+		int currentIndex = 0;
+		// re-populate array with the contents of the old array
+		for (String i : temp) {
+			currentDeck[currentIndex++] = i;
+		}
+		
+		// add new cards
+		for (String i : cardIDs) {
+			currentDeck[currentIndex++] = i;
+		}
 	}
 
 	private Move isolateMove(String cardID) {
+		Data d = new Data(thisBoard.isolateJSONObject(cardID + "\\move"));
+		Object[] datapoints = d.getDatapoints();
+		
 		return null;
 	}
-
-	// private Ability isolateAbility(String cardID) {return null;}
 
 	private Move[] isolateMoves(String cardID) {
+		Data d = new Data(thisBoard.isolateJSONObject(cardID + "\\moves"));
+		for (Object o : d.getDatapoints()) {
+			System.out.print(o);
+		}
+		
+		System.out.println(d.getData());
 		return null;
 	}
+	
+	// private Ability isolateAbility(String cardID) {return null;}
 
 	private Ability[] isolateAbilities(String cardID) {
 		return null;
@@ -115,8 +110,8 @@ public class Deck extends Data {
 	// given deck.
 	public String originalDeckToString() {
 		String output = "[";
-		for (Card i : originalDeck) {
-			output += i.id + ", ";
+		for (String i : originalDeck) {
+			output += i + ", ";
 		}
 
 		return output.substring(0, output.length() - 2) + "]";
@@ -126,8 +121,8 @@ public class Deck extends Data {
 	// given deck.
 	public String currentDeckToString() {
 		String output = "[";
-		for (Card i : currentDeck) {
-			output += i.id + ", ";
+		for (String i : currentDeck) {
+			output += i + ", ";
 		}
 
 		return output.substring(0, output.length() - 2) + "]";
@@ -136,9 +131,42 @@ public class Deck extends Data {
 	public Card drawCard() {
 		int randomNumber = RNG.nextInt() % 40;
 		if (randomNumber > 0) {
-			return currentDeck[randomNumber];
+			return createCard(currentDeck[randomNumber]);
 		} else {
-			return currentDeck[randomNumber * -1];
+			return createCard(currentDeck[randomNumber * -1]);
+		}
+	}
+
+	private Card createCard(String cardID) {
+		switch (cardID.substring(0, 2)) {
+		case "en": // entity
+			return new Card(cardID, thisBoard.isolateString(cardID + "\\name"),
+					thisBoard.isolateStringArray(cardID + "\\type"),
+					thisBoard.isolateInt(cardID + "\\cost"),
+					thisBoard.isolateString(cardID + "\\rarity"),
+					thisBoard.isolateInt(cardID + "\\health"),
+					thisBoard.isolateInt(cardID + "\\hpr"),
+					thisBoard.isolateInt(cardID + "\\shield"),
+					thisBoard.isolateBoolean(cardID + "\\aggressive"), this.isolateMoves(cardID),
+					this.isolateAbilities(cardID));
+		case "sp": // special
+			return new Card(cardID, thisBoard.isolateString(cardID + "\\name"),
+					thisBoard.isolateStringArray(cardID + "\\type"),
+					thisBoard.isolateInt(cardID + "\\cost"),
+					thisBoard.isolateString(cardID + "\\rarity"),
+					thisBoard.isolateInt(cardID + "\\charges"),
+					thisBoard.isolateInt(cardID + "\\chargeRegen"),
+					thisBoard.isolateString(cardID + "\\sacrificial"), this.isolateMove(cardID),
+					this.isolateAbilities(cardID));
+		case "ev": // environment
+			return new Card(cardID, thisBoard.isolateString(cardID + "\\name"),
+					thisBoard.isolateStringArray(cardID + "\\type"),
+					thisBoard.isolateInt(cardID + "\\cost"),
+					thisBoard.isolateString(cardID + "\\rarity"), this.isolateMoves(cardID),
+					this.isolateAbilities(cardID),
+					thisBoard.isolateBoolean(cardID + "\\permanent"));
+		default: // in the case that an actually invalid Card ID is given,
+			throw new NullPointerException("Invalid Card ID");
 		}
 	}
 }

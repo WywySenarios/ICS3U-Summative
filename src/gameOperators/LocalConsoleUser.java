@@ -57,10 +57,10 @@ public class LocalConsoleUser extends User {
 			finalPlayer = this.evilPlayer;
 		}
 
-		int damageTaken = finalPlayer.health - originalPlayer.health;
-
 		switch (args[0]) {
 		case "damage":
+			int damageTaken = finalPlayer.health - originalPlayer.health;
+			
 			if (evil) {
 				printOut(finalPlayer.username + "(the evil player) has received " + damageTaken + " damage!", true);
 			} else {
@@ -157,10 +157,14 @@ public class LocalConsoleUser extends User {
 			console.nextLine();
 		}
 	}
-
+	
 	public String getCommand() {
+		return getCommand("N/A");
+	}
+
+	public String getCommand(String message) {
 		//clearConsole();
-		printOut("getCommand() has been called.", false);
+		printOut("getCommand() has been called. Message: " + message, false);
 		System.out.println("Enter your input: ");
 		return console.nextLine();
 	}

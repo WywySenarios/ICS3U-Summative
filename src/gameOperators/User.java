@@ -44,4 +44,8 @@ public abstract class User implements UI {
 	public String getCommand() {
 		return null;
 	}
+	
+	public String getCommand(String message) {
+		return null;
+	}
 }
