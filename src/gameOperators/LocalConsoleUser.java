@@ -21,7 +21,7 @@ public class LocalConsoleUser extends User {
 		} else if (entityUpdated < 10) { // good entity
 			originalEntity = this.goodEntities[entityUpdated - 5];
 			this.evilEntities[entityUpdated - 5] = server.b.evilEntities[entityUpdated - 5];
-			finalEntity = this.evilEntities[entityUpdated];
+			finalEntity = this.evilEntities[entityUpdated - 5];
 		}
 		switch (args[0]) {
 		case "kill":
@@ -38,6 +38,13 @@ public class LocalConsoleUser extends User {
 			} else { // good entity
 				printOut("The good entity at lane " + (entityUpdated - 5) + " has changed in health by "
 						+ (finalEntity.health - originalEntity.health) + "!", true);
+			}
+			break;
+		case "place":
+			if (entityUpdated < 5) { // evil entity
+				printOut("The evil entity at lane " + entityUpdated + " has been placed!", true);
+			} else { // good entity
+				printOut("The good entity at lane " + (entityUpdated - 5) + " has been placed!", true);
 			}
 			break;
 		}
@@ -68,7 +75,6 @@ public class LocalConsoleUser extends User {
 			}
 			break;
 		}
-		console.nextLine();
 
 	}
 
@@ -86,7 +92,9 @@ public class LocalConsoleUser extends User {
 
 	private void printOut(String message, boolean acknowledgement) {
 		/*
-		 * GameStatus: Good player: Evil player:
+		 * GameStatus:
+		 * Evil player:
+		 * Good player:
 		 * 
 		 * Lane 1: \tGood Card: \tEvil Card:
 		 * 
@@ -110,6 +118,14 @@ public class LocalConsoleUser extends User {
 			System.out.print("GoodUser;");
 		}
 		System.out.println(" GameStatus: " + this.gameStatus + "\n");
+		
+		// print out players
+		// evilPlayer
+		
+		System.out.println("Evil Player: " + evilPlayer.toString());
+		
+		// goodPlayer
+		System.out.println("Good Player: " + goodPlayer.toString());
 
 		String laneOutput;
 		for (int i = 0; i < 5; i++) {
@@ -133,7 +149,10 @@ public class LocalConsoleUser extends User {
 		String inventoryOutput = "YOUR INVENTORY: [";
 
 		for (Card i : currentPlayer.inventory) {
-			inventoryOutput += i.toString() + ", ";
+			try {
+				inventoryOutput += i.toString() + ", ";
+			} catch (NullPointerException e) {
+			}
 		}
 
 		inventoryOutput = inventoryOutput.substring(0, inventoryOutput.length() - 2) + "]\n";

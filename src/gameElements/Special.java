@@ -3,14 +3,15 @@ package gameElements;
 public class Special implements HasAbility {
 	
 	public boolean inInventory;
+	public String[] type;
 	public int charges;
 	public int chargeRegen;
-	public String[] types;
 	public String sacrificial;
 	public Move move;
 	public Ability[] abilities;
 
-	public Special(int charges_, int chargeRegen_, String sacrificial_, Move move_, Ability[] abilities_) {
+	public Special(String[] type_, int charges_, int chargeRegen_, String sacrificial_, Move move_, Ability[] abilities_) {
+		this.type = type_;
 		this.charges = charges_;
 		this.chargeRegen = chargeRegen_;
 		this.sacrificial = sacrificial_;
@@ -53,5 +54,39 @@ public class Special implements HasAbility {
 			}
 		}
 	}
-
+	
+	public String toString() {
+		String output = "[inInventory:";
+		
+		// inInventory
+		output += this.inInventory + ",";
+		
+		// charges
+		output += "charges:" + this.charges + ",";
+		
+		// chargeRegen
+		output += "chargeRegen:" + this.chargeRegen + ",";
+		
+		// sacrificial
+		output += "sacrificial:" + this.sacrificial + ",";
+		
+		// types
+		output += "type:[";
+		for (String i : this.type) {
+			output += i + ",";
+		}
+		output = output.substring(0, output.length() - 1) + "],";
+		
+		// moves
+		output += "moves:[" + this.move.toString() + ",";
+		
+		// abilities
+		output += "abilities:[";
+		for (Ability i : this.abilities) {
+			output += i.toString() + ",";
+		}
+		output = output.substring(0, output.length() - 1) + "]";
+		
+		return output + "]";
+	}
 }

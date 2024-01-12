@@ -22,18 +22,22 @@ public class Player {
 			return false;
 		}
 	}
-
-	public int nextAvailableInventorySlot() {
-		for (int i = 0; i < 10; i++) {
-			try {
-				if (inventory[i] == null) {
-					return i;
-				}
-			} catch (Exception e) {
-				return -1;
+	
+	public boolean insertCard(Card newCard) { // returns true upon successful insertion
+		if (inventory.length == 10) {
+			return false;
+		} else {
+			// repopulate array
+			Card[] temp = inventory;
+			inventory = new Card[inventory.length + 1];
+			
+			int currentIndex = 0;
+			for (Card i : temp) {
+				inventory[currentIndex++] = i;
 			}
+			
+			inventory[currentIndex] = newCard;
+			return true;
 		}
-		
-		return -1;
 	}
 }

@@ -4,12 +4,14 @@ public abstract class Ability {
 	
 	public final String TYPE;
 	public boolean triggeredInInventory;
-	public Board b;
 	
-	public Ability(String TYPE_, boolean triggeredInInventory_, Board b_) {
+	public Ability(String TYPE_, boolean triggeredInInventory_) {
 		this.TYPE = TYPE_;
 		this.triggeredInInventory = triggeredInInventory_;
-		this.b = b_;
+	}
+	
+	public String toString() {
+		return TYPE;
 	}
 	
 	public void trigger(Object abilityHolder) {}

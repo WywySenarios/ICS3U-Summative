@@ -19,7 +19,7 @@ public class Card {
 		this.type = type_;
 		this.cost = cost_;
 		this.RARITY = "";
-		this.entity = new Entity(health_, hpr_, shield_, aggressive_, moves_, abilities_);
+		this.entity = new Entity(type_, health_, hpr_, shield_, aggressive_, moves_, abilities_);
 	}
 
 	// Special constructor
@@ -30,7 +30,7 @@ public class Card {
 		this.type = type_;
 		this.cost = cost_;
 		this.RARITY = "";
-		this.special = new Special(charges_, chargeRegen_, sacrificial_, move_, abilities_);
+		this.special = new Special(type_, charges_, chargeRegen_, sacrificial_, move_, abilities_);
 	}
 
 	// Environment constructor
@@ -41,7 +41,7 @@ public class Card {
 		this.type = type_;
 		this.cost = cost_;
 		this.RARITY = "";
-		this.environment = new Environment(moves_, abilities_, PERMANENT_);
+		this.environment = new Environment(type_, moves_, abilities_, PERMANENT_);
 	}
 
 	public String getType() {
@@ -64,6 +64,19 @@ public class Card {
 		} else if (this.environment != null) {
 			return environment;
 		} else { // invalid card,
+			return null;
+		}
+	}
+	
+	public String toString() {
+		switch (this.getType()) {
+		case "en":
+			return "en:" + this.entity.toString();
+		case "sp":
+			return "sp:" + this.special.toString();
+		case "ev":
+			return "ev" + this.environment.toString();
+		default:
 			return null;
 		}
 	}

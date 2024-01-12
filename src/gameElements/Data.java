@@ -288,4 +288,15 @@ public class Data {
 		file.putIfAbsent(key, o);
 		file.replace(key, o);
 	}
+	
+	public String[] getKeys() throws ClassCastException {
+		String[] output = new String[file.keySet().size()];
+		
+		int currentIndex = 0;
+		for (Object o : file.keySet()) {
+			output[currentIndex++] = (String) o;
+		}
+		
+		return output;
+	}
 }

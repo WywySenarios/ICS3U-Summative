@@ -27,17 +27,21 @@
 		"shield": 0,
 		"aggressive": true,
 		"moves": {
-			"directAttack": {
-				"damage": 100
-			},
-			"placeholder1": {
+			"AttackDirect": {
+				"damage": 100,
+				"statusEffects": []
 			}
 		},
 		
-		"abilities": [
-			"placeholder1",
-			"placeholder1"
-		]
+		"abilities": {
+			"Resistance": {
+				"resistantTypes": [
+					"wywy",
+					"wema"
+				],
+				"potency": 10
+			}
+		}
 	},
 	
 	"enw1": {
@@ -54,17 +58,20 @@
 		"shield": 0,
 		"aggressive": true,
 		"moves": {
-			"directAttack": {
-				"damage": 100
-			},
-			"placeholder1": {
+			"AttackDirect": {
+				"damage": 100,
+				"statusEffects": []
 			}
 		},
 		
-		"abilities": [
-			"placeholder1",
-			"placeholder1"
-		]
+		"abilities": {
+			"Resistance": {
+				"resistantTypes": [
+					"stickman"
+				],
+				"potency": 10
+			}
+		}
 	},
 	
 	"sps1": {
@@ -79,15 +86,13 @@
 		"charges": 1,
 		"chargeRegen": 0,
 		"move": {
-			"directAttack": {
-				"damage": 100
+			"AttackDirect": {
+				"damage": 100,
+				"statusEffects": []
 			}
 		},
 		
-		"abilities": [
-			"placeholder1",
-			"placeholder1"
-		]
+		"abilities": {}
 	},
 	
 	"spw1": {
@@ -103,15 +108,13 @@
 		"chargeRegen": 0,
 		"sacrificial": "WywyEntity",
 		"move": {
-			"directAttack": {
-				"damage": 100
+			"AttackDirect": {
+				"damage": 100,
+				"statusEffects": []
 			}
 		},
 		
-		"abilities": [
-			"placeholder1",
-			"placeholder1"
-		]
+		"abilities": {}
 	},
 	
 	"evs1": {
@@ -123,17 +126,17 @@
 		
 		"cost": 3,
 		"rarity": "Common",
-		"move": {
-			"attack": {
+		"moves": {
+			"AttackLane": {
 				"damage": 100,
-				"statusEffects": {
-					"poison": 100,
-					"healing": 10
-				}
+				"statusEffects": [
+					"poison:d100/1",
+					"regeneration:d-10/1"
+				]
 			}
 		},
 		
-		"abilities": [],
+		"abilities": {},
 		"permanent": false
 	},
 	
@@ -146,17 +149,17 @@
 		
 		"cost": 3,
 		"rarity": "Common",
-		"move": {
-			"attack": {
+		"moves": {
+			"AttackLane": {
 				"damage": 100,
-				"statusEffects": {
-					"poison": 100,
-					"healing": 10
-				}
+				"statusEffects": [
+					"poison:d100/1",
+					"regeneration:d-10/1"
+				]
 			}
 		},
 		
-		"abilities": [],
+		"abilities": {},
 		"permanent": false
 	}
 }

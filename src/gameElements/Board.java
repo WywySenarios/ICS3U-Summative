@@ -21,8 +21,8 @@ public class Board extends Data {
 	public Board(boolean experimentalDeck, String evilDeckName, String goodDeckName, String evilUsername,
 			String evilName, String goodUsername, String goodName) {
 		super("Board", findFilePath(experimentalDeck));
-		this.evilDeck = new Deck(this, fileLocation + "\\DeckData\\" + evilDeckName + ".JSON");
-		this.goodDeck = new Deck(this, fileLocation + "\\DeckData\\" + goodDeckName + ".JSON");
+		this.evilDeck = new Deck(this, fileLocation + "\\DeckData\\" + evilDeckName + ".JSON", true);
+		this.goodDeck = new Deck(this, fileLocation + "\\DeckData\\" + goodDeckName + ".JSON", false);
 
 		Card[] evilPlayerInventory = new Card[5];
 		for (int i = 0; i < 5; i++) {
@@ -33,7 +33,7 @@ public class Board extends Data {
 
 		Card[] goodPlayerInventory = new Card[5];
 		for (int i = 0; i < 5; i++) {
-			goodPlayerInventory[i] = this.evilDeck.drawCard();
+			goodPlayerInventory[i] = this.goodDeck.drawCard();
 		}
 		this.goodPlayer = new Player(goodUsername, goodName, goodPlayerInventory,
 				this.isolateStringArray(goodName + "\\type"));
@@ -53,15 +53,18 @@ public class Board extends Data {
 		/*
 		 * Preturns handle: Card drawing. And literally nothing else lmao
 		 */
+		
+		String[] args = new String[1];
+		args[0] = "inventory";
 
-		int nextSlot = evilPlayer.nextAvailableInventorySlot();
-		if (nextSlot != -1) {
-			evilPlayer.inventory[nextSlot] = evilDeck.drawCard();
+		if (evilPlayer.insertCard(evilDeck.drawCard())) {
+			// broadcast that a new Card has been added to the Evil Player's inventory
+			server.updatePlayer(args, true);
 		}
-
-		nextSlot = goodPlayer.nextAvailableInventorySlot();
-		if (nextSlot != -1) {
-			goodPlayer.inventory[nextSlot] = goodDeck.drawCard();
+		
+		if (goodPlayer.insertCard(goodDeck.drawCard())) {
+			// broadcast that a new Card has been added to the Good Player's inventory
+			server.updatePlayer(args, false);
 		}
 	}
 
@@ -206,20 +209,23 @@ public class Board extends Data {
 
 		// place the Card
 		String[] args;
+		//args = new String[1];
+		//args[0] = "";
+		//server.updatePlayer(args, evil);
 		switch (currentCard.getType()) {
 		case "en": // the Card is an Entity
 			// ensure there's an available slot to place the Entity
 			if (evil) {
-				if (evilEntities[lane] == null) {
-					return false;
-				} else { // place the Entity
+				if (evilEntities[lane] == null) { // place the Entity
 					evilEntities[lane] = (Entity) currentCard.get();
+				} else {
+					return false;
 				}
 			} else {
-				if (goodEntities[lane] == null) {
-					return false;
-				} else { // place the Entity
+				if (goodEntities[lane] == null) { // place the Entity
 					goodEntities[lane] = (Entity) currentCard.get();
+				} else {
+					return false;
 				}
 			}
 

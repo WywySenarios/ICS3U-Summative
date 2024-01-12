@@ -1,5 +1,10 @@
 package gameOperators;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 import gameElements.Board;
 
 public class Server implements UI {
@@ -38,6 +43,10 @@ public class Server implements UI {
 			this.evilUser = user2_;
 			this.goodUser = user1_;
 		}
+		
+		// create a new area for Log to happen
+		File logFile = new File(logPath);
+		logFile.createNewFile();
 	}
 
 	public void updateEntity(String[] args, int entityUpdated) {
@@ -49,7 +58,11 @@ public class Server implements UI {
 	public void updatePlayer(String[] args, boolean evil) {
 		evilUser.updatePlayer(args, evil);
 		goodUser.updatePlayer(args, evil);
-		log("Updated \"" + evil + "\" Player.");
+		if (evil) {
+			log("Updated \"evil\" Player.");
+		} else {
+			log("Updated \"good\" Player.");
+		}
 	}
 
 	public void updateGameStatus(String[] args) {
@@ -69,8 +82,18 @@ public class Server implements UI {
 		log(logOutput);
 	}
 
-	private void log(String logInfo) {
-		System.out.println(logPath);
+	private boolean log(String logInfo) {
+		try {
+			FileWriter fileWriter = new FileWriter(logPath);
+			PrintWriter output = new PrintWriter(fileWriter, true);
+			
+			output.print(logInfo);
+			output.close();
+			fileWriter.close();
+			return true;
+		} catch (IOException e) {
+			return false;
+		}
 	}
 
 	public void play() throws Exception {

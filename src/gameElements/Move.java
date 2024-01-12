@@ -10,4 +10,8 @@ public abstract class Move {
 		this.evil = evil_;
 	}
 	
+	public String toString() {
+		return type;
+	}
+	
 }

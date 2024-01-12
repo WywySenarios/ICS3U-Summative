@@ -1,6 +1,10 @@
 package gameElements;
 
 import org.json.simple.JSONArray;
+
+import Ability.*;
+import Move.*;
+
 import java.util.Random;
 
 public class Deck extends Data {
@@ -9,9 +13,12 @@ public class Deck extends Data {
 	private String[] currentDeck = new String[40];
 	private Board thisBoard;
 	private final Random RNG = new Random();
+	private boolean evil;
 
-	public Deck(Board board_, String path_) throws java.lang.NullPointerException {
+	public Deck(Board board_, String path_, boolean evil_) throws java.lang.NullPointerException {
 		super("Deck", path_);
+		
+		this.evil = evil_;
 
 		// mark which board this is on
 		this.thisBoard = board_;
@@ -82,28 +89,60 @@ public class Deck extends Data {
 			currentDeck[currentIndex++] = i;
 		}
 	}
+	
+	private Move createMove(String name, Data container) {
+		switch (name) {
+		case "AttackDirect":
+			return new AttackDirect(container.isolateInt(name + "\\damage"), container.isolateStringArray(name + "\\statusEffects"), this.evil);
+		case "AttackLane":
+			return new AttackLane(container.isolateInt(name + "\\damage"), container.isolateStringArray(name + "\\statusEffects"), this.evil);
+		case "AttackLeader":
+			return new AttackLeader(container.isolateInt(name + "\\damage"), this.evil);
+		case "AttackTarget":
+			return new AttackTarget(container.isolateInt(name + "\\damage"), container.isolateStringArray(name + "\\statusEffects"), this.evil);
+		default:
+			return null;
+		}
+	}
 
 	private Move isolateMove(String cardID) {
 		Data d = new Data(thisBoard.isolateJSONObject(cardID + "\\move"));
-		Object[] datapoints = d.getDatapoints();
 		
-		return null;
+		return createMove(d.getKeys()[0], d);
 	}
 
 	private Move[] isolateMoves(String cardID) {
 		Data d = new Data(thisBoard.isolateJSONObject(cardID + "\\moves"));
-		for (Object o : d.getDatapoints()) {
-			System.out.print(o);
+		String[] moveNames = d.getKeys();
+		Move[] output = new Move[moveNames.length];
+		for (int i = 0; i < output.length; i++) {
+			output[i] = createMove(moveNames[i], d);
 		}
 		
-		System.out.println(d.getData());
-		return null;
+		return output;
+	}
+	
+	private Ability createAbility(String name, Data container) {
+		switch (name) {
+		case "Resistance":
+			return new Resistance(container.isolateStringArray(name + "\\resistantTypes"), container.isolateInt(name + "\\potency"));
+		default:
+			return null;
+		}
 	}
 	
 	// private Ability isolateAbility(String cardID) {return null;}
 
 	private Ability[] isolateAbilities(String cardID) {
-		return null;
+		Data d = new Data(thisBoard.isolateJSONObject(cardID + "\\abilities"));
+		String[] abilityNames = d.getKeys();
+		Ability[] output = new Ability[abilityNames.length];
+		
+		for (int i = 0; i < output.length; i++) {
+			output[i] = createAbility(abilityNames[i], d);
+		}
+		
+		return output;
 	}
 
 	// this is a DEBUG function---this function lets me know what's REALLY inside a

@@ -1,7 +1,6 @@
 package Ability;
 
 import gameElements.Ability;
-import gameElements.Board;
 import gameElements.Entity;
 
 public class Resistance extends Ability {
@@ -9,15 +8,15 @@ public class Resistance extends Ability {
 	private String[] resistantTypes;
 	public int potency;
 	
-	public Resistance(String[] resistantTypes_, int potency_, Board b_) {
-		super("AbilityReceiveDamage", true, b_);
+	public Resistance(String[] resistantTypes_, int potency_) {
+		super("Resistance", true);
 		this.resistantTypes = resistantTypes_;
 		this.potency = potency_;
 	}
 	
 	public void trigger(Object abilityHolder, Entity attacker, int damage) {
 		boolean triggers = false;
-		for (String i : attacker.types) {
+		for (String i : attacker.type) {
 			if (searchForType(i)) {
 				triggers = true;
 				break;

@@ -3,18 +3,18 @@ package gameElements;
 public class Entity implements HasAbility {
 
 	public boolean inInventory;
+	public String[] type;
 	public int health;
 	public int hpr;
 	public int attackModifier;
 	public int shield;
 	public boolean aggressive;
-	public String[] types;
 	public String[] statusEffects = new String[0];
-	//public int[] statusPotency = new int[0];
 	public Move[] moves;
 	public Ability[] abilities;
 	
-	public Entity(int health_, int hpr_, int shield_, boolean aggressive_, Move[] moves_, Ability[] abilities_) {
+	public Entity(String[] type_, int health_, int hpr_, int shield_, boolean aggressive_, Move[] moves_, Ability[] abilities_) {
+		this.type = type_;
 		this.health = health_;
 		this.hpr = hpr_;
 		this.attackModifier = 1;
@@ -76,6 +76,58 @@ public class Entity implements HasAbility {
 		} else {
 			return false;
 		}
+	}
+	
+	public String toString() {
+		String output = "[inInventory:";
+		
+		// inInventory
+		output += this.inInventory + ",";
+		
+		// health
+		output += "health:" + this.health + ",";
+		
+		// hpr
+		output += "hpr:" + this.hpr + ",";
+		
+		// attackModifier
+		output += "attackModifier:" + this.attackModifier + ",";
+		
+		// shield
+		output += "shield:" + this.shield + ",";
+		
+		// aggressive
+		output += "aggressive:" + this.aggressive + ",";
+		
+		// types
+		output += "type:[";
+		for (String i : this.type) {
+			output += i + ",";
+		}
+		output = output.substring(0, output.length() - 1) + "],";
+		
+		// statusEffects
+		output += "statusEffects:[";
+		for (String i : this.statusEffects) {
+			output += i + ",";
+		}
+		output = output.substring(0, output.length() - 1) + "],";
+		
+		// moves
+		output += "moves:[";
+		for (Move i : this.moves) {
+			output += i.toString() + ",";
+		}
+		output = output.substring(0, output.length() - 1) + "],";
+		
+		// abilities
+		output += "abilities:[";
+		for (Ability i : this.abilities) {
+			output += i.toString() + ",";
+		}
+		output = output.substring(0, output.length() - 1) + "]";
+		
+		return output + "]";
 	}
 
 }
