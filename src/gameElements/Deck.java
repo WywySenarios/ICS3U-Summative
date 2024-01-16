@@ -211,11 +211,18 @@ public class Deck extends Data implements Duplicable {
 	}
 
 	public Card drawCard() {
+		Card output;
 		int randomNumber = RNG.nextInt() % 40;
 		if (randomNumber > 0) {
-			return createCard(currentDeck[randomNumber]);
+			output = createCard(currentDeck[randomNumber]);
 		} else {
-			return createCard(currentDeck[randomNumber * -1]);
+			output = createCard(currentDeck[randomNumber * -1]);
+		}
+		
+		if (output == null) {
+			throw new NullPointerException("Drew a Card with a value \"null\"");
+		} else {
+			return output;
 		}
 	}
 

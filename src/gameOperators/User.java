@@ -69,12 +69,11 @@ public abstract class User implements UI {
 	protected abstract void gameEnd();
 
 	public void updateEntity(String[] args, int entityUpdated, boolean evil) {
+		
 		switch (args[0]) {
-		case "kill":
-			this.killEntity(entityUpdated, evil);
-			break;
 		case "damage":
 			int healthDifference = ((Entity) this.lastReceivedObject).health;
+			
 			if (evil) {
 				healthDifference -= this.evilEntities[entityUpdated].health;
 			} else {
@@ -82,8 +81,13 @@ public abstract class User implements UI {
 			}
 			this.entityDamage(entityUpdated, evil, healthDifference);
 			break;
+		case "kill":
+			this.killEntity(entityUpdated, evil);
+			break;
 		case "place":
 			this.summonEntity(entityUpdated, evil);
+			break;
+		case "pregame":
 			break;
 		}
 
@@ -94,30 +98,30 @@ public abstract class User implements UI {
 		} else {
 			this.goodEntities[entityUpdated] = (Entity) this.lastReceivedObject;
 		}
-
 	}
 
 	public void updatePlayer(String[] args, boolean evil) {
-		Player originalPlayer;
-		Player finalPlayer;
-		if (evil) {
-			originalPlayer = evilPlayer;
-			this.evilPlayer = (Player) lastReceivedObject;
-			finalPlayer = this.evilPlayer;
-		} else {
-			originalPlayer = goodPlayer;
-			this.goodPlayer = (Player) lastReceivedObject;
-			finalPlayer = this.evilPlayer;
-		}
-
 		switch (args[0]) {
+		case "pregame":
+			break;
 		case "damage":
-			int damageTaken = finalPlayer.health - originalPlayer.health;
+			int damageTaken;
+			if (evil) {
+				damageTaken = ((Player) lastReceivedObject).health - evilPlayer.health;
+			} else {
+				damageTaken = ((Player) lastReceivedObject).health - goodPlayer.health;
+			}
 
 			this.playerDamage(evil, damageTaken);
 			break;
 		}
 
+		// push changes
+		if (evil) {
+			this.evilPlayer = (Player) lastReceivedObject;
+		} else {
+			this.goodPlayer = (Player) lastReceivedObject;
+		}
 	}
 
 	public void updateGameStatus(String[] args) {

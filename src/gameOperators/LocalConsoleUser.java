@@ -92,28 +92,15 @@ public class LocalConsoleUser extends User {
 		// print out players
 		// evilPlayer
 
-		System.out.println("Evil Player: " + evilPlayer.toString());
+		System.out.println("Evil Player: " + evilPlayer);
 
 		// goodPlayer
-		System.out.println("Good Player: " + goodPlayer.toString());
+		System.out.println("Good Player: " + goodPlayer);
 
 		String laneOutput;
 		for (int i = 0; i < 5; i++) {
-			laneOutput = "Lane" + (i + 1) + ":\n\tEvil: ";
-			
-			if (evilEntities[i] == null) {
-				laneOutput += "N/A";
-			} else {
-				laneOutput += evilEntities[i].toString();
-			}
-
-			laneOutput += "\n\tGood: ";
-
-			if (goodEntities[i] == null) {
-				laneOutput += "N/A";
-			} else {
-				laneOutput += goodEntities[i].toString();
-			}
+			laneOutput = "Lane" + (i + 1) + ":\n\tEvil: " + evilEntities[i];
+			laneOutput += "\n\tGood: " + goodEntities[i];
 			
 			System.out.println(laneOutput);
 		}
@@ -122,7 +109,7 @@ public class LocalConsoleUser extends User {
 
 		for (int i = 0; i < currentPlayer.inventory.length; i++) {
 			try {
-				inventoryOutput += "\t" + (i) + ") " + currentPlayer.inventory[i].toString() + "\n";
+				inventoryOutput += "\t" + (i) + ") " + currentPlayer.inventory[i] + "\n";
 			} catch (NullPointerException e) {
 				inventoryOutput += "\t" + (i) + ") null\n";
 			}

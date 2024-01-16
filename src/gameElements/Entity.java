@@ -2,7 +2,7 @@ package gameElements;
 
 public class Entity implements HasAbility, Duplicable{
 
-	public boolean inInventory;
+	public boolean inInventory = true;
 	public String[] type;
 	public int health;
 	public int hpr;
@@ -21,6 +21,13 @@ public class Entity implements HasAbility, Duplicable{
 		this.aggressive = aggressive_;
 		this.moves = moves_;
 		this.abilities = abilities_;
+	}
+	
+	private Entity(String[] type_, int health_, int hpr_, int shield_, boolean aggressive_, Move[] moves_, Ability[] abilities_, boolean inInventory_, int attackModifier_, String[] statusEffects_) {
+		this(type_, health_, hpr_, shield_, aggressive_, moves_, abilities_);
+		this.inInventory = inInventory_;
+		this.attackModifier = attackModifier_;
+		this.statusEffects = statusEffects_;
 	}
 	
 	public void triggerAbilities(String command) {
@@ -84,7 +91,14 @@ public class Entity implements HasAbility, Duplicable{
 			outputAbilities[currentIndex++] = (Ability) i.duplicate();
 		}
 		
-		return new Entity(outputType, this.health, this.hpr, this.shield, this.aggressive, outputMoves, outputAbilities);
+		// duplicable
+		String[] outputStatusEffects = new String[this.statusEffects.length];
+		currentIndex = 0;
+		for (String i : this.statusEffects) {
+			outputStatusEffects[currentIndex++] = i;
+		}
+		
+		return new Entity(outputType, this.health, this.hpr, this.shield, this.aggressive, outputMoves, outputAbilities, this.inInventory, this.attackModifier, outputStatusEffects);
 	}
 	
 	public boolean isAlive() {

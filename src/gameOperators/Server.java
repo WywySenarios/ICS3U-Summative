@@ -7,10 +7,6 @@ import java.io.PrintWriter;
 
 import gameElements.Board;
 import gameElements.Duplicable;
-import gameElements.Entity;
-import gameElements.Environment;
-import gameElements.Player;
-import gameElements.Special;
 
 public class Server implements UI {
 
@@ -43,7 +39,7 @@ public class Server implements UI {
 			this.evilUser = user2_;
 			this.goodUser = user1_;
 		}
-		
+
 		// create a new area for Log to happen
 		File logFile = new File(logPath);
 		logFile.createNewFile();
@@ -55,7 +51,7 @@ public class Server implements UI {
 		} else {
 			distributeObjects(b.goodEntities[entityUpdated]);
 		}
-		
+
 		evilUser.updateEntity(args, entityUpdated, evil);
 		goodUser.updateEntity(args, entityUpdated, evil);
 		log("Updated Entity at location \"" + entityUpdated + "\".");
@@ -67,7 +63,7 @@ public class Server implements UI {
 		} else {
 			distributeObjects(b.goodPlayer);
 		}
-		
+
 		evilUser.updatePlayer(args, evil);
 		goodUser.updatePlayer(args, evil);
 		if (evil) {
@@ -98,7 +94,7 @@ public class Server implements UI {
 		try {
 			FileWriter fileWriter = new FileWriter(logPath);
 			PrintWriter output = new PrintWriter(fileWriter, true);
-			
+
 			output.print(logInfo);
 			output.close();
 			fileWriter.close();
@@ -109,8 +105,12 @@ public class Server implements UI {
 	}
 
 	public void play() throws Exception {
-		
-		if (! gameStatus.equals("ongoing")) {
+
+		if (this.b.evilPlayer.inventory[0] == null) {
+			throw new Exception("yay the inventory slot is null...");
+		}
+
+		if (!gameStatus.equals("ongoing")) {
 			throw new Exception("Game already started");
 		}
 
@@ -119,19 +119,11 @@ public class Server implements UI {
 
 		// immediately broadcast who has what
 
-		/*
-		 * 
-		 * private Deck evilDeck; private Deck goodDeck;
-		 */
+		String[] args = { "pregame", "noDisplay" };
 
 		// Players
-		// evil Player
-		evilUser.evilPlayer = this.b.evilPlayer;
-		goodUser.evilPlayer = this.b.evilPlayer;
-
-		// good Player
-		evilUser.goodPlayer = this.b.goodPlayer;
-		goodUser.goodPlayer = this.b.goodPlayer;
+		this.updatePlayer(args, true);
+		this.updatePlayer(args, false);
 
 		// Entities
 		// evil Entities
@@ -154,6 +146,7 @@ public class Server implements UI {
 		// Decks
 		// N/A, the Decks are private lmao
 
+		int temp = 0;
 		boolean thinking = false;
 		String evilCommand;
 		String goodCommand;
@@ -208,30 +201,17 @@ public class Server implements UI {
 			b.endTurn();
 		}
 	}
-	
+
 	private void distributeObjects(Object givenObject) {
-		Object output = null;
-		
+		Object output;
+
 		// duplicate and distribute given objects.
 		if (givenObject instanceof Duplicable) {
 			output = ((Duplicable) givenObject).duplicate();
-		} else if (givenObject instanceof Entity) {
-			Entity givenEntity = (Entity) givenObject;
-			output = new Entity(givenEntity.type, givenEntity.health, givenEntity.hpr, givenEntity.shield, givenEntity.aggressive, null, null);
-		} else if (givenObject instanceof Environment) {
-			Environment givenEnvironment = (Environment) givenObject;
-			output = new Environment(givenEnvironment.type, givenEnvironment.moves, givenEnvironment.abilities, givenEnvironment.PERMANENT);
-		} else if (givenObject instanceof Special) {
-			Special givenSpecial = (Special) givenObject;
-			output = new Special(givenSpecial.type, givenSpecial.charges, givenSpecial.chargeRegen, givenSpecial.sacrificial, givenSpecial.move, givenSpecial.abilities);
-		} else if (givenObject instanceof Player) {
-			Player givenPlayer = (Player) givenObject;
-			output = new Player(givenPlayer.username, givenPlayer.name, givenPlayer.inventory, givenPlayer.type);
-			((Player) output).health = givenPlayer.health;
 		} else {
-			output = 1;
+			output = givenObject;
 		}
-		
+
 		evilUser.lastReceivedObject = output;
 		goodUser.lastReceivedObject = output;
 	}

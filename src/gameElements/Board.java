@@ -23,20 +23,22 @@ public class Board extends Data {
 		super("Board", findFilePath(experimentalDeck));
 		this.evilDeck = new Deck(this, fileLocation + "\\DeckData\\" + evilDeckName + ".JSON", true);
 		this.goodDeck = new Deck(this, fileLocation + "\\DeckData\\" + goodDeckName + ".JSON", false);
-
-		Card[] evilPlayerInventory = new Card[4];
-		for (int i = 0; i < 4; i++) {
-			evilPlayerInventory[i] = this.evilDeck.drawCard();
-		}
-		this.evilPlayer = new Player(evilUsername, evilName, evilPlayerInventory,
+		
+		this.evilPlayer = new Player(evilUsername, evilName, 
 				this.isolateStringArray(evilName + "\\type"));
-
-		Card[] goodPlayerInventory = new Card[4];
-		for (int i = 0; i < 4; i++) {
-			goodPlayerInventory[i] = this.goodDeck.drawCard();
+		for (int i = 0; i < 4; i++) { // fill player inventory (5-1) times to counteract the preturn Card draw
+			evilPlayer.insertCard(this.evilDeck.drawCard());
 		}
-		this.goodPlayer = new Player(goodUsername, goodName, goodPlayerInventory,
+
+		this.goodPlayer = new Player(goodUsername, goodName, 
 				this.isolateStringArray(goodName + "\\type"));
+		for (int i = 0; i < 4; i++) { // fill player inventory (5-1) times to counteract the preturn Card draw
+			goodPlayer.insertCard(this.goodDeck.drawCard());
+		}
+		
+		if (! (this.goodPlayer.validInventory() && this.goodPlayer.validInventory())) {
+			throw new NullPointerException("BOARD CLASS HAS FUCKING FAILED ME");
+		}
 	}
 
 	private static String findFilePath(boolean experimentalDeck) {
@@ -56,13 +58,22 @@ public class Board extends Data {
 
 		String[] args = new String[1];
 		args[0] = "inventory";
+		
+		Card temp = evilDeck.drawCard();
+		Card temp2 = goodDeck.drawCard();
 
-		if (evilPlayer.insertCard(evilDeck.drawCard())) {
+		if (evilPlayer.insertCard(temp)) {
+			if(! this.evilPlayer.validInventory()) {
+				throw new NullPointerException("DRAWING A CARD FAILED ME");
+			}
 			// broadcast that a new Card has been added to the Evil Player's inventory
 			server.updatePlayer(args, true);
 		}
 
-		if (goodPlayer.insertCard(goodDeck.drawCard())) {
+		if (goodPlayer.insertCard(temp2)) {
+			if(! this.evilPlayer.validInventory()) {
+				throw new NullPointerException("DRAWING A CARD FAILED ME");
+			}
 			// broadcast that a new Card has been added to the Good Player's inventory
 			server.updatePlayer(args, false);
 		}
@@ -209,6 +220,10 @@ public class Board extends Data {
 			currentCard = evilPlayer.inventory[inventorySlot];
 		} else { // good Player is placing a Card
 			currentCard = goodPlayer.inventory[inventorySlot];
+		}
+		
+		if (currentCard == null) {
+			throw new Exception("Attempted to place a Card with a value of \"null\"");
 		}
 
 		// place the Card
