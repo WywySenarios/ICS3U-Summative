@@ -58,7 +58,7 @@ public class AttackDirect extends Move implements ChoiceMove {
 			
 			
 			String[] args = {"damage"};
-			b.server.updateEntity(args, selection);
+			b.server.updateEntity(args, selection, ! evil);
 		}
 	}
 }

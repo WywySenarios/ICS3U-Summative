@@ -105,7 +105,7 @@ public class Board extends Data {
 			try {
 				if (goodEntities[i].health < 0) {
 					goodEntities[i] = null;
-					server.updateEntity(null, i);
+					server.updateEntity(null, i, false);
 				}
 			} catch (NullPointerException e) {
 				// this happens when there is no good Entity in the lane
@@ -114,7 +114,7 @@ public class Board extends Data {
 			try {
 				if (evilEntities[i].health < 0) {
 					evilEntities[i] = null;
-					server.updateEntity(null, i + 5);
+					server.updateEntity(null, i, true);
 				}
 			} catch (NullPointerException e) {
 				// this happens when there is no evil Entity in the lane
@@ -259,11 +259,8 @@ public class Board extends Data {
 
 			args = new String[1];
 			args[0] = "place";
-			if (evil) {
-				server.updateEntity(args, lane);
-			} else {
-				server.updateEntity(args, lane + 5);
-			}
+			server.updateEntity(args, lane, evil);
+			
 			break;
 		case "sp": // the Card is a special
 			Special currentSpecial = (Special) currentCard.get();
