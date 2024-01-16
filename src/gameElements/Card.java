@@ -1,6 +1,6 @@
 package gameElements;
 
-public class Card {
+public class Card implements Duplicable {
 
 	private Entity entity;
 	private Special special;
@@ -22,6 +22,14 @@ public class Card {
 		this.entity = new Entity(type_, health_, hpr_, shield_, aggressive_, moves_, abilities_);
 	}
 
+	private Card(String id_, String name_, String[] type_, int cost_, String RARITY_, Entity entity_) {
+		this.id = id_;
+		this.name = name_;
+		this.type = type_;
+		this.cost = cost_;
+		this.RARITY = "";
+	}
+
 	// Special constructor
 	public Card(String id_, String name_, String[] type_, int cost_, String RARITY_, int charges_, int chargeRegen_,
 			String sacrificial_, Move move_, Ability[] abilities_) {
@@ -31,6 +39,15 @@ public class Card {
 		this.cost = cost_;
 		this.RARITY = "";
 		this.special = new Special(type_, charges_, chargeRegen_, sacrificial_, move_, abilities_);
+	}
+	
+	private Card(String id_, String name_, String[] type_, int cost_, String RARITY_, Environment environment_) {
+		this.id = id_;
+		this.name = name_;
+		this.type = type_;
+		this.cost = cost_;
+		this.RARITY = "";
+		this.environment = environment_;
 	}
 
 	// Environment constructor
@@ -42,6 +59,36 @@ public class Card {
 		this.cost = cost_;
 		this.RARITY = "";
 		this.environment = new Environment(type_, moves_, abilities_, PERMANENT_);
+	}
+	
+	private Card(String id_, String name_, String[] type_, int cost_, String RARITY_, Special special_) {
+		this.id = id_;
+		this.name = name_;
+		this.type = type_;
+		this.cost = cost_;
+		this.RARITY = "";
+		this.special = special_;
+	}
+
+	@Override
+	public Object duplicate() {
+		// duplicate type
+		String[] outputType = new String[this.type.length];
+		int currentIndex = 0;
+		for (String i : this.type) {
+			outputType[currentIndex++] = i;
+		}
+		
+		switch (this.getType()) {
+		case "en":
+			return new Card(this.id, this.name, outputType, this.cost, this.RARITY, (Entity) this.entity.duplicate());
+		case "sp":
+			return new Card(this.id, this.name, outputType, this.cost, this.RARITY, (Special) this.special.duplicate());
+		case "ev":
+			return new Card(this.id, this.name, outputType, this.cost, this.RARITY, (Environment) this.environment.duplicate());
+		default:
+			return null;
+		}
 	}
 
 	public String getType() {
@@ -55,7 +102,7 @@ public class Card {
 			return null;
 		}
 	}
-	
+
 	public Object get() {
 		if (this.entity != null) {
 			return this.entity;
@@ -67,7 +114,7 @@ public class Card {
 			return null;
 		}
 	}
-	
+
 	public String toString() {
 		switch (this.getType()) {
 		case "en":

@@ -1,6 +1,5 @@
 package gameOperators;
 
-import gameElements.Entity;
 import gameElements.Player;
 
 public class LocalConsoleUser extends User {
@@ -9,81 +8,54 @@ public class LocalConsoleUser extends User {
 		super("console", evil_);
 	}
 
-	public void updateEntity(String[] args, int entityUpdated, boolean evil) {
-		Entity originalEntity = null;
-		Entity finalEntity = null;
-		
+	@Override
+	protected void entityDamage(int lane, boolean evil, int damage) {
 		if (evil) { // evil entity
-			originalEntity = this.evilEntities[entityUpdated];
-			this.evilEntities[entityUpdated] = server.b.evilEntities[entityUpdated];
-			finalEntity = this.evilEntities[entityUpdated];
-		} else {
-			originalEntity = this.goodEntities[entityUpdated];
-			this.goodEntities[entityUpdated] = server.b.goodEntities[entityUpdated];
-			finalEntity = this.goodEntities[entityUpdated];
+			printOut("The evil entity at lane " + lane + " has changed in health by " + damage + "!",
+					true);
+		} else { // good entity
+			printOut("The good entity at lane " + lane + " has changed in health by " + damage + "!",
+					true);
 		}
-		
-		switch (args[0]) {
-		case "kill":
-			if (evil) { // evil entity
-				printOut("The evil entity at lane " + entityUpdated + " has been slain!", true);
-			} else { // good entity
-				printOut("The good entity at lane " + entityUpdated + " has been slain!", true);
-			}
-			break;
-		case "damage":
-			if (evil) { // evil entity
-				printOut("The evil entity at lane " + entityUpdated + " has changed in health by "
-						+ (finalEntity.health - originalEntity.health) + "!", true);
-			} else { // good entity
-				printOut("The good entity at lane " + entityUpdated + " has changed in health by "
-						+ (finalEntity.health - originalEntity.health) + "!", true);
-			}
-			break;
-		case "place":
-			if (evil) { // evil entity
-				printOut("The evil entity at lane " + entityUpdated + " has been placed!", true);
-			} else { // good entity
-				printOut("The good entity at lane " + entityUpdated + " has been placed!", true);
-			}
-			break;
+	}
+
+	@Override
+	protected void killEntity(int lane, boolean evil) {
+		if (evil) { // evil entity
+			printOut("The evil entity at lane " + lane + " has been slain!", true);
+		} else { // good entity
+			printOut("The good entity at lane " + lane + " has been slain!", true);
 		}
+	}
+
+	@Override
+	protected void summonEntity(int lane, boolean evil) {
+		if (evil) { // evil entity
+			printOut("The evil entity at lane " + lane + " has been placed!", true);
+		} else { // good entity
+			printOut("The good entity at lane " + lane + " has been placed!", true);
+		}
+	}
+
+	@Override
+	protected void playerDamage(boolean evil, int damage) {
+		if (evil) { // evil Player
+			printOut("The evil PLAYER has received " + damage + " damage!", true);
+		} else { // good Player
+			printOut("The good PLAYER has received " + damage + " damage!", true);
+		}
+	}
+
+	@Override
+	protected void summonPlayer(boolean evil) {
+		// TODO Auto-generated method stub
 
 	}
 
-	public void updatePlayer(String[] args, boolean evil) {
-		Player originalPlayer;
-		Player finalPlayer;
-		if (evil) {
-			originalPlayer = evilPlayer;
-			this.evilPlayer = server.b.evilPlayer;
-			finalPlayer = this.evilPlayer;
-		} else {
-			originalPlayer = goodPlayer;
-			this.goodPlayer = server.b.goodPlayer;
-			finalPlayer = this.evilPlayer;
-		}
+	@Override
+	protected void gameEnd() {
+		printOut("The game has ended!", true);
 
-		switch (args[0]) {
-		case "damage":
-			int damageTaken = finalPlayer.health - originalPlayer.health;
-
-			if (evil) {
-				printOut(finalPlayer.username + "(the evil player) has received " + damageTaken + " damage!", true);
-			} else {
-				printOut(finalPlayer.username + "(the evil player) has received " + damageTaken + " damage!", true);
-			}
-			break;
-		}
-
-	}
-
-	public void updateGameStatus(String[] args) {
-		switch (args[0]) {
-		case "end":
-			printOut("The game has ended! " + args[1] + " has won the game!", true);
-			break;
-		}
 	}
 
 	private void clearConsole() {
@@ -128,19 +100,21 @@ public class LocalConsoleUser extends User {
 		String laneOutput;
 		for (int i = 0; i < 5; i++) {
 			laneOutput = "Lane" + (i + 1) + ":\n\tEvil: ";
-			try {
-				laneOutput += evilEntities[i].toString();
-			} catch (NullPointerException e) {
+			
+			if (evilEntities[i] == null) {
 				laneOutput += "N/A";
+			} else {
+				laneOutput += evilEntities[i].toString();
 			}
 
 			laneOutput += "\n\tGood: ";
 
-			try {
-				laneOutput += goodEntities[i].toString();
-			} catch (NullPointerException e) {
+			if (goodEntities[i] == null) {
 				laneOutput += "N/A";
+			} else {
+				laneOutput += goodEntities[i].toString();
 			}
+			
 			System.out.println(laneOutput);
 		}
 
@@ -150,7 +124,7 @@ public class LocalConsoleUser extends User {
 			try {
 				inventoryOutput += "\t" + (i) + ") " + currentPlayer.inventory[i].toString() + "\n";
 			} catch (NullPointerException e) {
-
+				inventoryOutput += "\t" + (i) + ") null\n";
 			}
 		}
 

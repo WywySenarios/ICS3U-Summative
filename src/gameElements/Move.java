@@ -1,6 +1,6 @@
 package gameElements;
 
-public abstract class Move {
+public abstract class Move implements Duplicable {
 
 	public String type;
 	public boolean evil;

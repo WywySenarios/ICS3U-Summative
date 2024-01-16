@@ -6,19 +6,22 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import gameElements.Board;
+import gameElements.Duplicable;
+import gameElements.Entity;
+import gameElements.Environment;
+import gameElements.Player;
+import gameElements.Special;
 
 public class Server implements UI {
 
-	private String uiType;
 	private String logPath;
 	private User evilUser;
 	private User goodUser;
 	protected Board b;
 	private String gameStatus = "ongoing";
 
-	public Server(String uiType_, User user1_, User user2_, String evilDeckPath, String goodDeckPath, String logPath_)
+	public Server(User user1_, User user2_, String evilDeckPath, String goodDeckPath, String logPath_)
 			throws Exception {
-		this.uiType = uiType_;
 		this.logPath = logPath_;
 
 		this.b = new Board(true, evilDeckPath, goodDeckPath, "evilPlayerUsername", "stickmanLeader",
@@ -26,9 +29,6 @@ public class Server implements UI {
 		if (!this.b.addServer(this)) {
 			throw new Exception("Unsuccessful registry of server on the Board class.");
 		}
-
-		user1_.server = this;
-		user2_.server = this;
 
 		if (user1_.evil == user2_.evil) {
 			if (user1_.evil == true) {
@@ -50,12 +50,24 @@ public class Server implements UI {
 	}
 
 	public void updateEntity(String[] args, int entityUpdated, boolean evil) {
+		if (evil) {
+			distributeObjects(b.evilEntities[entityUpdated]);
+		} else {
+			distributeObjects(b.goodEntities[entityUpdated]);
+		}
+		
 		evilUser.updateEntity(args, entityUpdated, evil);
 		goodUser.updateEntity(args, entityUpdated, evil);
 		log("Updated Entity at location \"" + entityUpdated + "\".");
 	}
 
 	public void updatePlayer(String[] args, boolean evil) {
+		if (evil) {
+			distributeObjects(b.evilPlayer);
+		} else {
+			distributeObjects(b.goodPlayer);
+		}
+		
 		evilUser.updatePlayer(args, evil);
 		goodUser.updatePlayer(args, evil);
 		if (evil) {
@@ -97,6 +109,10 @@ public class Server implements UI {
 	}
 
 	public void play() throws Exception {
+		
+		if (! gameStatus.equals("ongoing")) {
+			throw new Exception("Game already started");
+		}
 
 		// when Board initializes, they already hand out starting hands, so no need to
 		// worry about drawing Cards here
@@ -192,8 +208,31 @@ public class Server implements UI {
 			b.endTurn();
 		}
 	}
-
-	public String getUiType() {
-		return uiType;
+	
+	private void distributeObjects(Object givenObject) {
+		Object output = null;
+		
+		// duplicate and distribute given objects.
+		if (givenObject instanceof Duplicable) {
+			output = ((Duplicable) givenObject).duplicate();
+		} else if (givenObject instanceof Entity) {
+			Entity givenEntity = (Entity) givenObject;
+			output = new Entity(givenEntity.type, givenEntity.health, givenEntity.hpr, givenEntity.shield, givenEntity.aggressive, null, null);
+		} else if (givenObject instanceof Environment) {
+			Environment givenEnvironment = (Environment) givenObject;
+			output = new Environment(givenEnvironment.type, givenEnvironment.moves, givenEnvironment.abilities, givenEnvironment.PERMANENT);
+		} else if (givenObject instanceof Special) {
+			Special givenSpecial = (Special) givenObject;
+			output = new Special(givenSpecial.type, givenSpecial.charges, givenSpecial.chargeRegen, givenSpecial.sacrificial, givenSpecial.move, givenSpecial.abilities);
+		} else if (givenObject instanceof Player) {
+			Player givenPlayer = (Player) givenObject;
+			output = new Player(givenPlayer.username, givenPlayer.name, givenPlayer.inventory, givenPlayer.type);
+			((Player) output).health = givenPlayer.health;
+		} else {
+			output = 1;
+		}
+		
+		evilUser.lastReceivedObject = output;
+		goodUser.lastReceivedObject = output;
 	}
 }

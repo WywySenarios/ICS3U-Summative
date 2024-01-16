@@ -8,13 +8,26 @@ import gameElements.Move;
 public class AttackTarget extends Move implements ChoiceMove {
 	public int damage;
 	public String[] statusEffects;
-	
+
 	public AttackTarget(int damage_, String[] statusEffects_, boolean evil_) {
 		super("AttackTarget", evil_);
 		this.damage = damage_;
 		this.statusEffects = statusEffects_;
 	}
-	
+
+	@Override
+	public Object duplicate() {
+		// duplicate statusEffects
+		String[] outputStatusEffects = new String[this.statusEffects.length];
+		int currentIndex = 0;
+		for (String i : this.statusEffects) {
+			outputStatusEffects[currentIndex++] = i;
+		}
+
+		return new AttackTarget(this.damage, outputStatusEffects, super.evil);
+	}
+
+	@Override
 	public void move(Entity attacker, Board b, int selection) {
 
 		/*
@@ -28,20 +41,24 @@ public class AttackTarget extends Move implements ChoiceMove {
 		 */
 		if (selection <= 0) {
 			throw new NullPointerException("Invalid target, (the selected target was 0-)");
-		} else if (selection < 5) { // attack a evil unit
-			if (b.evilEntities[selection] != null) { // if there is a valid target,
-				new AttackDirect(this.damage, this.statusEffects, this.evil).move(attacker, b, selection);
+		} else if (selection < 5) { // attack an Entity
+			if (this.evil) { // attack a good unit
+				if (b.goodEntities[selection] != null) { // if there is a valid target,
+					new AttackDirect(this.damage, this.statusEffects, this.evil).move(attacker, b, selection);
+				}
+			} else { // attack an evil unit
+				if (b.evilEntities[selection] != null) { // if there is a valid target,
+					new AttackDirect(this.damage, this.statusEffects, this.evil).move(attacker, b, selection);
+				}
 			}
-		} else if (selection < 10) { // attack a good unit
-			if (b.goodEntities[selection] != null) { // if there is a valid target,
-				new AttackDirect(this.damage, this.statusEffects, this.evil).move(attacker, b, selection - 5);
+		} else if (selection == 5) { // attack a leader
+			if (this.evil) { // attack the good leader
+				new AttackLeader(this.damage, this.evil).move(attacker, b, 1);
+			} else { // attack the evil leader
+				new AttackLeader(this.damage, this.evil).move(attacker, b, 0);
 			}
-		} else if (selection == 11) { // attack the evil leader
-			new AttackLeader(this.damage, this.evil).move(attacker, b, 0);
-		} else if (selection == 12) { // attack good leader
-			new AttackLeader(this.damage, this.evil).move(attacker, b, 1);
 		} else {
-			throw new NullPointerException("Invalid target (the selected target was 13+)");
+			throw new NullPointerException("Invalid target (the selected target was 6+)");
 		}
 	}
 }

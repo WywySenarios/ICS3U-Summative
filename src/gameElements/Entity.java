@@ -1,6 +1,6 @@
 package gameElements;
 
-public class Entity implements HasAbility {
+public class Entity implements HasAbility, Duplicable{
 
 	public boolean inInventory;
 	public String[] type;
@@ -35,6 +35,7 @@ public class Entity implements HasAbility {
 		}
 	}
 	
+	@Override
 	public void triggerAbilities(String command, Entity e) {
 		for (Ability i : abilities) {
 			/*
@@ -47,6 +48,7 @@ public class Entity implements HasAbility {
 		}
 	}
 	
+	@Override
 	public void triggerAbilities(String command, Entity e, int potency) {
 		for (Ability i : abilities) {
 			/*
@@ -57,6 +59,32 @@ public class Entity implements HasAbility {
 				i.trigger(this, e, potency);
 			}
 		}
+	}
+	
+	@Override
+	public Object duplicate() {
+		// duplicate type
+		String[] outputType = new String[this.type.length];
+		int currentIndex = 0;
+		for (String i : this.type) {
+			outputType[currentIndex++] = i;
+		}
+		
+		// duplicate moves
+		Move[] outputMoves = new Move[this.moves.length];
+		currentIndex = 0;
+		for (Move i : this.moves) {
+			outputMoves[currentIndex++] = (Move) i.duplicate();
+		}
+		
+		// duplicable abilities
+		Ability[] outputAbilities = new Ability[this.abilities.length];
+		currentIndex = 0;
+		for (Ability i : this.abilities) {
+			outputAbilities[currentIndex++] = (Ability) i.duplicate();
+		}
+		
+		return new Entity(outputType, this.health, this.hpr, this.shield, this.aggressive, outputMoves, outputAbilities);
 	}
 	
 	public boolean isAlive() {

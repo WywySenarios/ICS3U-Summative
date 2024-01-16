@@ -1,6 +1,6 @@
 package gameElements;
 
-public abstract class Ability {
+public abstract class Ability implements Duplicable {
 	
 	public final String TYPE;
 	public boolean triggeredInInventory;

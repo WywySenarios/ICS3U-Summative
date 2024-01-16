@@ -70,23 +70,10 @@ public class Board extends Data {
 
 	public void fight() {
 		Move temp;
-		// good Cards fight first
 
 		// Entities fight first, then environments.
 		// each lane is calculated individually.
 		for (int i = 0; i < 5; i++) {
-			// good Entity does its move
-			try {
-				temp = goodEntities[i].moves[goodAttacks[i]];
-				if (temp instanceof ChoiceMove) {
-					((ChoiceMove) temp).move(goodEntities[i], this, goodSelection[i]);
-				} else {
-					((NoChoiceMove) temp).move(goodEntities[i], this);
-				}
-			} catch (NullPointerException e) {
-				// this happens when there is no good Entity in the lane
-			}
-
 			// evil Entity does its move
 			try {
 				temp = evilEntities[i].moves[evilAttacks[i]];
@@ -99,26 +86,30 @@ public class Board extends Data {
 				// this happens when there is no evil Entity in the lane
 			}
 
-			// environments trigger
-
-			// kill necessary entities
+			// good Entity does its move
 			try {
-				if (goodEntities[i].health < 0) {
-					goodEntities[i] = null;
-					server.updateEntity(null, i);
+				temp = goodEntities[i].moves[goodAttacks[i]];
+				if (temp instanceof ChoiceMove) {
+					((ChoiceMove) temp).move(goodEntities[i], this, goodSelection[i]);
+				} else {
+					((NoChoiceMove) temp).move(goodEntities[i], this);
 				}
 			} catch (NullPointerException e) {
 				// this happens when there is no good Entity in the lane
 			}
 
-			try {
-				if (evilEntities[i].health < 0) {
-					evilEntities[i] = null;
-					server.updateEntity(null, i + 5);
-				}
-			} catch (NullPointerException e) {
-				// this happens when there is no evil Entity in the lane
-			}
+			// environments trigger
+
+			/*
+			 * // kill necessary entities try { if (goodEntities[i].health <= 0) {
+			 * goodEntities[i] = null; server.updateEntity(null, i, false); } } catch
+			 * (NullPointerException e) { // this happens when there is no good Entity in
+			 * the lane }
+			 * 
+			 * try { if (evilEntities[i].health <= 0) { evilEntities[i] = null;
+			 * server.updateEntity(null, i, true); } } catch (NullPointerException e) { //
+			 * this happens when there is no evil Entity in the lane }
+			 */
 		}
 	}
 
@@ -167,9 +158,6 @@ public class Board extends Data {
 				// apply environment abilities
 				// for (Ability a : environments[i].abilities) {}
 			}
-
-			// attack (how fun!)
-
 		}
 
 	}
@@ -225,9 +213,6 @@ public class Board extends Data {
 
 		// place the Card
 		String[] args;
-		// args = new String[1];
-		// args[0] = "";
-		// server.updatePlayer(args, evil);
 		switch (currentCard.getType()) {
 		case "en": // the Card is an Entity
 			// ensure there's an available slot to place the Entity
@@ -247,9 +232,9 @@ public class Board extends Data {
 
 			// take away the Card from the player's inventory
 			if (evil) {
-				evilPlayer.inventory[inventorySlot] = null;
+				evilPlayer.removeCard(inventorySlot);
 			} else {
-				goodPlayer.inventory[inventorySlot] = null;
+				goodPlayer.removeCard(inventorySlot);
 			}
 
 			// broadcast changes
@@ -259,11 +244,7 @@ public class Board extends Data {
 
 			args = new String[1];
 			args[0] = "place";
-			if (evil) {
-				server.updateEntity(args, lane);
-			} else {
-				server.updateEntity(args, lane + 5);
-			}
+			server.updateEntity(args, lane, evil);
 			break;
 		case "sp": // the Card is a special
 			Special currentSpecial = (Special) currentCard.get();

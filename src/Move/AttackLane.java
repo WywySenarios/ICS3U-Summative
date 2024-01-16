@@ -16,6 +16,19 @@ public class AttackLane extends Move implements ChoiceMove {
 		this.evil = evil_;
 	}
 
+	@Override
+	public Object duplicate() {
+		// duplicate statusEffects
+		String[] outputStatusEffects = new String[this.statusEffects.length];
+		int currentIndex = 0;
+		for (String i : this.statusEffects) {
+			outputStatusEffects[currentIndex++] = i;
+		}
+
+		return new AttackLane(this.damage, this.statusEffects, super.evil);
+	}
+
+	@Override
 	public void move(Entity attacker, Board b, int selection) {
 
 		/*
@@ -27,10 +40,10 @@ public class AttackLane extends Move implements ChoiceMove {
 		 * Remember that STATUS EFFECTS don't affect PLAYERS Remember that KILLING
 		 * ENTITIES is NOT a part of this method's functionality.
 		 */
-		
+
 		try {
 			if (this.evil) { // if the target is good,
-				new AttackTarget(this.damage, this.statusEffects, this.evil).move(attacker, b, selection + 5);
+				new AttackTarget(this.damage, this.statusEffects, this.evil).move(attacker, b, selection);
 			} else { // if the target is evil,
 				new AttackTarget(this.damage, this.statusEffects, this.evil).move(attacker, b, selection);
 			}

@@ -9,12 +9,16 @@ public class Resistance extends Ability {
 	public int potency;
 	
 	public Resistance(String[] resistantTypes_, int potency_) {
-		super("Resistance", true);
+		super("AbilityReceiveDamage", true);
 		this.resistantTypes = resistantTypes_;
 		this.potency = potency_;
 	}
 	
 	public void trigger(Object abilityHolder, Entity attacker, int damage) {
+		if (attacker == null) { // this is for when a Special attacks
+			return;
+		}
+		
 		boolean triggers = false;
 		for (String i : attacker.type) {
 			if (searchForType(i)) {
@@ -42,6 +46,10 @@ public class Resistance extends Ability {
 		}
 		
 		return false;
+	}
+
+	public Object duplicate() {
+		return new Resistance(resistantTypes, potency);
 	}
 
 }

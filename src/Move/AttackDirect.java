@@ -8,13 +8,26 @@ import gameElements.Move;
 public class AttackDirect extends Move implements ChoiceMove {
 	public int damage;
 	public String[] statusEffects;
-	
+
 	public AttackDirect(int damage_, String[] statusEffects_, boolean evil_) {
 		super("AttackDirect", evil_);
 		this.damage = damage_;
 		this.statusEffects = statusEffects_;
 	}
-	
+
+	@Override
+	public Object duplicate() {
+		// duplicate statusEffects
+		String[] outputStatusEffects = new String[this.statusEffects.length];
+		int currentIndex = 0;
+		for (String i : this.statusEffects) {
+			outputStatusEffects[currentIndex++] = i;
+		}
+
+		return new AttackDirect(this.damage, outputStatusEffects, super.evil);
+	}
+
+	@Override
 	public void move(Entity attacker, Board b, int selection) {
 
 		/*
@@ -29,7 +42,7 @@ public class AttackDirect extends Move implements ChoiceMove {
 
 		Entity attackedEntity;
 
-		if (evil) { // if the attacker is EVIL,
+		if (this.evil) { // if the attacker is EVIL,
 			attackedEntity = b.goodEntities[selection];
 		} else { // if the attacker is GOOD,
 			attackedEntity = b.evilEntities[selection];
@@ -55,10 +68,9 @@ public class AttackDirect extends Move implements ChoiceMove {
 
 				attackedEntity.statusEffects = temp;
 			}
-			
-			
-			String[] args = {"damage"};
-			b.server.updateEntity(args, selection);
+
+			String[] args = { "damage" };
+			b.server.updateEntity(args, selection, !this.evil);
 		}
 	}
 }

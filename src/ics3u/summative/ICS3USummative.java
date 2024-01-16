@@ -13,7 +13,7 @@ public class ICS3USummative {
 	 * @param args the command line arguments
 	 */
 	public static void main(String[] args) throws Exception {
-		Server s = new Server("console", new LocalConsoleUser(true), new LocalConsoleUser(false), "exampleEvilDeck", "exampleGoodDeck", "exampleGame.txt");
+		Server s = new Server(new LocalConsoleUser(true), new LocalConsoleUser(false), "exampleEvilDeck", "exampleGoodDeck", "exampleGame.txt");
 		s.play();
 	}
 

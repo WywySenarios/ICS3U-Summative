@@ -14,6 +14,12 @@ public class AttackLeader extends Move implements ChoiceMove {
 		this.damage = damage_;
 	}
 	
+	@Override
+	public Object duplicate() {
+		return new AttackLeader(this.damage, super.evil);
+	}
+	
+	@Override
 	public void move(Entity attacker, Board b, int selection) {
 
 		/*
@@ -27,7 +33,7 @@ public class AttackLeader extends Move implements ChoiceMove {
 		 */
 		
 		Player attackedPlayer;
-		boolean evil;
+		boolean evil; // this variable is for knowing which Player to broadcast to update.
 		
 		if (selection == 0) { // attack the evil leader
 			attackedPlayer = b.evilPlayer;
