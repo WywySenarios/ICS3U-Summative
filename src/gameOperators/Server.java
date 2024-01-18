@@ -7,6 +7,9 @@ import java.io.PrintWriter;
 
 import gameElements.Board;
 import gameElements.Duplicable;
+import gameElements.Entity;
+import gameElements.Environment;
+import gameElements.Player;
 
 public class Server implements UI {
 
@@ -117,22 +120,35 @@ public class Server implements UI {
 		// when Board initializes, they already hand out starting hands, so no need to
 		// worry about drawing Cards here
 
-		// immediately broadcast who has what
-
-		String[] args = { "pregame", "noDisplay" };
-
 		// Players
-		this.updatePlayer(args, true);
-		this.updatePlayer(args, false);
+		this.evilUser.evilPlayer = (Player) this.b.evilPlayer.duplicate();
+		this.goodUser.evilPlayer = (Player) this.b.evilPlayer.duplicate();
+
+		this.evilUser.goodPlayer = (Player) this.b.goodPlayer.duplicate();
+		this.goodUser.goodPlayer = (Player) this.b.goodPlayer.duplicate();
 
 		// Entities
+		Entity[] outputEvilEntities = new Entity[5];
+		Entity[] outputGoodEntities = new Entity[5];
+
+		for (int i = 0; i < 5; i++) {
+			try {
+				outputEvilEntities[i] = (Entity) this.b.evilEntities[i].duplicate();
+			} catch (NullPointerException e) {
+			}
+			try {
+				outputGoodEntities[i] = (Entity) this.b.goodEntities[i].duplicate();
+			} catch (NullPointerException e) {
+			}
+		}
+
 		// evil Entities
-		evilUser.evilEntities = this.b.evilEntities;
-		goodUser.evilEntities = this.b.evilEntities;
+		this.evilUser.evilEntities = outputEvilEntities;
+		this.goodUser.evilEntities = outputEvilEntities;
 
 		// good Entities
-		evilUser.goodEntities = this.b.goodEntities;
-		goodUser.goodEntities = this.b.goodEntities;
+		this.evilUser.goodEntities = outputGoodEntities;
+		this.goodUser.goodEntities = outputGoodEntities;
 
 		// Moves
 		// N/A, the Moves are private lmao
@@ -140,13 +156,25 @@ public class Server implements UI {
 		// N/A, the selections are private lmao
 
 		// Environments
-		evilUser.environments = this.b.environments;
-		goodUser.environments = this.b.environments;
+		Environment[] outputEnvironments = new Environment[5];
 
+		for (int i = 0; i < 5; i++) {
+			try {
+				outputEnvironments[i] = (Environment) this.b.environments[i].duplicate();
+			} catch (NullPointerException e) {
+			}
+		}
+
+		this.evilUser.environments = outputEnvironments;
+		this.goodUser.environments = outputEnvironments;
+
+		// broadcast pregames
+		this.evilUser.pregame();
+		this.goodUser.pregame();
+		
 		// Decks
 		// N/A, the Decks are private lmao
 
-		int temp = 0;
 		boolean thinking = false;
 		String evilCommand;
 		String goodCommand;
@@ -156,41 +184,45 @@ public class Server implements UI {
 
 			// evil turn
 			do {
-				evilCommand = evilUser.getCommand();
-				switch (evilCommand.toLowerCase()) {
-				case "place", "placecard":
-					try {
-						b.placeCard(Integer.parseInt(evilUser.getCommand("inventorySlot")),
-								Integer.parseInt(evilUser.getCommand("lane")), true);
-					} catch (ClassCastException e) {
-					} catch (NumberFormatException e) {
-						// from the evilUser.getCommand()s inside the b.placeCard() method parameter
-						// input
-					}
+				evilCommand = evilUser.getCommand(null);
+				if (evilCommand != null) {
+					switch (evilCommand.toLowerCase()) {
+					case "place", "placecard":
+						try {
+							b.placeCard(Integer.parseInt(evilUser.getCommand("inventorySlot")),
+									Integer.parseInt(evilUser.getCommand("lane")), true);
+						} catch (ClassCastException e) {
+						} catch (NumberFormatException e) {
+							// from the evilUser.getCommand()s inside the b.placeCard() method parameter
+							// input
+						}
 
-					break;
-				default:
-					break;
+						break;
+					default:
+						break;
+					}
 				}
 			} while (thinking);
 
 			// good turn
 			do {
-				goodCommand = goodUser.getCommand();
-				switch (goodCommand.toLowerCase()) {
-				case "place", "placecard":
-					try {
-						b.placeCard(Integer.parseInt(goodUser.getCommand("inventorySlot")),
-								Integer.parseInt(goodUser.getCommand("lane")), false);
-					} catch (ClassCastException e) {
-					} catch (NumberFormatException e) {
-						// from the evilUser.getCommand()s inside the b.placeCard() method parameter
-						// input
-					}
+				goodCommand = goodUser.getCommand(null);
+				if (goodCommand != null) {
+					switch (goodCommand.toLowerCase()) {
+					case "place", "placecard":
+						try {
+							b.placeCard(Integer.parseInt(goodUser.getCommand("inventorySlot")),
+									Integer.parseInt(goodUser.getCommand("lane")), false);
+						} catch (ClassCastException e) {
+						} catch (NumberFormatException e) {
+							// from the evilUser.getCommand()s inside the b.placeCard() method parameter
+							// input
+						}
 
-					break;
-				default:
-					break;
+						break;
+					default:
+						break;
+					}
 				}
 			} while (thinking);
 

@@ -1,26 +1,32 @@
 package gameOperators;
 
+import gameElements.Card;
 import gameElements.Player;
 
 public class LocalConsoleUser extends User {
 
-	public LocalConsoleUser(boolean evil_) {
-		super("console", evil_);
+	private final boolean TEXTACKNOWLEDGEMENT;
+	private final int DELAY;
+
+	public LocalConsoleUser(boolean evil_, int delay) {
+		super("LocalConsole", evil_);
+
+		this.DELAY = delay;
+		this.TEXTACKNOWLEDGEMENT = this.DELAY <= 0;
+
 	}
 
 	@Override
-	protected void entityDamage(int lane, boolean evil, int damage) {
+	public void entityDamage(int lane, boolean evil, int damage) {
 		if (evil) { // evil entity
-			printOut("The evil entity at lane " + lane + " has changed in health by " + damage + "!",
-					true);
+			printOut("The evil entity at lane " + lane + " has changed in health by " + damage + "!", true);
 		} else { // good entity
-			printOut("The good entity at lane " + lane + " has changed in health by " + damage + "!",
-					true);
+			printOut("The good entity at lane " + lane + " has changed in health by " + damage + "!", true);
 		}
 	}
 
 	@Override
-	protected void killEntity(int lane, boolean evil) {
+	public void entityDeath(int lane, boolean evil) {
 		if (evil) { // evil entity
 			printOut("The evil entity at lane " + lane + " has been slain!", true);
 		} else { // good entity
@@ -29,7 +35,7 @@ public class LocalConsoleUser extends User {
 	}
 
 	@Override
-	protected void summonEntity(int lane, boolean evil) {
+	public void summonEntity(int lane, boolean evil) {
 		if (evil) { // evil entity
 			printOut("The evil entity at lane " + lane + " has been placed!", true);
 		} else { // good entity
@@ -38,7 +44,7 @@ public class LocalConsoleUser extends User {
 	}
 
 	@Override
-	protected void playerDamage(boolean evil, int damage) {
+	public void playerDamage(boolean evil, int damage) {
 		if (evil) { // evil Player
 			printOut("The evil PLAYER has received " + damage + " damage!", true);
 		} else { // good Player
@@ -47,13 +53,13 @@ public class LocalConsoleUser extends User {
 	}
 
 	@Override
-	protected void summonPlayer(boolean evil) {
+	public void summonPlayer(boolean evil) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	protected void gameEnd() {
+	public void gameEnd() {
 		printOut("The game has ended!", true);
 
 	}
@@ -62,7 +68,7 @@ public class LocalConsoleUser extends User {
 		System.out.println("\n\n\n\n\n\n\n\n\n");
 	}
 
-	private void printOut(String message, boolean acknowledgement) {
+	private void printOut() {
 		/*
 		 * GameStatus: Evil player: Good player:
 		 * 
@@ -101,7 +107,7 @@ public class LocalConsoleUser extends User {
 		for (int i = 0; i < 5; i++) {
 			laneOutput = "Lane" + (i + 1) + ":\n\tEvil: " + evilEntities[i];
 			laneOutput += "\n\tGood: " + goodEntities[i];
-			
+
 			System.out.println(laneOutput);
 		}
 
@@ -126,12 +132,23 @@ public class LocalConsoleUser extends User {
 		movesOutput = movesOutput.substring(0, movesOutput.length() - 2) + "]\n";
 
 		System.out.println(movesOutput);
+	}
+	
+	private void printOut(String message, boolean acknowledgement) {
+		this.printOut();
 
 		System.out.println(message);
 
 		if (acknowledgement) {
-			System.out.println("\nAcknowledged...");
-			console.nextLine();
+			if (TEXTACKNOWLEDGEMENT) {
+				System.out.println("\nAcknowledged...");
+				console.nextLine();
+			} else {
+				try {
+					Thread.sleep(DELAY);
+				} catch (InterruptedException e) {
+				}
+			}
 		}
 	}
 
@@ -144,6 +161,22 @@ public class LocalConsoleUser extends User {
 		printOut("getCommand() has been called. Message: " + message, false);
 		System.out.println("Enter your input: ");
 		return console.nextLine();
+	}
+
+	@Override
+	public void inventoryRemoveCard(Card givenCard) {
+	}
+
+	@Override
+	public void inventoryAddCard(Card givenCard) {
+	}
+
+	@Override
+	public void playerDeath(boolean evil) {
+	}
+
+	@Override
+	public void pregame() { // empty; nothing is needed.
 	}
 
 }

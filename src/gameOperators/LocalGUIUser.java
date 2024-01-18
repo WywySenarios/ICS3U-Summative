@@ -1,45 +1,79 @@
 package gameOperators;
 
+import gameElements.Card;
+
 public class LocalGUIUser extends User {
+	
+	public GUI gui;
 
-	public LocalGUIUser(String uiType_, boolean evil_) {
-		super(uiType_, evil_);
+	public LocalGUIUser(boolean evil_, boolean developerMode) {
+		super("LocalGUI", evil_);
+		
+		this.gui = new GUI(this, developerMode);
 	}
 
 	@Override
-	protected void entityDamage(int lane, boolean evil, int damage) {
+	public void entityDamage(int lane, boolean evil, int damage) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	protected void killEntity(int lane, boolean evil) {
+	public void entityDeath(int lane, boolean evil) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	protected void summonEntity(int lane, boolean evil) {
+	public void summonEntity(int lane, boolean evil) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	protected void playerDamage(boolean evil, int damage) {
+	public void playerDamage(boolean evil, int damage) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	protected void summonPlayer(boolean evil) {
+	public void playerDeath(boolean evil) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	protected void gameEnd() {
+	public void summonPlayer(boolean evil) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	@Override
+	public void gameEnd() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void inventoryRemoveCard(Card givenCard) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void inventoryAddCard(Card givenCard) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void pregame() {
+		this.gui.pregame();
+	}
+
+	@Override
+	public String getCommand(String message) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

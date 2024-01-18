@@ -7,24 +7,24 @@ import gameElements.Entity;
 import gameElements.Environment;
 import gameElements.Player;
 
-public abstract class User implements UI {
+public abstract class User implements UI, UserUpdates{
 
 	private String uiType;
-	protected boolean evil;
-	protected String gameStatus;
-	protected Scanner console = new Scanner(System.in);
+	public boolean evil;
+	public String gameStatus;
+	public Scanner console = new Scanner(System.in);
 
-	protected Player evilPlayer;
-	protected Player goodPlayer;
-	protected Entity[] evilEntities = new Entity[5];
-	protected int[] evilAttacks = new int[5];
-	protected Entity[] goodEntities = new Entity[5];
-	protected int[] goodAttacks = new int[5];
-	protected Environment[] environments = new Environment[5];
-	protected Deck evilDeck;
-	protected Deck goodDeck;
+	public Player evilPlayer;
+	public Player goodPlayer;
+	public Entity[] evilEntities = new Entity[5];
+	public int[] evilAttacks = new int[5];
+	public Entity[] goodEntities = new Entity[5];
+	public int[] goodAttacks = new int[5];
+	public Environment[] environments = new Environment[5];
+	public Deck evilDeck;
+	public Deck goodDeck;
 
-	protected Object lastReceivedObject;
+	public Object lastReceivedObject;
 
 	public User(String uiType_, boolean evil_) {
 		this.uiType = uiType_;
@@ -37,36 +37,66 @@ public abstract class User implements UI {
 	 * current displayed information so that GUI systems can show animations for
 	 * changing the stuff one at a time.
 	 */
+	
+	// VARIOUS ACCESSORS:
 
 	public String getUiType() {
 		return uiType;
 	}
-
-	public String getCommand() {
-		return null;
+	
+	public boolean getEvil() {
+		return this.evil;
 	}
+	
+	public String getGameStatus() {
+		return this.gameStatus;
+	}
+	
+	public Scanner getConsole() { // returns a reference to the Scanner, not a duplicate
+		return this.console;
+	}
+	
+	public Player getPlayer(boolean evil) { // returns a reference to the Player, not a duplicate
+		if (evil) {
+			return this.evilPlayer;
+		} else {
+			return this.goodPlayer;
+		}
+	}
+	
+	public Entity[] getEntities(boolean evil) { // returns a reference to the Array and Entities, not duplicates
+		if (evil) {
+			return this.evilEntities;
+		} else {
+			return this.goodEntities;
+		}
+	}
+	
+	public int[] getAttacks(boolean evil) { // returns a reference to the Array, not a duplicate
+		if (evil) {
+			return this.evilAttacks;
+		} else {
+			return this.goodAttacks;
+		}
+	}
+	
+	public Environment[] getEnvironments() { // returns a reference to the Array and Environments, not duplicates
+		return this.environments;
+	}
+	
+	public Deck getDeck(boolean evil) {
+		if (evil) {
+			return this.evilDeck;
+		} else {
+			return this.goodDeck;
+		}
+	}
+
+	// end: VARIOUS ACCESORS
 
 	public String getCommand(String message) {
 		return null;
 	}
-
-	// display an Entity taking damage
-	protected abstract void entityDamage(int lane, boolean evil, int damage);
-
-	// display an Entity dying
-	protected abstract void killEntity(int lane, boolean evil);
-
-	// display an Entity being placed or summoned
-	protected abstract void summonEntity(int lane, boolean evil);
-
-	// display a Player taking damage
-	protected abstract void playerDamage(boolean evil, int damage);
-
-	// display a Player being summoned
-	protected abstract void summonPlayer(boolean evil);
-
-	// display game end messages
-	protected abstract void gameEnd();
 
 	public void updateEntity(String[] args, int entityUpdated, boolean evil) {
 		
@@ -82,7 +112,7 @@ public abstract class User implements UI {
 			this.entityDamage(entityUpdated, evil, healthDifference);
 			break;
 		case "kill":
-			this.killEntity(entityUpdated, evil);
+			this.entityDeath(entityUpdated, evil);
 			break;
 		case "place":
 			this.summonEntity(entityUpdated, evil);
@@ -103,6 +133,8 @@ public abstract class User implements UI {
 	public void updatePlayer(String[] args, boolean evil) {
 		switch (args[0]) {
 		case "pregame":
+			break;
+		case "inventory":
 			break;
 		case "damage":
 			int damageTaken;
