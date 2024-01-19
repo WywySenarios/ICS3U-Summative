@@ -2,6 +2,7 @@ package gameElements;
 
 public class Entity implements HasAbility, Duplicable{
 
+	public String id;
 	public boolean inInventory = true;
 	public String[] type;
 	public int health;
@@ -13,7 +14,8 @@ public class Entity implements HasAbility, Duplicable{
 	public Move[] moves;
 	public Ability[] abilities;
 	
-	public Entity(String[] type_, int health_, int hpr_, int shield_, boolean aggressive_, Move[] moves_, Ability[] abilities_) {
+	public Entity(String id_, String[] type_, int health_, int hpr_, int shield_, boolean aggressive_, Move[] moves_, Ability[] abilities_) {
+		this.id = id_;
 		this.type = type_;
 		this.health = health_;
 		this.hpr = hpr_;
@@ -23,8 +25,8 @@ public class Entity implements HasAbility, Duplicable{
 		this.abilities = abilities_;
 	}
 	
-	private Entity(String[] type_, int health_, int hpr_, int shield_, boolean aggressive_, Move[] moves_, Ability[] abilities_, boolean inInventory_, int attackModifier_, String[] statusEffects_) {
-		this(type_, health_, hpr_, shield_, aggressive_, moves_, abilities_);
+	private Entity(String id_, String[] type_, int health_, int hpr_, int shield_, boolean aggressive_, Move[] moves_, Ability[] abilities_, boolean inInventory_, int attackModifier_, String[] statusEffects_) {
+		this(id_, type_, health_, hpr_, shield_, aggressive_, moves_, abilities_);
 		this.inInventory = inInventory_;
 		this.attackModifier = attackModifier_;
 		this.statusEffects = statusEffects_;
@@ -98,7 +100,7 @@ public class Entity implements HasAbility, Duplicable{
 			outputStatusEffects[currentIndex++] = i;
 		}
 		
-		return new Entity(outputType, this.health, this.hpr, this.shield, this.aggressive, outputMoves, outputAbilities, this.inInventory, this.attackModifier, outputStatusEffects);
+		return new Entity(this.id, outputType, this.health, this.hpr, this.shield, this.aggressive, outputMoves, outputAbilities, this.inInventory, this.attackModifier, outputStatusEffects);
 	}
 	
 	public boolean isAlive() {

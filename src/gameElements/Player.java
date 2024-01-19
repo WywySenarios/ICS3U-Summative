@@ -1,16 +1,17 @@
 package gameElements;
 
 public class Player implements Duplicable {
-
+	
 	public String username;
-	public String name;
+	public String playerID;
 	public Card[] inventory = new Card[0];
 	public String[] type;
 	public int health = 1000;
+	public String status;
 	
-	public Player(String username_, String name_, String[] type_) {
+	public Player(String username_, String playerID_, String[] type_) {
 		this.username = username_;
-		this.name = name_;
+		this.playerID = playerID_;
 		this.type = type_;
 	}
 
@@ -20,9 +21,10 @@ public class Player implements Duplicable {
 	}
 	
 	@SuppressWarnings("unused")
-	private Player(String username_, String name_, Card[] inventory_, String[] type_, int health_) {
+	private Player(String username_, String name_, Card[] inventory_, String[] type_, int health_, String status_) {
 		this(username_, name_, inventory_, type_);
 		this.health = health_;
+		this.status = status_;
 	}
 
 	@Override
@@ -45,7 +47,7 @@ public class Player implements Duplicable {
 			outputType[currentIndex++] = i;
 		}
 
-		return new Player(this.username, this.name, outputInventory, outputType, this.health);*/
+		return new Player(this.username, this.name, outputInventory, outputType, this.health, this.status);*/
 	}
 
 	public boolean isAlive() {

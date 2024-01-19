@@ -2,13 +2,15 @@ package gameElements;
 
 public class Environment implements HasAbility, Duplicable {
 
+	public String id;
 	public boolean inInventory;
 	public String[] type;
 	public Move[] moves;
 	public Ability[] abilities;
 	public final boolean PERMANENT;
 
-	public Environment(String[] type_, Move[] moves_, Ability[] abilities_, boolean PERMANENT_) {
+	public Environment(String id_, String[] type_, Move[] moves_, Ability[] abilities_, boolean PERMANENT_) {
+		this.id = id_;
 		this.type = type_;
 		this.moves = moves_;
 		this.abilities = abilities_;
@@ -80,7 +82,7 @@ public class Environment implements HasAbility, Duplicable {
 			outputAbilities[currentIndex++] = (Ability) i.duplicate();
 		}
 
-		return new Environment(outputType, outputMoves, outputAbilities, this.PERMANENT);
+		return new Environment(this.id, outputType, outputMoves, outputAbilities, this.PERMANENT);
 	}
 
 	public String toString() {

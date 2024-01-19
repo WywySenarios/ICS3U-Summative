@@ -19,7 +19,7 @@ public class Card implements Duplicable {
 		this.type = type_;
 		this.cost = cost_;
 		this.RARITY = "";
-		this.entity = new Entity(type_, health_, hpr_, shield_, aggressive_, moves_, abilities_);
+		this.entity = new Entity(id, type_, health_, hpr_, shield_, aggressive_, moves_, abilities_);
 	}
 
 	private Card(String id_, String name_, String[] type_, int cost_, String RARITY_, Entity entity_) {
@@ -38,7 +38,7 @@ public class Card implements Duplicable {
 		this.type = type_;
 		this.cost = cost_;
 		this.RARITY = "";
-		this.special = new Special(type_, charges_, chargeRegen_, sacrificial_, move_, abilities_);
+		this.special = new Special(id_, type_, charges_, chargeRegen_, sacrificial_, move_, abilities_);
 	}
 	
 	private Card(String id_, String name_, String[] type_, int cost_, String RARITY_, Environment environment_) {
@@ -58,7 +58,7 @@ public class Card implements Duplicable {
 		this.type = type_;
 		this.cost = cost_;
 		this.RARITY = "";
-		this.environment = new Environment(type_, moves_, abilities_, PERMANENT_);
+		this.environment = new Environment(id_, type_, moves_, abilities_, PERMANENT_);
 	}
 	
 	private Card(String id_, String name_, String[] type_, int cost_, String RARITY_, Special special_) {

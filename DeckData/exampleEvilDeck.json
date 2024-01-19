@@ -1,11 +1,7 @@
 {
 	"contents": [
-		"ens1",
-		"sps1",
-		"evs1"
+		"ens1"
 	],
 	
-	"ens1": 20,
-	"sps1": 10,
-	"evs1": 10
+	"ens1": 40
 }

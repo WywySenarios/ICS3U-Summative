@@ -1,16 +1,20 @@
 {
-	"stickmanLeader": {
+	"pls1": {
 		"type": [
 			"stickman",
 			"placeholder1"
-		]
+		],
+		"inventoryStartingSize": 5,
+		"health": 1000
 	},
 	
-	"wywyLeader": {
+	"plw1": {
 		"type": [
 			"wywy",
 			"placeholder1"
-		]
+		],
+		"inventoryStartingSize": 5,
+		"health": 1000
 	},
 	
 	"ens1": {

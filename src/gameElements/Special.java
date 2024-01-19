@@ -2,6 +2,7 @@ package gameElements;
 
 public class Special implements HasAbility, Duplicable {
 
+	public String id;
 	public boolean inInventory;
 	public String[] type;
 	public int charges;
@@ -10,8 +11,9 @@ public class Special implements HasAbility, Duplicable {
 	public Move move;
 	public Ability[] abilities;
 
-	public Special(String[] type_, int charges_, int chargeRegen_, String sacrificial_, Move move_,
+	public Special(String id_, String[] type_, int charges_, int chargeRegen_, String sacrificial_, Move move_,
 			Ability[] abilities_) {
+		this.id = id_;
 		this.type = type_;
 		this.charges = charges_;
 		this.chargeRegen = chargeRegen_;
@@ -78,7 +80,7 @@ public class Special implements HasAbility, Duplicable {
 			outputAbilities[currentIndex++] = (Ability) i.duplicate();
 		}
 
-		return new Special(outputType, this.charges, this.chargeRegen, this.sacrificial, (Move) this.move.duplicate(),
+		return new Special(this.id, outputType, this.charges, this.chargeRegen, this.sacrificial, (Move) this.move.duplicate(),
 				outputAbilities);
 	}
 

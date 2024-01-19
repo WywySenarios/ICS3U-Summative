@@ -1,9 +1,12 @@
 package gameOperators;
 
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -22,17 +25,21 @@ public class GUI extends javax.swing.JFrame implements UserUpdates {
 	private JLabel prompt = new JLabel();
 	private JLabel evilPlayerHealth = new JLabel();
 	private JLabel evilPlayer = new JLabel();
-	private JButton[] evilCards;
+	private JButton[] evilCards = { new JButton(), new JButton(), new JButton(), new JButton(), new JButton(),
+			new JButton(), new JButton(), new JButton(), new JButton(), new JButton() };
 	private JButton[] evilEntities = new JButton[5];
 	private JLabel goodPlayerHealth = new JLabel();
 	private JLabel goodPlayer = new JLabel();
-	private JButton[] goodCards;
+	private JButton[] goodCards = { new JButton(), new JButton(), new JButton(), new JButton(), new JButton(),
+			new JButton(), new JButton(), new JButton(), new JButton(), new JButton() };
 	private JButton[] goodEntities = new JButton[5];
 	private JTextField developerConsole = new JTextField();
 	private boolean developerMode = false;
 	private User givenUser;
-	private volatile String lastUserInput;
-	private final int DELAY = 3;
+	private volatile String[] userInputQueue;
+	// private volatile String[] consoleInputQueue;
+	private final int DELAY = 50;
+	private final char endChar = '\\';
 
 	// I'm letting Eclipse IDE generate me a serialVersionUID.
 	private static final long serialVersionUID = 6998556482722372610L;
@@ -47,12 +54,12 @@ public class GUI extends javax.swing.JFrame implements UserUpdates {
 			evilEntities[i] = new JButton();
 			goodEntities[i] = new JButton();
 		}
-		
+
 		this.developerMode = developerMode;
 	}
 
 	public void actionPerformed(ActionEvent action) { // in the event that the user presses anything,
-		lastUserInput = action.getActionCommand();
+		// lastUserInput = action.getActionCommand();
 
 		switch (action.getActionCommand()) {
 
@@ -107,13 +114,11 @@ public class GUI extends javax.swing.JFrame implements UserUpdates {
 
 	private void updateLengthValues() {
 		this.segment = ((double) this.height) / 8;
-		System.out.println(segment);
 		/*
 		 * the width is made of: 2 segment part for the Good Player the length of the
 		 * lanes (variableSegment) 2 segment part for the Evil Player
 		 */
 		this.variableSegment = this.width - (this.segment * 4);
-		System.out.println(variableSegment);
 	}
 
 	// PLEASE, when updating single parts of the screen, RECALCULATE SEGMENT LENGTH
@@ -124,6 +129,7 @@ public class GUI extends javax.swing.JFrame implements UserUpdates {
 		this.updateTurn();
 		this.updateAllPlayers();
 		this.updateAllCards();
+		this.updateBackground();
 		this.updateDev();
 
 		this.pack();
@@ -132,28 +138,30 @@ public class GUI extends javax.swing.JFrame implements UserUpdates {
 	// PLEASE, when updating single parts of the screen, RECALCULATE SEGMENT LENGTH
 
 	private void updateAllEntities() {
-		// all five lanes take up 75% (3/4) of the Height
-		// there are 5 lanes, so the lane size is 15% (3/20) of the Height
+		// all five lanes take up 50% (4/8) of the Height
+		// there are 5 lanes, so the lane size is 10% (4/40) of the Height
 		// the entity JLabel is 75% of the lane size
-		// so the entity JLabel is 11.25% (9/80) of the Height
-		double laneHeight = calculateDistance(3.0 / 20);
-		int cardLength = (int) calculateDistance(9.0 / 80);
+		// so the entity JLabel is 7.5% (12/160) of the Height
+		double laneHeight = calculateDistance(4.0 / 40);
+		int cardLength = (int) calculateDistance(12.0 / 160);
 
-		int x = (int) segment * 2;
+		int goodX = (int) segment * 2;
+		int evilX = (int) (goodX + this.variableSegment - segment); // the extra "- segment" is to counteract stupid
+																	// turd swing's way of saying that coordinates are
+																	// top-left based
 
-		// PRAY TO FUCKING GOD “i” IS A REFERENCE TO THE JLABELS OF THIS CLASS
 		for (int i = 0; i < 5; i++) {
 
 			try {
-				this.evilEntities[i].setText(givenUser.evilEntities[i].toString());
+				this.evilEntities[i].setIcon(this.scaleImage("CData\\" + givenUser.evilEntities[0].id + "_placed.png", cardLength, cardLength));
 			} catch (NullPointerException e) {
-				this.evilEntities[i].setText(null);
+				this.evilEntities[i].setIcon(null);
 			}
 
 			try {
-				this.goodEntities[i].setText(givenUser.goodEntities[i].toString());
+				this.goodEntities[i].setIcon(this.scaleImage("CData\\" + givenUser.goodEntities[0].id + "_placed.png", cardLength, cardLength));
 			} catch (NullPointerException e) {
-				this.goodEntities[i].setText(null);
+				this.goodEntities[i].setIcon(null);
 			}
 
 			/*
@@ -161,37 +169,237 @@ public class GUI extends javax.swing.JFrame implements UserUpdates {
 			 * for each Card, there is 15% (3/20) of the Height, as calculated previously.
 			 */
 
-			this.evilEntities[i].setBounds(x, (int) calculateDistance(1.0 / 8 + laneHeight), cardLength, cardLength);
-			this.goodEntities[i].setBounds(x, (int) (segment * 2 + laneHeight * i), cardLength, cardLength);
+			this.evilEntities[i].setBounds(evilX, (int) (segment * 2 + laneHeight * i), cardLength, cardLength);
+			this.goodEntities[i].setBounds(goodX, (int) (segment * 2 + laneHeight * i), cardLength, cardLength);
 		}
 	}
 
 	// PLEASE, when updating single parts of the screen, RECALCULATE SEGMENT LENGTH
 
 	private void updateTurn() {
+		int turnCounterLength = (int) (this.segment * 2.0 * 0.75);
+
+		// the turn counter is on the bottom far right.
+		// the formula is: (width OR height) - (player area /2) - (turnCounterLength /2)
+		this.turnCounter.setText(this.givenUser.gameStatus);
+		this.turnCounter.setBounds((int) (this.width - segment * 2.0 / 2 - turnCounterLength / 2.0),
+				(int) (this.height - segment * 2.0 / 2 - turnCounterLength / 2.0), turnCounterLength,
+				turnCounterLength);
+		// this.turnCounter.setVisible(true);
 	}
 
 	// PLEASE, when updating single parts of the screen, RECALCULATE SEGMENT LENGTH
 
 	private void updateAllPlayers() {
+		// the Players will take up 60% of their section’s height and 75% of the width.
+		// Their name tags and whatnot will take up the remaining 15%, splitting 5
+		// percent into empty space, 5% into a name tag, and 5% into health.
+		int playerWidth = (int) (this.segment * (2.0) * 0.6);
+		int playerHeight = (int) (this.segment * (4.0) * 0.75);
+
+		ImageIcon playerIcon = new ImageIcon(
+				"CData\\" + this.givenUser.evilPlayer.playerID + "_" + this.givenUser.evilPlayer.status + ".png");
+		Image playerImage = playerIcon.getImage().getScaledInstance(playerWidth, playerHeight, Image.SCALE_DEFAULT);
+
+		this.evilPlayer.setIcon(new ImageIcon(playerImage));
+
+		playerIcon = new ImageIcon(
+				"CData\\" + this.givenUser.goodPlayer.playerID + "_" + this.givenUser.goodPlayer.status + ".png");
+		playerImage = playerIcon.getImage().getScaledInstance(playerWidth, playerHeight, Image.SCALE_DEFAULT);
+		this.goodPlayer.setIcon(new ImageIcon(playerImage));
+
+		this.evilPlayer.setBounds((int) (this.segment * 2.4 + this.variableSegment), (int) (segment * 2), playerWidth,
+				playerHeight);
+		this.goodPlayer.setBounds((int) (this.segment * 0.2), (int) (segment * 2), playerWidth, playerHeight);
+
+		// this.evilPlayer.setVisible(true);
+		// this.goodPlayer.setVisible(true);
 	}
 
 	// PLEASE, when updating single parts of the screen, RECALCULATE SEGMENT LENGTH
 
 	private void updateAllCards() {
+		double cardSectionHeight = segment * 2 * 0.75;
+
+		/*
+		 * There are four spaces in between the Cards and 5 Cards. (That means 5 spaces
+		 * + 5 Cards - 1 space).
+		 * 
+		 * A Card is 3 times bigger than the space (75% occupation)
+		 * 
+		 * this.variableSegment = Four spaces + five cards = 4 * ⅓ + 5 * 1 Cards =
+		 * (19/3) Cards Card = this.variableSegment / (19/3)
+		 * 
+		 * ALSO, if the height of the cardSectionHeight limits the Card size, then it
+		 * limits the Card Size. the Cards are still placed in the same places but are
+		 * just smaller to compensate.
+		 */
+
+		double cardSize = this.variableSegment / (19.0 / 3);
+		double spaceSize = cardSize / 3;
+
+		if (cardSize * 2 + spaceSize > cardSectionHeight) {
+			// card + card + space = 3/3 + 3/3 + 1/3
+			// = 7.0 / 3
+			cardSize = cardSectionHeight / (7.0 / 3);
+			spaceSize = cardSize / 3;
+		}
+
+		/*
+		 * x = 2 segments + respective number of past spaces and cards
+		 * 
+		 * Evil y = space of the cardSectionHeight [AKA 1 segment * 0.25 / 2]; and +
+		 * Card length + space if it’s on the second row
+		 * 
+		 * Good y = evil y + 6 segments
+		 * 
+		 */
+
+		double initialX = this.segment * 2;
+		double evilY = spaceSize;
+		double goodY = evilY + this.segment * 6;
+
+		// top row Cards
+		try {
+			this.evilCards[0].setIcon(
+					scaleImage("CData\\" + givenUser.evilPlayer.inventory[0].id + "_Card.png", (int) cardSize, (int) cardSize));
+			this.evilCards[0].setVisible(true);
+		} catch (ArrayIndexOutOfBoundsException e) {
+			this.evilCards[0].setIcon(null);
+			this.evilCards[0].setVisible(false);
+		} catch (NullPointerException e) {
+			this.evilCards[0].setIcon(null);
+			this.evilCards[0].setVisible(false);
+		}
+
+		try {
+			this.goodCards[0].setIcon(
+					scaleImage("CData\\" + givenUser.goodPlayer.inventory[0].id + "_Card.png", (int) cardSize, (int) cardSize));
+			this.goodCards[0].setVisible(true);
+		} catch (ArrayIndexOutOfBoundsException e) {
+			this.goodCards[0].setIcon(null);
+			this.goodCards[0].setVisible(false);
+		} catch (NullPointerException e) {
+			this.goodCards[0].setIcon(null);
+			this.goodCards[0].setVisible(false);
+		}
+
+		this.evilCards[0].setBounds((int) (initialX + cardSize), (int) (evilY), (int) cardSize, (int) cardSize);
+		this.goodCards[0].setBounds((int) (initialX + cardSize), (int) (goodY), (int) cardSize, (int) cardSize);
+
+		for (int i = 1; i < 5; i++) {
+			try {
+				this.evilCards[i].setIcon(
+						scaleImage("CData\\" + givenUser.evilPlayer.inventory[i].id + "_Card.png", (int) cardSize, (int) cardSize));
+				this.evilCards[i].setVisible(true);
+			} catch (ArrayIndexOutOfBoundsException e) {
+				this.evilCards[i].setIcon(null);
+				this.evilCards[i].setVisible(false);
+			} catch (NullPointerException e) {
+				this.evilCards[i].setIcon(null);
+				this.evilCards[i].setVisible(false);
+			}
+
+			try {
+				this.goodCards[i].setIcon(
+						scaleImage("CData\\" + givenUser.goodPlayer.inventory[i].id + "_Card.png", (int) cardSize, (int) cardSize));
+				this.goodCards[i].setVisible(true);
+			} catch (ArrayIndexOutOfBoundsException e) {
+				this.goodCards[i].setIcon(null);
+				this.goodCards[i].setVisible(false);
+			} catch (NullPointerException e) {
+				this.goodCards[i].setIcon(null);
+				this.goodCards[i].setVisible(false);
+			}
+
+			this.evilCards[i].setBounds((int) (initialX + i * (cardSize + spaceSize) + cardSize), (int) (evilY),
+					(int) cardSize, (int) cardSize);
+			this.goodCards[i].setBounds((int) (initialX + i * (cardSize + spaceSize) + cardSize), (int) (goodY),
+					(int) cardSize, (int) cardSize);
+		}
+
+		
+		// bottom row Cards
+		evilY += cardSize + spaceSize;
+		goodY = evilY + this.segment * 6;
+		try {
+			this.evilCards[5].setIcon(
+					scaleImage("CData\\" + givenUser.evilPlayer.inventory[5].id + "_Card.png", (int) cardSize, (int) cardSize));
+			this.evilCards[5].setVisible(true);
+		} catch (ArrayIndexOutOfBoundsException a) {
+			this.evilCards[5].setIcon(null);
+			this.evilCards[5].setVisible(false);
+		} catch (NullPointerException b) {
+			this.evilCards[5].setIcon(null);
+			this.evilCards[5].setVisible(false);
+		}
+
+		try {
+			this.goodCards[5].setIcon(
+					scaleImage("CData\\" + givenUser.goodPlayer.inventory[5].id + "_Card.png", (int) cardSize, (int) cardSize));
+			this.goodCards[5].setVisible(true);
+		} catch (ArrayIndexOutOfBoundsException a) {
+			this.goodCards[5].setIcon(null);
+			this.goodCards[5].setVisible(false);
+		} catch (NullPointerException b) {
+			this.goodCards[5].setIcon(null);
+			this.goodCards[5].setVisible(false);
+		}
+
+		this.evilCards[5].setBounds((int) (initialX + cardSize), (int) (evilY), (int) cardSize, (int) cardSize);
+		this.goodCards[5].setBounds((int) (initialX + cardSize), (int) (goodY), (int) cardSize, (int) cardSize);
+
+		for (int i = 1; i < 5; i++) { // first row
+			try {
+				this.evilCards[i + 5].setIcon(scaleImage("CData\\" + givenUser.evilPlayer.inventory[i + 5].id + "_Card.png",
+						(int) cardSize, (int) cardSize));
+				this.evilCards[i + 5].setVisible(true);
+			} catch (ArrayIndexOutOfBoundsException c) {
+				this.evilCards[i + 5].setIcon(null);
+				this.evilCards[i + 5].setVisible(false);
+			} catch (NullPointerException d) {
+				this.evilCards[i + 5].setIcon(null);
+				this.evilCards[i + 5].setVisible(false);
+			}
+
+			try {
+				this.goodCards[i + 5].setIcon(scaleImage("CData\\" + givenUser.goodPlayer.inventory[i + 5].id + "_Card.png",
+						(int) cardSize, (int) cardSize));
+				this.goodCards[i + 5].setVisible(true);
+			} catch (ArrayIndexOutOfBoundsException e) {
+				this.goodCards[i + 5].setIcon(null);
+				this.goodCards[i + 5].setVisible(false);
+			} catch (NullPointerException f) {
+				this.goodCards[i + 5].setIcon(null);
+				this.goodCards[i + 5].setVisible(false);
+			}
+
+			this.evilCards[i + 5].setBounds((int) (initialX + i * (cardSize + spaceSize) + cardSize), (int) (evilY),
+					(int) cardSize, (int) cardSize);
+			this.goodCards[i + 5].setBounds((int) (initialX + i * (cardSize + spaceSize) + cardSize), (int) (goodY),
+					(int) cardSize, (int) cardSize);
+		}
+
+	}
+
+	private void updateBackground() {
+		this.background.setBounds(this.getBounds());
+		this.background.setIcon(this.scaleImage("backgrounds\\sampleBackground.png", this.width, this.height));
+		// this.background.setVisible(true);
 	}
 
 	private void updateDev() {
 		if (developerMode) {
-			System.out.println((int) (this.segment * 2 + this.variableSegment));
-			//this.developerConsole.setBounds(this.width / 50, this.width / 50, (int) (this.width - this.segment * 2), 0);
-			//this.developerConsole.setBounds(0,0,1000,1000);
-			this.developerConsole.setBounds((int) (this.segment * 2 + this.variableSegment) / 3, 0, this.width / 10, this.width / 10);
+			// this.developerConsole.setBounds(this.width / 50, this.width / 50, (int)
+			// (this.width - this.segment * 2), 0);
+			// this.developerConsole.setBounds(0,0,1000,1000);
+			this.developerConsole.setBounds((int) (this.segment * 2 + this.variableSegment), 0, this.width / 10,
+					this.width / 10);
 			this.developerConsole.setText("");
 		}
-		
-		this.developerConsole.setVisible(true);
-		//this.developerConsole.setVisible(developerMode);
+
+		// this.developerConsole.setVisible(true);
+		// this.developerConsole.setVisible(developerMode);
 	}
 
 	private double calculateDistance(double percentHeight) { // this calculates the distance based on a fraction of the
@@ -199,9 +407,8 @@ public class GUI extends javax.swing.JFrame implements UserUpdates {
 		return (double) this.height * percentHeight;
 	}
 
-	private void setBounds(JLabel givenObject, double percentHeightx, double percentHeighty) {
-		givenObject.setBounds((int) this.calculateDistance(percentHeightx),
-				(int) this.calculateDistance(percentHeighty), givenObject.getWidth(), givenObject.getHeight());
+	private ImageIcon scaleImage(String path, int width, int height) {
+		return new ImageIcon(new ImageIcon(path).getImage().getScaledInstance(width, height, Image.SCALE_DEFAULT));
 	}
 
 	@Override
@@ -265,18 +472,18 @@ public class GUI extends javax.swing.JFrame implements UserUpdates {
 		this.setLayout(null);
 		this.setResizable(true);
 		this.setTitle("Wywy's Card Game!");
-		//this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-		width = 1500;
-				height = 1000;
-		this.setBounds(0, 0, width, height);
+		// this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+		width = 1280;
+		height = 720;
+		// this.setBounds(0, 0, width, height);
 		this.setPreferredSize(new java.awt.Dimension(width, height));
-		System.out.println(this.getBounds());
-		//this.setPreferredSize(new java.awt.Dimension(width = (3000 /2), height = (2000 /2)));
-		//this.setExtendedState(MAXIMIZED_BOTH);
+		// this.setPreferredSize(new java.awt.Dimension(width = (3000 /2), height =
+		// (2000 /2)));s
+		// this.setExtendedState(MAXIMIZED_BOTH);
 		getAccessibleContext().setAccessibleDescription("Wywy's Card Game! It's my CS Summative.");
 		this.addComponentListener(new ComponentAdapter() {
 			public void componentResized(ComponentEvent componentEvent) {
-				//updateEntireScreen();
+				// updateEntireScreen();
 			}
 		});
 
@@ -287,9 +494,23 @@ public class GUI extends javax.swing.JFrame implements UserUpdates {
 			this.add(evilEntities[i]);
 			this.add(goodEntities[i]);
 		}
+
 		this.updateTurn();
+		this.add(this.turnCounter);
+
 		this.updateAllPlayers();
+		this.add(this.evilPlayer);
+		this.add(this.goodPlayer);
+
 		this.updateAllCards();
+		for (int i = 0; i < 10; i++) {
+			this.add(this.evilCards[i]);
+			this.add(this.goodCards[i]);
+		}
+
+		this.updateBackground();
+		this.add(this.background);
+
 		this.updateDev();
 		this.add(this.developerConsole);
 
@@ -306,7 +527,33 @@ public class GUI extends javax.swing.JFrame implements UserUpdates {
 			Thread.sleep(DELAY);
 		} catch (InterruptedException e) {
 		}
-		return null;
+
+		if (developerMode) {
+			String output = this.developerConsole.getText();
+			boolean stillRunning = true;
+			while (stillRunning) {
+				try {
+					// this is a really messed up code where the loop keeps on waiting variable
+					// "DELAY"ms and then checking if the developerConsole ends with variable
+					// "endChar"'s value.
+					Thread.sleep(DELAY);
+				} catch (InterruptedException e) {
+				}
+
+				output = this.developerConsole.getText();
+
+				try {
+					stillRunning = output.charAt(output.length() - 1) != this.endChar;
+				} catch (StringIndexOutOfBoundsException e) {
+				}
+			}
+
+			this.developerConsole.setText("");
+			return output.substring(0, output.length() - 1);
+		} else {
+			// unimplemented GUI input from the user
+			return null;
+		}
 	}
 
 }

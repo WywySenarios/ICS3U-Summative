@@ -74,6 +74,6 @@ public class LocalGUIUser extends User {
 	@Override
 	public String getCommand(String message) {
 		// TODO Auto-generated method stub
-		return null;
+		return this.gui.getCommand(message);
 	}
 }

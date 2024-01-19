@@ -23,8 +23,8 @@ public class Server implements UI {
 			throws Exception {
 		this.logPath = logPath_;
 
-		this.b = new Board(true, evilDeckPath, goodDeckPath, "evilPlayerUsername", "stickmanLeader",
-				"goodPlayerUsername", "wywyLeader");
+		this.b = new Board(true, evilDeckPath, goodDeckPath, "evilPlayerUsername", "pls1",
+				"goodPlayerUsername", "plw1");
 		if (!this.b.addServer(this)) {
 			throw new Exception("Unsuccessful registry of server on the Board class.");
 		}
@@ -95,10 +95,10 @@ public class Server implements UI {
 
 	private boolean log(String logInfo) {
 		try {
-			FileWriter fileWriter = new FileWriter(logPath);
+			FileWriter fileWriter = new FileWriter(logPath, true);
 			PrintWriter output = new PrintWriter(fileWriter, true);
 
-			output.print(logInfo);
+			output.print(logInfo + '\n');
 			output.close();
 			fileWriter.close();
 			return true;
