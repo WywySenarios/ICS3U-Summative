@@ -49,7 +49,7 @@ public class AttackLeader extends Move implements ChoiceMove {
 		attackedPlayer.health -= damage;
 		
 		// broadcast damage
-		String[] args = {"damage"};
+		String[] args = {"damage", "" + damage};
 		b.server.updatePlayer(args, evil);
 
 		// if (attackedPlayer.health < 0) { gameEnd() }

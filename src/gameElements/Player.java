@@ -1,5 +1,7 @@
 package gameElements;
 
+import java.util.Arrays;
+
 public class Player implements Duplicable {
 	
 	public String username;
@@ -107,5 +109,18 @@ public class Player implements Duplicable {
 		}
 		
 		return true;
+	}
+	
+	@Override
+	public String toString() {
+		String output = "Player[";
+		
+		output += "username=" + this.username + "][";
+		output += "id=" + this.playerID + "][";
+		output += "type=" + Arrays.toString(this.type) + "][";
+		output +=  "health=" + this.health + "][";
+		output += "status=" + status + "]";
+		
+		return output;
 	}
 }

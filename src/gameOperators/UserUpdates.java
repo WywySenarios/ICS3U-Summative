@@ -6,7 +6,7 @@ public interface UserUpdates {
 	public String getCommand(String message);
 	
 	// display an Entity taking damage
-	public void entityDamage(int lane, boolean evil, int damage);
+	public void entityDamage(int lane, boolean evil, String damage);
 
 	// display an Entity dying
 	public void entityDeath(int lane, boolean evil);
@@ -15,7 +15,7 @@ public interface UserUpdates {
 	public void summonEntity(int lane, boolean evil);
 
 	// display a Player taking damage
-	public void playerDamage(boolean evil, int damage);
+	public void playerDamage(boolean evil, String damage);
 
 	// display a Player dying
 	public void playerDeath(boolean evil);

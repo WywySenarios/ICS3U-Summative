@@ -102,14 +102,7 @@ public abstract class User implements UI, UserUpdates{
 		
 		switch (args[0]) {
 		case "damage":
-			int healthDifference = ((Entity) this.lastReceivedObject).health;
-			
-			if (evil) {
-				healthDifference -= this.evilEntities[entityUpdated].health;
-			} else {
-				healthDifference -= this.goodEntities[entityUpdated].health;
-			}
-			this.entityDamage(entityUpdated, evil, healthDifference);
+			this.entityDamage(entityUpdated, evil, args[1]);
 			break;
 		case "kill":
 			this.entityDeath(entityUpdated, evil);
@@ -137,14 +130,7 @@ public abstract class User implements UI, UserUpdates{
 		case "inventory":
 			break;
 		case "damage":
-			int damageTaken;
-			if (evil) {
-				damageTaken = ((Player) lastReceivedObject).health - evilPlayer.health;
-			} else {
-				damageTaken = ((Player) lastReceivedObject).health - goodPlayer.health;
-			}
-
-			this.playerDamage(evil, damageTaken);
+			this.playerDamage(evil, args[1]);
 			break;
 		}
 

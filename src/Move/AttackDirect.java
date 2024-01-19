@@ -49,10 +49,20 @@ public class AttackDirect extends Move implements ChoiceMove {
 		}
 
 		if (attackedEntity == null) { // if the given lane is empty,
-			new AttackLeader(this.damage, this.evil).move(attacker, b, selection);
+			if (this.evil) {
+				new AttackLeader(this.damage, this.evil).move(attacker, b, 1);
+			} else {
+				new AttackLeader(this.damage, this.evil).move(attacker, b, 0);
+			}
 		} else { // if the given lane is NOT empty,
+			
+			int healthChange = attackedEntity.health;
+			
 			// apply damage
 			attackedEntity.receiveDamage(attacker, damage);
+			
+			healthChange -= attackedEntity.health;
+			//healthChange *= -1;
 
 			// add status effects if necessary
 			if (statusEffects != null) {
@@ -69,7 +79,7 @@ public class AttackDirect extends Move implements ChoiceMove {
 				attackedEntity.statusEffects = temp;
 			}
 
-			String[] args = { "damage" };
+			String[] args = { "damage" , "" + healthChange};
 			b.server.updateEntity(args, selection, ! this.evil);
 		}
 	}

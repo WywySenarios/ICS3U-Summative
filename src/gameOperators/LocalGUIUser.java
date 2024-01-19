@@ -13,7 +13,7 @@ public class LocalGUIUser extends User {
 	}
 
 	@Override
-	public void entityDamage(int lane, boolean evil, int damage) {
+	public void entityDamage(int lane, boolean evil, String damage) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -31,7 +31,7 @@ public class LocalGUIUser extends User {
 	}
 
 	@Override
-	public void playerDamage(boolean evil, int damage) {
+	public void playerDamage(boolean evil, String damage) {
 		// TODO Auto-generated method stub
 		
 	}

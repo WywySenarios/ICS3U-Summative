@@ -2,10 +2,10 @@ package gameOperators;
 
 import java.awt.Image;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -13,7 +13,7 @@ import javax.swing.JTextField;
 
 import gameElements.Card;
 
-public class GUI extends javax.swing.JFrame implements UserUpdates {
+public class GUI extends javax.swing.JFrame implements UserUpdates, ActionListener {
 
 	// Variables declaration
 	private int width;
@@ -22,24 +22,24 @@ public class GUI extends javax.swing.JFrame implements UserUpdates {
 	private double variableSegment;
 	private JLabel background = new JLabel();
 	private JLabel turnCounter = new JLabel();
-	private JLabel prompt = new JLabel();
+	// private JLabel prompt = new JLabel();
 	private JLabel evilPlayerHealth = new JLabel();
 	private JLabel evilPlayer = new JLabel();
 	private JButton[] evilCards = { new JButton(), new JButton(), new JButton(), new JButton(), new JButton(),
 			new JButton(), new JButton(), new JButton(), new JButton(), new JButton() };
-	private JButton[] evilEntities = new JButton[5];
+	private JButton[] evilEntities = { new JButton(), new JButton(), new JButton(), new JButton(), new JButton() };
 	private JLabel goodPlayerHealth = new JLabel();
 	private JLabel goodPlayer = new JLabel();
 	private JButton[] goodCards = { new JButton(), new JButton(), new JButton(), new JButton(), new JButton(),
 			new JButton(), new JButton(), new JButton(), new JButton(), new JButton() };
-	private JButton[] goodEntities = new JButton[5];
+	private JButton[] goodEntities = { new JButton(), new JButton(), new JButton(), new JButton(), new JButton() };
 	private JTextField developerConsole = new JTextField();
 	private boolean developerMode = false;
-	private User givenUser;
-	private volatile String[] userInputQueue;
+	private volatile User givenUser;
+	private volatile String[] userInputQueue = new String[0];
 	// private volatile String[] consoleInputQueue;
 	private final int DELAY = 50;
-	private final char endChar = '\\';
+	private final char ENDCHAR = '\\';
 
 	// I'm letting Eclipse IDE generate me a serialVersionUID.
 	private static final long serialVersionUID = 6998556482722372610L;
@@ -50,20 +50,67 @@ public class GUI extends javax.swing.JFrame implements UserUpdates {
 	public GUI(User user_, boolean developerMode) {
 		this.givenUser = user_;
 
-		for (int i = 0; i < 5; i++) {
-			evilEntities[i] = new JButton();
-			goodEntities[i] = new JButton();
+		this.developerMode = developerMode;
+	}
+
+	public void queueInput(String command) {
+		String[] temp = userInputQueue;
+		userInputQueue = new String[temp.length + 1];
+
+		for (int i = 0; i < temp.length; i++) {
+			userInputQueue[i] = temp[i];
 		}
 
-		this.developerMode = developerMode;
+		userInputQueue[temp.length] = command;
+	}
+
+	public void removeBottomQueue(int numberOfActions) {
+		String[] temp = this.userInputQueue;
+		this.userInputQueue = new String[this.userInputQueue.length - numberOfActions];
+
+		for (int i = 0; i < this.userInputQueue.length; i++) {
+			this.userInputQueue[i] = temp[i + numberOfActions];
+		}
+
+		// System.out.println(Arrays.toString(this.userInputQueue));
+	}
+
+	public void removeQueue(int numberOfActions) {
+		int numberOfInputs = this.userInputQueue.length - numberOfActions;
+		String[] temp = this.userInputQueue;
+		this.userInputQueue = new String[numberOfInputs];
+
+		for (int i = 0; i < numberOfInputs; i++) {
+			this.userInputQueue[i] = temp[i];
+		}
 	}
 
 	public void actionPerformed(ActionEvent action) { // in the event that the user presses anything,
 		// lastUserInput = action.getActionCommand();
+		String command = action.getActionCommand();
 
-		switch (action.getActionCommand()) {
-
+		if (this.userInputQueue.length > 2 && this.userInputQueue[this.userInputQueue.length - 2].equals("place")) {
+			if (command.substring(0, 5).equals("place")) {
+				this.userInputQueue[this.userInputQueue.length - 1] = command.substring(5);
+				return;
+			} else {
+				try {
+					Integer.parseInt(command);
+					this.queueInput(command);
+					return;
+				} catch (Exception e) {
+					this.removeQueue(2);
+				}
+			}
+		} else {
+			if (command.length() > 4 && command.substring(0, 5).equals("place")) {
+				this.queueInput("place");
+				this.queueInput(command.substring(5));
+				return;
+			}
 		}
+
+		this.queueInput(command);
 	}
 
 	/**
@@ -153,13 +200,15 @@ public class GUI extends javax.swing.JFrame implements UserUpdates {
 		for (int i = 0; i < 5; i++) {
 
 			try {
-				this.evilEntities[i].setIcon(this.scaleImage("CData\\" + givenUser.evilEntities[0].id + "_placed.png", cardLength, cardLength));
+				this.evilEntities[i].setIcon(this.scaleImage("CData\\" + givenUser.evilEntities[0].id + "_placed.png",
+						cardLength, cardLength));
 			} catch (NullPointerException e) {
 				this.evilEntities[i].setIcon(null);
 			}
 
 			try {
-				this.goodEntities[i].setIcon(this.scaleImage("CData\\" + givenUser.goodEntities[0].id + "_placed.png", cardLength, cardLength));
+				this.goodEntities[i].setIcon(this.scaleImage("CData\\" + givenUser.goodEntities[0].id + "_placed.png",
+						cardLength, cardLength));
 			} catch (NullPointerException e) {
 				this.goodEntities[i].setIcon(null);
 			}
@@ -197,16 +246,12 @@ public class GUI extends javax.swing.JFrame implements UserUpdates {
 		int playerWidth = (int) (this.segment * (2.0) * 0.6);
 		int playerHeight = (int) (this.segment * (4.0) * 0.75);
 
-		ImageIcon playerIcon = new ImageIcon(
-				"CData\\" + this.givenUser.evilPlayer.playerID + "_" + this.givenUser.evilPlayer.status + ".png");
-		Image playerImage = playerIcon.getImage().getScaledInstance(playerWidth, playerHeight, Image.SCALE_DEFAULT);
-
-		this.evilPlayer.setIcon(new ImageIcon(playerImage));
-
-		playerIcon = new ImageIcon(
-				"CData\\" + this.givenUser.goodPlayer.playerID + "_" + this.givenUser.goodPlayer.status + ".png");
-		playerImage = playerIcon.getImage().getScaledInstance(playerWidth, playerHeight, Image.SCALE_DEFAULT);
-		this.goodPlayer.setIcon(new ImageIcon(playerImage));
+		this.evilPlayer.setIcon(this.scaleImage(
+				"CData\\" + this.givenUser.evilPlayer.playerID + "_" + this.givenUser.evilPlayer.status + ".png",
+				playerWidth, playerHeight));
+		this.goodPlayer.setIcon(this.scaleImage(
+				"CData\\" + this.givenUser.goodPlayer.playerID + "_" + this.givenUser.goodPlayer.status + ".png",
+				playerWidth, playerHeight));
 
 		this.evilPlayer.setBounds((int) (this.segment * 2.4 + this.variableSegment), (int) (segment * 2), playerWidth,
 				playerHeight);
@@ -214,6 +259,14 @@ public class GUI extends javax.swing.JFrame implements UserUpdates {
 
 		// this.evilPlayer.setVisible(true);
 		// this.goodPlayer.setVisible(true);
+
+		this.evilPlayerHealth.setText("" + this.givenUser.evilPlayer.health);
+		this.goodPlayerHealth.setText("" + this.givenUser.goodPlayer.health);
+
+		this.evilPlayerHealth.setBounds((int) (this.segment * 2.4 + this.variableSegment), (int) (segment * 1.8), playerWidth,
+				(int) (segment * 0.1));
+		this.goodPlayerHealth.setBounds((int) (this.segment * 0.2), (int) (segment * 1.8), playerWidth,
+				(int) (segment * 0.1));
 	}
 
 	// PLEASE, when updating single parts of the screen, RECALCULATE SEGMENT LENGTH
@@ -261,8 +314,8 @@ public class GUI extends javax.swing.JFrame implements UserUpdates {
 
 		// top row Cards
 		try {
-			this.evilCards[0].setIcon(
-					scaleImage("CData\\" + givenUser.evilPlayer.inventory[0].id + "_Card.png", (int) cardSize, (int) cardSize));
+			this.evilCards[0].setIcon(scaleImage("CData\\" + givenUser.evilPlayer.inventory[0].id + "_Card.png",
+					(int) cardSize, (int) cardSize));
 			this.evilCards[0].setVisible(true);
 		} catch (ArrayIndexOutOfBoundsException e) {
 			this.evilCards[0].setIcon(null);
@@ -273,8 +326,8 @@ public class GUI extends javax.swing.JFrame implements UserUpdates {
 		}
 
 		try {
-			this.goodCards[0].setIcon(
-					scaleImage("CData\\" + givenUser.goodPlayer.inventory[0].id + "_Card.png", (int) cardSize, (int) cardSize));
+			this.goodCards[0].setIcon(scaleImage("CData\\" + givenUser.goodPlayer.inventory[0].id + "_Card.png",
+					(int) cardSize, (int) cardSize));
 			this.goodCards[0].setVisible(true);
 		} catch (ArrayIndexOutOfBoundsException e) {
 			this.goodCards[0].setIcon(null);
@@ -289,8 +342,8 @@ public class GUI extends javax.swing.JFrame implements UserUpdates {
 
 		for (int i = 1; i < 5; i++) {
 			try {
-				this.evilCards[i].setIcon(
-						scaleImage("CData\\" + givenUser.evilPlayer.inventory[i].id + "_Card.png", (int) cardSize, (int) cardSize));
+				this.evilCards[i].setIcon(scaleImage("CData\\" + givenUser.evilPlayer.inventory[i].id + "_Card.png",
+						(int) cardSize, (int) cardSize));
 				this.evilCards[i].setVisible(true);
 			} catch (ArrayIndexOutOfBoundsException e) {
 				this.evilCards[i].setIcon(null);
@@ -301,8 +354,8 @@ public class GUI extends javax.swing.JFrame implements UserUpdates {
 			}
 
 			try {
-				this.goodCards[i].setIcon(
-						scaleImage("CData\\" + givenUser.goodPlayer.inventory[i].id + "_Card.png", (int) cardSize, (int) cardSize));
+				this.goodCards[i].setIcon(scaleImage("CData\\" + givenUser.goodPlayer.inventory[i].id + "_Card.png",
+						(int) cardSize, (int) cardSize));
 				this.goodCards[i].setVisible(true);
 			} catch (ArrayIndexOutOfBoundsException e) {
 				this.goodCards[i].setIcon(null);
@@ -318,13 +371,12 @@ public class GUI extends javax.swing.JFrame implements UserUpdates {
 					(int) cardSize, (int) cardSize);
 		}
 
-		
 		// bottom row Cards
 		evilY += cardSize + spaceSize;
 		goodY = evilY + this.segment * 6;
 		try {
-			this.evilCards[5].setIcon(
-					scaleImage("CData\\" + givenUser.evilPlayer.inventory[5].id + "_Card.png", (int) cardSize, (int) cardSize));
+			this.evilCards[5].setIcon(scaleImage("CData\\" + givenUser.evilPlayer.inventory[5].id + "_Card.png",
+					(int) cardSize, (int) cardSize));
 			this.evilCards[5].setVisible(true);
 		} catch (ArrayIndexOutOfBoundsException a) {
 			this.evilCards[5].setIcon(null);
@@ -335,8 +387,8 @@ public class GUI extends javax.swing.JFrame implements UserUpdates {
 		}
 
 		try {
-			this.goodCards[5].setIcon(
-					scaleImage("CData\\" + givenUser.goodPlayer.inventory[5].id + "_Card.png", (int) cardSize, (int) cardSize));
+			this.goodCards[5].setIcon(scaleImage("CData\\" + givenUser.goodPlayer.inventory[5].id + "_Card.png",
+					(int) cardSize, (int) cardSize));
 			this.goodCards[5].setVisible(true);
 		} catch (ArrayIndexOutOfBoundsException a) {
 			this.goodCards[5].setIcon(null);
@@ -351,8 +403,9 @@ public class GUI extends javax.swing.JFrame implements UserUpdates {
 
 		for (int i = 1; i < 5; i++) { // first row
 			try {
-				this.evilCards[i + 5].setIcon(scaleImage("CData\\" + givenUser.evilPlayer.inventory[i + 5].id + "_Card.png",
-						(int) cardSize, (int) cardSize));
+				this.evilCards[i + 5]
+						.setIcon(scaleImage("CData\\" + givenUser.evilPlayer.inventory[i + 5].id + "_Card.png",
+								(int) cardSize, (int) cardSize));
 				this.evilCards[i + 5].setVisible(true);
 			} catch (ArrayIndexOutOfBoundsException c) {
 				this.evilCards[i + 5].setIcon(null);
@@ -363,8 +416,9 @@ public class GUI extends javax.swing.JFrame implements UserUpdates {
 			}
 
 			try {
-				this.goodCards[i + 5].setIcon(scaleImage("CData\\" + givenUser.goodPlayer.inventory[i + 5].id + "_Card.png",
-						(int) cardSize, (int) cardSize));
+				this.goodCards[i + 5]
+						.setIcon(scaleImage("CData\\" + givenUser.goodPlayer.inventory[i + 5].id + "_Card.png",
+								(int) cardSize, (int) cardSize));
 				this.goodCards[i + 5].setVisible(true);
 			} catch (ArrayIndexOutOfBoundsException e) {
 				this.goodCards[i + 5].setIcon(null);
@@ -412,7 +466,7 @@ public class GUI extends javax.swing.JFrame implements UserUpdates {
 	}
 
 	@Override
-	public void entityDamage(int lane, boolean evil, int damage) {
+	public void entityDamage(int lane, boolean evil, String damage) {
 		// TODO Auto-generated method stub
 
 	}
@@ -430,7 +484,7 @@ public class GUI extends javax.swing.JFrame implements UserUpdates {
 	}
 
 	@Override
-	public void playerDamage(boolean evil, int damage) {
+	public void playerDamage(boolean evil, String damage) {
 		// TODO Auto-generated method stub
 
 	}
@@ -491,6 +545,14 @@ public class GUI extends javax.swing.JFrame implements UserUpdates {
 		this.updateLengthValues();
 		this.updateAllEntities();
 		for (int i = 0; i < 5; i++) {
+			if (this.givenUser.evil) {
+				this.evilEntities[i].setActionCommand("" + i);
+				this.evilEntities[i].addActionListener(this);
+			} else {
+				this.goodEntities[i].setActionCommand("" + i);
+				this.goodEntities[i].addActionListener(this);
+			}
+
 			this.add(evilEntities[i]);
 			this.add(goodEntities[i]);
 		}
@@ -501,9 +563,19 @@ public class GUI extends javax.swing.JFrame implements UserUpdates {
 		this.updateAllPlayers();
 		this.add(this.evilPlayer);
 		this.add(this.goodPlayer);
+		this.add(this.evilPlayerHealth);
+		this.add(this.goodPlayerHealth);
 
 		this.updateAllCards();
 		for (int i = 0; i < 10; i++) {
+			if (this.givenUser.evil) {
+				this.evilCards[i].setActionCommand("place" + i);
+				this.evilCards[i].addActionListener(this);
+			} else {
+				this.goodCards[i].setActionCommand("place" + i);
+				this.goodCards[i].addActionListener(this);
+			}
+
 			this.add(this.evilCards[i]);
 			this.add(this.goodCards[i]);
 		}
@@ -531,11 +603,12 @@ public class GUI extends javax.swing.JFrame implements UserUpdates {
 		if (developerMode) {
 			String output = this.developerConsole.getText();
 			boolean stillRunning = true;
+
 			while (stillRunning) {
 				try {
 					// this is a really messed up code where the loop keeps on waiting variable
 					// "DELAY"ms and then checking if the developerConsole ends with variable
-					// "endChar"'s value.
+					// "ENDCHAR"'s value.
 					Thread.sleep(DELAY);
 				} catch (InterruptedException e) {
 				}
@@ -543,8 +616,14 @@ public class GUI extends javax.swing.JFrame implements UserUpdates {
 				output = this.developerConsole.getText();
 
 				try {
-					stillRunning = output.charAt(output.length() - 1) != this.endChar;
+					stillRunning = output.charAt(output.length() - 1) != this.ENDCHAR;
 				} catch (StringIndexOutOfBoundsException e) {
+				}
+
+				if (this.userInputQueue.length != 0) {
+					output = userInputQueue[0];
+					this.removeBottomQueue(1);
+					return output;
 				}
 			}
 

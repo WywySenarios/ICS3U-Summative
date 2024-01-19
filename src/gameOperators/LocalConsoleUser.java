@@ -17,11 +17,11 @@ public class LocalConsoleUser extends User {
 	}
 
 	@Override
-	public void entityDamage(int lane, boolean evil, int damage) {
+	public void entityDamage(int lane, boolean evil, String damage) {
 		if (evil) { // evil entity
-			printOut("The evil entity at lane " + lane + " has changed in health by " + damage + "!", true);
+			printOut("The evil entity at lane " + (lane + 1) + " has changed in health by " + damage + "!", true);
 		} else { // good entity
-			printOut("The good entity at lane " + lane + " has changed in health by " + damage + "!", true);
+			printOut("The good entity at lane " + (lane + 1) + " has changed in health by " + damage + "!", true);
 		}
 	}
 
@@ -44,7 +44,7 @@ public class LocalConsoleUser extends User {
 	}
 
 	@Override
-	public void playerDamage(boolean evil, int damage) {
+	public void playerDamage(boolean evil, String damage) {
 		if (evil) { // evil Player
 			printOut("The evil PLAYER has received " + damage + " damage!", true);
 		} else { // good Player
@@ -153,7 +153,7 @@ public class LocalConsoleUser extends User {
 	}
 
 	public String getCommand() {
-		return getCommand("N/A");
+		return getCommand(null);
 	}
 
 	public String getCommand(String message) {

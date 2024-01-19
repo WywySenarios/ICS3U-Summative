@@ -23,20 +23,18 @@ public class Board extends Data {
 		super("Board", findFilePath(experimentalDeck));
 		this.evilDeck = new Deck(this, fileLocation + "\\DeckData\\" + evilDeckName + ".JSON", true);
 		this.goodDeck = new Deck(this, fileLocation + "\\DeckData\\" + goodDeckName + ".JSON", false);
-		
-		this.evilPlayer = new Player(evilUsername, evilName, 
-				this.isolateStringArray(evilName + "\\type"));
+
+		this.evilPlayer = new Player(evilUsername, evilName, this.isolateStringArray(evilName + "\\type"));
 		for (int i = 0; i < 4; i++) { // fill player inventory (5-1) times to counteract the preturn Card draw
 			evilPlayer.insertCard(this.evilDeck.drawCard());
 		}
 
-		this.goodPlayer = new Player(goodUsername, goodName, 
-				this.isolateStringArray(goodName + "\\type"));
+		this.goodPlayer = new Player(goodUsername, goodName, this.isolateStringArray(goodName + "\\type"));
 		for (int i = 0; i < 4; i++) { // fill player inventory (5-1) times to counteract the preturn Card draw
 			goodPlayer.insertCard(this.goodDeck.drawCard());
 		}
-		
-		if (! (this.goodPlayer.validInventory() && this.goodPlayer.validInventory())) {
+
+		if (!(this.goodPlayer.validInventory() && this.goodPlayer.validInventory())) {
 			throw new NullPointerException("BOARD CLASS HAS FUCKING FAILED ME");
 		}
 	}
@@ -58,12 +56,12 @@ public class Board extends Data {
 
 		String[] args = new String[1];
 		args[0] = "inventory";
-		
+
 		Card temp = evilDeck.drawCard();
 		Card temp2 = goodDeck.drawCard();
 
 		if (evilPlayer.insertCard(temp)) {
-			if(! this.evilPlayer.validInventory()) {
+			if (!this.evilPlayer.validInventory()) {
 				throw new NullPointerException("DRAWING A CARD FAILED ME");
 			}
 			// broadcast that a new Card has been added to the Evil Player's inventory
@@ -71,7 +69,7 @@ public class Board extends Data {
 		}
 
 		if (goodPlayer.insertCard(temp2)) {
-			if(! this.evilPlayer.validInventory()) {
+			if (!this.evilPlayer.validInventory()) {
 				throw new NullPointerException("DRAWING A CARD FAILED ME");
 			}
 			// broadcast that a new Card has been added to the Good Player's inventory
@@ -111,16 +109,25 @@ public class Board extends Data {
 
 			// environments trigger
 
-			/*
-			 * // kill necessary entities try { if (goodEntities[i].health <= 0) {
-			 * goodEntities[i] = null; server.updateEntity(null, i, false); } } catch
-			 * (NullPointerException e) { // this happens when there is no good Entity in
-			 * the lane }
-			 * 
-			 * try { if (evilEntities[i].health <= 0) { evilEntities[i] = null;
-			 * server.updateEntity(null, i, true); } } catch (NullPointerException e) { //
-			 * this happens when there is no evil Entity in the lane }
-			 */
+			// kill necessary entities
+			String[] args = {"kill"};
+			try {
+				if (goodEntities[i].health <= 0) {
+					goodEntities[i] = null;
+					server.updateEntity(args, i, false);
+				}
+			} catch (NullPointerException e) { // this happens when there is no good Entity in the lane
+			}
+
+			try {
+				if (evilEntities[i].health <= 0) {
+					evilEntities[i] = null;
+					server.updateEntity(args, i, true);
+				}
+			} catch (NullPointerException e) { // this happens when there is no evil Entity in the lane
+
+			}
+
 		}
 	}
 
@@ -221,7 +228,7 @@ public class Board extends Data {
 		} else { // good Player is placing a Card
 			currentCard = goodPlayer.inventory[inventorySlot];
 		}
-		
+
 		if (currentCard == null) {
 			throw new Exception("Attempted to place a Card with a value of \"null\"");
 		}
