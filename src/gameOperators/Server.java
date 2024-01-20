@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 
 import gameElements.Board;
 import gameElements.Duplicable;
@@ -18,13 +19,15 @@ public class Server implements UI {
 	private User goodUser;
 	protected Board b;
 	private String gameStatus = "ongoing";
+	private final int DELAY;
 
-	public Server(User user1_, User user2_, String evilDeckPath, String goodDeckPath, String logPath_)
+	public Server(User user1_, User user2_, String evilDeckPath, String goodDeckPath, String logPath_, int DELAY_)
 			throws Exception {
 		this.logPath = logPath_;
+		this.DELAY = DELAY_;
 
-		this.b = new Board(true, evilDeckPath, goodDeckPath, "evilPlayerUsername", "pls1",
-				"goodPlayerUsername", "plw1");
+		this.b = new Board(true, evilDeckPath, goodDeckPath, "evilPlayerUsername", "pls1", "goodPlayerUsername",
+				"plw1");
 		if (!this.b.addServer(this)) {
 			throw new Exception("Unsuccessful registry of server on the Board class.");
 		}
@@ -55,9 +58,35 @@ public class Server implements UI {
 			distributeObjects(b.goodEntities[entityUpdated]);
 		}
 
-		evilUser.updateEntity(args, entityUpdated, evil);
-		goodUser.updateEntity(args, entityUpdated, evil);
-		log("Updated Entity at location \"" + entityUpdated + "\".");
+		Thread evilThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				evilUser.updateEntity(args, entityUpdated, evil);
+			}
+		}, "updateEntity[evil=true,args=" + Arrays.toString(args) + "]");
+
+		Thread goodThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				goodUser.updateEntity(args, entityUpdated, evil);
+			}
+		}, "updateEntity[evil=false,args=" + Arrays.toString(args) + "]");
+
+		evilThread.start();
+		goodThread.start();
+		try {
+			Thread.sleep((int) (DELAY * 1.02)); // compensate for Computer not synchronizing.
+		} catch (InterruptedException e) {
+		}
+
+		// evilUser.updateEntity(args, entityUpdated, evil);
+		// goodUser.updateEntity(args, entityUpdated, evil);
+
+		if (evil) {
+			log("Updated evil Entity at location \"" + entityUpdated + "\". args = " + Arrays.toString(args));
+		} else {
+			log("Updated good Entity at location \"" + entityUpdated + "\". args = " + Arrays.toString(args));
+		}
 	}
 
 	public void updatePlayer(String[] args, boolean evil) {
@@ -70,9 +99,9 @@ public class Server implements UI {
 		evilUser.updatePlayer(args, evil);
 		goodUser.updatePlayer(args, evil);
 		if (evil) {
-			log("Updated \"evil\" Player.");
+			log("Updated \"evil\" Player. args = " + Arrays.toString(args));
 		} else {
-			log("Updated \"good\" Player.");
+			log("Updated \"good\" Player. args = " + Arrays.toString(args));
 		}
 	}
 
@@ -88,12 +117,14 @@ public class Server implements UI {
 		for (String i : args) {
 			logOutput += i + ",";
 		}
-		logOutput = logOutput.substring(0, logOutput.length() - 1) + "]\"";
+		logOutput = logOutput.substring(0, logOutput.length() - 1) + "]\". args = " + Arrays.toString(args);
 
 		log(logOutput);
 	}
 
 	private boolean log(String logInfo) {
+		//System.out.println(logInfo);
+
 		try {
 			FileWriter fileWriter = new FileWriter(logPath, true);
 			PrintWriter output = new PrintWriter(fileWriter, true);
@@ -108,11 +139,6 @@ public class Server implements UI {
 	}
 
 	public void play() throws Exception {
-
-		if (this.b.evilPlayer.inventory[0] == null) {
-			throw new Exception("yay the inventory slot is null...");
-		}
-
 		if (!gameStatus.equals("ongoing")) {
 			throw new Exception("Game already started");
 		}
@@ -171,7 +197,7 @@ public class Server implements UI {
 		// broadcast pregames
 		this.evilUser.pregame();
 		this.goodUser.pregame();
-		
+
 		// Decks
 		// N/A, the Decks are private lmao
 

@@ -1,19 +1,23 @@
 package gameOperators;
 
-import gameElements.Card;
+import java.util.Scanner;
+
 import gameElements.Player;
 
 public class LocalConsoleUser extends User {
 
 	private final boolean TEXTACKNOWLEDGEMENT;
-	private final int DELAY;
+	public Scanner console = new Scanner(System.in);
 
-	public LocalConsoleUser(boolean evil_, int delay) {
-		super("LocalConsole", evil_);
+	public LocalConsoleUser(boolean evil_, int DELAY_) {
+		super("LocalConsole", evil_, DELAY_);
 
-		this.DELAY = delay;
 		this.TEXTACKNOWLEDGEMENT = this.DELAY <= 0;
 
+	}
+	
+	public Scanner getConsole() { // returns a reference to the Scanner, not a duplicate
+		return this.console;
 	}
 
 	@Override
@@ -164,11 +168,11 @@ public class LocalConsoleUser extends User {
 	}
 
 	@Override
-	public void inventoryRemoveCard(Card givenCard) {
+	public void inventoryRemoveCard(int inventoryIndex, boolean evil) {
 	}
 
 	@Override
-	public void inventoryAddCard(Card givenCard) {
+	public void inventoryAddCard(int inventoryIndex, boolean evil) {
 	}
 
 	@Override

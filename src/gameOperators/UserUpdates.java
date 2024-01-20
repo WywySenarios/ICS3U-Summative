@@ -1,7 +1,5 @@
 package gameOperators;
 
-import gameElements.Card;
-
 public interface UserUpdates {
 	public String getCommand(String message);
 	
@@ -27,10 +25,10 @@ public interface UserUpdates {
 	public void gameEnd();
 
 	// display a Card being removed
-	public void inventoryRemoveCard(Card givenCard);
+	public void inventoryRemoveCard(int inventoryIndex, boolean evil);
 
 	// display a Card being added
-	public void inventoryAddCard(Card givenCard);
+	public void inventoryAddCard(int inventoryIndex, boolean evil);
 	
 	// pregame stuff. XD
 	// this is just for the GUI users.

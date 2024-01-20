@@ -54,24 +54,30 @@ public class Board extends Data {
 		 * Preturns handle: Card drawing. And literally nothing else lmao
 		 */
 
-		String[] args = new String[1];
-		args[0] = "inventory";
+		String[] args = {"inventory", "add", ""};
 
 		Card temp = evilDeck.drawCard();
 		Card temp2 = goodDeck.drawCard();
+		
+		int evilPlayerCardDrawStatus = evilPlayer.insertCard(temp);
+		int goodPlayerCardDrawStatus = goodPlayer.insertCard(temp2);
 
-		if (evilPlayer.insertCard(temp)) {
+		if (evilPlayerCardDrawStatus != -1) { // upon successful Card insertion,
 			if (!this.evilPlayer.validInventory()) {
 				throw new NullPointerException("DRAWING A CARD FAILED ME");
 			}
+			args[2] = "" + evilPlayerCardDrawStatus;
+			
 			// broadcast that a new Card has been added to the Evil Player's inventory
 			server.updatePlayer(args, true);
 		}
 
-		if (goodPlayer.insertCard(temp2)) {
+		if (goodPlayerCardDrawStatus != -1) { // upon successful Card insertion,
 			if (!this.evilPlayer.validInventory()) {
 				throw new NullPointerException("DRAWING A CARD FAILED ME");
 			}
+			args[2] = "" + goodPlayerCardDrawStatus;
+			
 			// broadcast that a new Card has been added to the Good Player's inventory
 			server.updatePlayer(args, false);
 		}
@@ -260,8 +266,10 @@ public class Board extends Data {
 			}
 
 			// broadcast changes
-			args = new String[1];
+			args = new String[3];
 			args[0] = "inventory";
+			args[1] = "remove";
+			args[2] = "" + inventorySlot;
 			server.updatePlayer(args, evil);
 
 			args = new String[1];
@@ -294,8 +302,10 @@ public class Board extends Data {
 				}
 
 				// broadcast changes
-				args = new String[1];
+				args = new String[3];
 				args[0] = "inventory";
+				args[1] = "remove";
+				args[2] = "" + inventorySlot;
 				server.updatePlayer(args, evil);
 			}
 
@@ -319,8 +329,10 @@ public class Board extends Data {
 			}
 
 			// broadcast changes
-			args = new String[1];
+			args = new String[3];
 			args[0] = "inventory";
+			args[1] = "remove";
+			args[2] = "" + inventorySlot;
 			server.updatePlayer(args, evil);
 
 			args = new String[1];

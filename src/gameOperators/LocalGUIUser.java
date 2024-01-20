@@ -1,68 +1,58 @@
 package gameOperators;
 
-import gameElements.Card;
-
 public class LocalGUIUser extends User {
 	
 	public GUI gui;
 
-	public LocalGUIUser(boolean evil_, boolean developerMode) {
-		super("LocalGUI", evil_);
+	public LocalGUIUser(boolean evil_, boolean developerMode, int DELAY_) {
+		super("LocalGUI", evil_, DELAY_);
 		
-		this.gui = new GUI(this, developerMode);
+		this.gui = new GUI(this, developerMode, "CData\\", DELAY_);
 	}
 
 	@Override
 	public void entityDamage(int lane, boolean evil, String damage) {
-		// TODO Auto-generated method stub
-		
+		this.gui.entityDamage(lane, evil, damage);
 	}
 
 	@Override
 	public void entityDeath(int lane, boolean evil) {
-		// TODO Auto-generated method stub
-		
+		this.gui.entityDeath(lane, evil);
 	}
 
 	@Override
 	public void summonEntity(int lane, boolean evil) {
-		// TODO Auto-generated method stub
-		
+		this.gui.summonEntity(lane, evil);
 	}
 
 	@Override
 	public void playerDamage(boolean evil, String damage) {
-		// TODO Auto-generated method stub
-		
+		this.gui.playerDamage(evil, damage);
 	}
 
 	@Override
 	public void playerDeath(boolean evil) {
-		// TODO Auto-generated method stub
-		
+		this.gui.playerDeath(evil);
 	}
 
 	@Override
 	public void summonPlayer(boolean evil) {
-		// TODO Auto-generated method stub
-		
+		this.gui.summonPlayer(evil);
 	}
 
 	@Override
 	public void gameEnd() {
-		// TODO Auto-generated method stub
-		
+		this.gui.gameEnd();
 	}
 
 	@Override
-	public void inventoryRemoveCard(Card givenCard) {
-		// TODO Auto-generated method stub
-		
+	public void inventoryRemoveCard(int inventoryIndex, boolean evil) {
+		this.gui.inventoryRemoveCard(inventoryIndex, evil);
 	}
 
 	@Override
-	public void inventoryAddCard(Card givenCard) {
-		// TODO Auto-generated method stub
+	public void inventoryAddCard(int inventoryIndex, boolean evil) {
+		this.gui.inventoryAddCard(inventoryIndex, evil);
 		
 	}
 
@@ -73,7 +63,6 @@ public class LocalGUIUser extends User {
 
 	@Override
 	public String getCommand(String message) {
-		// TODO Auto-generated method stub
 		return this.gui.getCommand(message);
 	}
 }

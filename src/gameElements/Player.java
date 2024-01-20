@@ -60,13 +60,13 @@ public class Player implements Duplicable {
 		}
 	}
 
-	public boolean insertCard(Card newCard) { // returns true upon successful insertion
+	public int insertCard(Card newCard) { // returns the index that was updated
 		if (newCard == null) {
 			throw new NullPointerException("Attempted to insert a null value into a Player's inventory");
 		}
 		
 		if (inventory.length == 10) {
-			return false;
+			return -1;
 		} else {
 			// repopulate array
 			Card[] temp = inventory;
@@ -78,7 +78,7 @@ public class Player implements Duplicable {
 			}
 
 			inventory[currentIndex] = newCard;
-			return true;
+			return currentIndex;
 		}
 	}
 
