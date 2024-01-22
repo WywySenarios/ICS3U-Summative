@@ -6,20 +6,43 @@ import gameElements.Entity;
 import gameElements.Move;
 import gameElements.Player;
 
+/**
+ *
+ * @author pc
+ */
 public class AttackLeader extends Move implements ChoiceMove {
-	public int damage;
 
-	public AttackLeader(int damage_, boolean evil_) {
+    /**
+     *
+     */
+    public int damage;
+
+    /**
+     *
+     * @param damage_
+     * @param evil_
+     */
+    public AttackLeader(int damage_, boolean evil_) {
 		super("AttackLeader", evil_);
 		this.damage = damage_;
 	}
 
-	@Override
+    /**
+     *
+     * @return
+     */
+    @Override
 	public Object duplicate() {
 		return new AttackLeader(this.damage, super.evil);
 	}
 
-	@Override
+    /**
+     *
+     * @param attacker
+     * @param b
+     * @param selection
+     */
+    @Override
 	public void move(Entity attacker, Board b, int selection) {
 
 		/*

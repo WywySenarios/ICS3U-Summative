@@ -1,20 +1,78 @@
 package gameElements;
 
+/**
+ *
+ * @author pc
+ */
 public class Entity implements HasAbility, Duplicable{
 
-	public String id;
-	public boolean inInventory = true;
-	public String[] type;
-	public int health;
-	public int hpr;
-	public int attackModifier;
-	public int shield;
-	public boolean aggressive;
-	public String[] statusEffects = new String[0];
-	public Move[] moves;
-	public Ability[] abilities;
+    /**
+     *
+     */
+    public String id;
+
+    /**
+     *
+     */
+    public boolean inInventory = true;
+
+    /**
+     *
+     */
+    public String[] type;
+
+    /**
+     *
+     */
+    public int health;
+
+    /**
+     *
+     */
+    public int hpr;
+
+    /**
+     *
+     */
+    public int attackModifier;
+
+    /**
+     *
+     */
+    public int shield;
+
+    /**
+     *
+     */
+    public boolean aggressive;
+
+    /**
+     *
+     */
+    public String[] statusEffects = new String[0];
+
+    /**
+     *
+     */
+    public Move[] moves;
+
+    /**
+     *
+     */
+    public Ability[] abilities;
 	
-	public Entity(String id_, String[] type_, int health_, int hpr_, int shield_, boolean aggressive_, Move[] moves_, Ability[] abilities_) {
+    /**
+     *
+     * @param id_
+     * @param type_
+     * @param health_
+     * @param hpr_
+     * @param shield_
+     * @param aggressive_
+     * @param moves_
+     * @param abilities_
+     */
+    public Entity(String id_, String[] type_, int health_, int hpr_, int shield_, boolean aggressive_, Move[] moves_, Ability[] abilities_) {
 		this.id = id_;
 		this.type = type_;
 		this.health = health_;
@@ -32,7 +90,11 @@ public class Entity implements HasAbility, Duplicable{
 		this.statusEffects = statusEffects_;
 	}
 	
-	public void triggerAbilities(String command) {
+    /**
+     *
+     * @param command
+     */
+    public void triggerAbilities(String command) {
 		for (Ability i : abilities) {
 			/*
 			 * 1) the TYPE must be equivalent
@@ -44,7 +106,12 @@ public class Entity implements HasAbility, Duplicable{
 		}
 	}
 	
-	@Override
+    /**
+     *
+     * @param command
+     * @param e
+     */
+    @Override
 	public void triggerAbilities(String command, Entity e) {
 		for (Ability i : abilities) {
 			/*
@@ -57,7 +124,13 @@ public class Entity implements HasAbility, Duplicable{
 		}
 	}
 	
-	@Override
+    /**
+     *
+     * @param command
+     * @param e
+     * @param potency
+     */
+    @Override
 	public void triggerAbilities(String command, Entity e, int potency) {
 		for (Ability i : abilities) {
 			/*
@@ -70,7 +143,11 @@ public class Entity implements HasAbility, Duplicable{
 		}
 	}
 	
-	@Override
+    /**
+     *
+     * @return
+     */
+    @Override
 	public Object duplicate() {
 		// duplicate type
 		String[] outputType = new String[this.type.length];
@@ -103,7 +180,11 @@ public class Entity implements HasAbility, Duplicable{
 		return new Entity(this.id, outputType, this.health, this.hpr, this.shield, this.aggressive, outputMoves, outputAbilities, this.inInventory, this.attackModifier, outputStatusEffects);
 	}
 	
-	public boolean isAlive() {
+    /**
+     *
+     * @return
+     */
+    public boolean isAlive() {
 		if (health > 0) {
 			return true;
 		} else {
@@ -111,7 +192,13 @@ public class Entity implements HasAbility, Duplicable{
 		}
 	}
 	
-	public boolean receiveDamage(Entity attacker, int damage) { // returns true if the Enitty has 0- HP
+    /**
+     *
+     * @param attacker
+     * @param damage
+     * @return
+     */
+    public boolean receiveDamage(Entity attacker, int damage) { // returns true if the Enitty has 0- HP
 		this.health -= damage;
 		this.triggerAbilities("AbilityReceiveDamage", attacker, damage);
 		
@@ -122,7 +209,11 @@ public class Entity implements HasAbility, Duplicable{
 		}
 	}
 	
-	public String toString() {
+    /**
+     *
+     * @return
+     */
+    public String toString() {
 		String output = "[inInventory:";
 		
 		// inInventory

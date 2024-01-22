@@ -1,5 +1,15 @@
 package gameElements;
 
+/**
+ *
+ * @author pc
+ */
 public interface NoChoiceMove {
-public void move(Entity attacker, Board b);
+
+    /**
+     *
+     * @param attacker
+     * @param b
+     */
+    public void move(Entity attacker, Board b);
 }

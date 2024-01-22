@@ -1,7 +1,29 @@
 package gameElements;
 
+/**
+ *
+ * @author pc
+ */
 public interface HasAbility {
-public void triggerAbilities(String command);
-public void triggerAbilities(String command, Entity e);
-public void triggerAbilities(String command, Entity e, int potency);
+
+    /**
+     *
+     * @param command
+     */
+    public void triggerAbilities(String command);
+
+    /**
+     *
+     * @param command
+     * @param e
+     */
+    public void triggerAbilities(String command, Entity e);
+
+    /**
+     *
+     * @param command
+     * @param e
+     * @param potency
+     */
+    public void triggerAbilities(String command, Entity e, int potency);
 }

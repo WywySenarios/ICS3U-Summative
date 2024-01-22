@@ -5,25 +5,51 @@ import gameElements.ChoiceMove;
 import gameElements.Entity;
 import gameElements.Move;
 
+/**
+ *
+ * @author pc
+ */
 public class HealTarget extends Move implements ChoiceMove {
 
-	public int health;
-	public int target;
+    /**
+     *
+     */
+    public int health;
+
+    /**
+     *
+     */
+    public int target;
 	
-	public HealTarget(int health_, int target_, boolean evil_) {
+    /**
+     *
+     * @param health_
+     * @param target_
+     * @param evil_
+     */
+    public HealTarget(int health_, int target_, boolean evil_) {
 		super("HealTarget", evil_);
 		this.health = health_;
 		this.target = target_;
 	}
 
-	@Override
+    /**
+     *
+     * @return
+     */
+    @Override
 	public Object duplicate() {
 		// TODO Auto-generated method stub
 		return new HealTarget(this.health, this.target, this.evil);
 	}
 
-	
-	@Override
+    /**
+     *
+     * @param attacker
+     * @param b
+     * @param selection
+     */
+    @Override
 	public void move(Entity attacker, Board b, int selection) {
 		String[] args = {"damage", "" + (this.health * -1)};
 		

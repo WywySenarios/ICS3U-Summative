@@ -11,6 +11,10 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+/**
+ *
+ * @author pc
+ */
 public class GUI extends javax.swing.JFrame implements UserUpdates, ActionListener {
 
 	// Variables declaration
@@ -70,7 +74,14 @@ public class GUI extends javax.swing.JFrame implements UserUpdates, ActionListen
 	// I'm letting Eclipse IDE generate me a serialVersionUID.
 	private static final long serialVersionUID = 6998556482722372610L;
 
-	public GUI(User givenUser, boolean developerMode, String FILEPATH_, int DELAY_) {
+    /**
+     *
+     * @param givenUser
+     * @param developerMode
+     * @param FILEPATH_
+     * @param DELAY_
+     */
+    public GUI(User givenUser, boolean developerMode, String FILEPATH_, int DELAY_) {
 		this.givenUser = givenUser;
 
 		this.FILEPATH = FILEPATH_;
@@ -78,7 +89,11 @@ public class GUI extends javax.swing.JFrame implements UserUpdates, ActionListen
 		this.developerMode = developerMode;
 	}
 
-	public void queueInput(String command) {
+    /**
+     *
+     * @param command
+     */
+    public void queueInput(String command) {
 		String[] temp = userInputQueue;
 		userInputQueue = new String[temp.length + 1];
 
@@ -89,7 +104,11 @@ public class GUI extends javax.swing.JFrame implements UserUpdates, ActionListen
 		userInputQueue[temp.length] = command;
 	}
 
-	public void removeBottomQueue(int numberOfActions) {
+    /**
+     *
+     * @param numberOfActions
+     */
+    public void removeBottomQueue(int numberOfActions) {
 		String[] temp = this.userInputQueue;
 		this.userInputQueue = new String[this.userInputQueue.length - numberOfActions];
 
@@ -98,7 +117,11 @@ public class GUI extends javax.swing.JFrame implements UserUpdates, ActionListen
 		}
 	}
 
-	public void removeQueue(int numberOfActions) {
+    /**
+     *
+     * @param numberOfActions
+     */
+    public void removeQueue(int numberOfActions) {
 		int numberOfInputs = this.userInputQueue.length - numberOfActions;
 		String[] temp = this.userInputQueue;
 		this.userInputQueue = new String[numberOfInputs];
@@ -108,7 +131,11 @@ public class GUI extends javax.swing.JFrame implements UserUpdates, ActionListen
 		}
 	}
 
-	public void actionPerformed(ActionEvent action) { // in the event that the user presses anything,
+    /**
+     *
+     * @param action
+     */
+    public void actionPerformed(ActionEvent action) { // in the event that the user presses anything,
 		// lastUserInput = action.getActionCommand();
 		String command = action.getActionCommand();
 
@@ -494,28 +521,53 @@ public class GUI extends javax.swing.JFrame implements UserUpdates, ActionListen
 		this.pack();
 	}
 
-	@Override
+    /**
+     *
+     * @param lane
+     * @param evil
+     * @param damage
+     */
+    @Override
 	public void entityDamage(int lane, boolean evil, String damage) {
 		String[] args = { damage };
 		this.entityAnimation(lane, evil, "damage", args);
 	}
 
-	@Override
+    /**
+     *
+     * @param lane
+     * @param evil
+     */
+    @Override
 	public void entityDeath(int lane, boolean evil) {
 		this.entityAnimation(lane, evil, "death");
 	}
 
-	@Override
+    /**
+     *
+     * @param lane
+     * @param evil
+     */
+    @Override
 	public void summonEntity(int lane, boolean evil) {
 		this.entityAnimation(lane, evil, "spawn");
 	}
 
-	@Override
+    /**
+     *
+     * @param evil
+     * @param damage
+     */
+    @Override
 	public void playerDamage(boolean evil, String damage) {
 		this.playerAnimation(evil, " - " + damage + "HP");
 	}
 
-	@Override
+    /**
+     *
+     * @param evil
+     */
+    @Override
 	public void playerDeath(boolean evil) {
 		this.updatePlayer(evil);
 		if (evil == this.givenUser.evil) {
@@ -531,13 +583,20 @@ public class GUI extends javax.swing.JFrame implements UserUpdates, ActionListen
 		this.pack();
 	}
 
-	@Override
+    /**
+     *
+     * @param evil
+     */
+    @Override
 	public void summonPlayer(boolean evil) {
 		this.updatePlayer(evil);
 
 	}
 
-	@Override
+    /**
+     *
+     */
+    @Override
 	public void gameEnd() {
 		this.endScreen.setVisible(true);
 		this.endScreen.setBounds(0, 0, 1000, 1000);
@@ -551,7 +610,12 @@ public class GUI extends javax.swing.JFrame implements UserUpdates, ActionListen
 		this.dispose();
 	}
 
-	@Override
+    /**
+     *
+     * @param inventoryIndex
+     * @param evil
+     */
+    @Override
 	public void inventoryRemoveCard(int inventoryIndex, boolean evil) {
 		// this means moving all the cards after the given Card. YAY!
 		int inventoryLength;
@@ -568,14 +632,22 @@ public class GUI extends javax.swing.JFrame implements UserUpdates, ActionListen
 		this.pack();
 	}
 
-	@Override
+    /**
+     *
+     * @param inventoryIndex
+     * @param evil
+     */
+    @Override
 	public void inventoryAddCard(int inventoryIndex, boolean evil) {
 		// we only need to update the very last card---the one that was just drawn
 		this.updateCard(evil, inventoryIndex);
 		this.pack();
 	}
 
-	@Override
+    /**
+     *
+     */
+    @Override
 	public void pregame() {
 		// configure the entire window
 		this.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -655,7 +727,12 @@ public class GUI extends javax.swing.JFrame implements UserUpdates, ActionListen
 		this.updateEntireScreen();
 	}
 
-	@Override
+    /**
+     *
+     * @param message
+     * @return
+     */
+    @Override
 	public String getCommand(String message) {
 		String output = this.developerConsole.getText();
 		boolean stillRunning = true;

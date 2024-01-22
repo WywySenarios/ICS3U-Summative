@@ -5,17 +5,39 @@ import gameElements.ChoiceMove;
 import gameElements.Entity;
 import gameElements.Move;
 
+/**
+ *
+ * @author pc
+ */
 public class AttackTarget extends Move implements ChoiceMove {
-	public int damage;
-	public String[] statusEffects;
 
-	public AttackTarget(int damage_, String[] statusEffects_, boolean evil_) {
+    /**
+     *
+     */
+    public int damage;
+
+    /**
+     *
+     */
+    public String[] statusEffects;
+
+    /**
+     *
+     * @param damage_
+     * @param statusEffects_
+     * @param evil_
+     */
+    public AttackTarget(int damage_, String[] statusEffects_, boolean evil_) {
 		super("AttackTarget", evil_);
 		this.damage = damage_;
 		this.statusEffects = statusEffects_;
 	}
 
-	@Override
+    /**
+     *
+     * @return
+     */
+    @Override
 	public Object duplicate() {
 		// duplicate statusEffects
 		String[] outputStatusEffects = new String[this.statusEffects.length];
@@ -27,7 +49,13 @@ public class AttackTarget extends Move implements ChoiceMove {
 		return new AttackTarget(this.damage, outputStatusEffects, super.evil);
 	}
 
-	@Override
+    /**
+     *
+     * @param attacker
+     * @param b
+     * @param selection
+     */
+    @Override
 	public void move(Entity attacker, Board b, int selection) {
 
 		/*

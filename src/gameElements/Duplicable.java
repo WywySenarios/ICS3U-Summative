@@ -1,5 +1,14 @@
 package gameElements;
 
+/**
+ *
+ * @author pc
+ */
 public interface Duplicable {
-public Object duplicate();
+
+    /**
+     *
+     * @return
+     */
+    public Object duplicate();
 }

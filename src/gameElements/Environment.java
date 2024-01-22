@@ -1,15 +1,50 @@
 package gameElements;
 
+/**
+ *
+ * @author pc
+ */
 public class Environment implements HasAbility, Duplicable {
 
-	public String id;
-	public boolean inInventory;
-	public String[] type;
-	public Move[] moves;
-	public Ability[] abilities;
-	public final boolean PERMANENT;
+    /**
+     *
+     */
+    public String id;
 
-	public Environment(String id_, String[] type_, Move[] moves_, Ability[] abilities_, boolean PERMANENT_) {
+    /**
+     *
+     */
+    public boolean inInventory;
+
+    /**
+     *
+     */
+    public String[] type;
+
+    /**
+     *
+     */
+    public Move[] moves;
+
+    /**
+     *
+     */
+    public Ability[] abilities;
+
+    /**
+     *
+     */
+    public final boolean PERMANENT;
+
+    /**
+     *
+     * @param id_
+     * @param type_
+     * @param moves_
+     * @param abilities_
+     * @param PERMANENT_
+     */
+    public Environment(String id_, String[] type_, Move[] moves_, Ability[] abilities_, boolean PERMANENT_) {
 		this.id = id_;
 		this.type = type_;
 		this.moves = moves_;
@@ -17,7 +52,11 @@ public class Environment implements HasAbility, Duplicable {
 		this.PERMANENT = PERMANENT_;
 	}
 
-	@Override
+    /**
+     *
+     * @param command
+     */
+    @Override
 	public void triggerAbilities(String command) {
 		for (Ability i : abilities) {
 			/*
@@ -31,7 +70,12 @@ public class Environment implements HasAbility, Duplicable {
 		}
 	}
 
-	@Override
+    /**
+     *
+     * @param command
+     * @param e
+     */
+    @Override
 	public void triggerAbilities(String command, Entity e) {
 		for (Ability i : abilities) {
 			/*
@@ -45,7 +89,13 @@ public class Environment implements HasAbility, Duplicable {
 		}
 	}
 
-	@Override
+    /**
+     *
+     * @param command
+     * @param e
+     * @param potency
+     */
+    @Override
 	public void triggerAbilities(String command, Entity e, int potency) {
 		for (Ability i : abilities) {
 			/*
@@ -59,7 +109,11 @@ public class Environment implements HasAbility, Duplicable {
 		}
 	}
 
-	@Override
+    /**
+     *
+     * @return
+     */
+    @Override
 	public Object duplicate() {
 		// duplicate type
 		String[] outputType = new String[this.type.length];
@@ -85,7 +139,11 @@ public class Environment implements HasAbility, Duplicable {
 		return new Environment(this.id, outputType, outputMoves, outputAbilities, this.PERMANENT);
 	}
 
-	public String toString() {
+    /**
+     *
+     * @return
+     */
+    public String toString() {
 		String output = "[inInventory:";
 
 		// inInventory

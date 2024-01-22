@@ -1,17 +1,62 @@
 package gameElements;
 
+/**
+ *
+ * @author pc
+ */
 public class Special implements HasAbility, Duplicable {
 
-	public String id;
-	public boolean inInventory;
-	public String[] type;
-	public int charges;
-	public int chargeRegen;
-	public String sacrificial;
-	public Move move;
-	public Ability[] abilities;
+    /**
+     *
+     */
+    public String id;
 
-	public Special(String id_, String[] type_, int charges_, int chargeRegen_, String sacrificial_, Move move_,
+    /**
+     *
+     */
+    public boolean inInventory;
+
+    /**
+     *
+     */
+    public String[] type;
+
+    /**
+     *
+     */
+    public int charges;
+
+    /**
+     *
+     */
+    public int chargeRegen;
+
+    /**
+     *
+     */
+    public String sacrificial;
+
+    /**
+     *
+     */
+    public Move move;
+
+    /**
+     *
+     */
+    public Ability[] abilities;
+
+    /**
+     *
+     * @param id_
+     * @param type_
+     * @param charges_
+     * @param chargeRegen_
+     * @param sacrificial_
+     * @param move_
+     * @param abilities_
+     */
+    public Special(String id_, String[] type_, int charges_, int chargeRegen_, String sacrificial_, Move move_,
 			Ability[] abilities_) {
 		this.id = id_;
 		this.type = type_;
@@ -22,7 +67,11 @@ public class Special implements HasAbility, Duplicable {
 		this.abilities = abilities_;
 	}
 
-	@Override
+    /**
+     *
+     * @param command
+     */
+    @Override
 	public void triggerAbilities(String command) {
 		for (Ability i : abilities) {
 			/*
@@ -36,7 +85,12 @@ public class Special implements HasAbility, Duplicable {
 		}
 	}
 
-	@Override
+    /**
+     *
+     * @param command
+     * @param e
+     */
+    @Override
 	public void triggerAbilities(String command, Entity e) {
 		for (Ability i : abilities) {
 			/*
@@ -50,7 +104,13 @@ public class Special implements HasAbility, Duplicable {
 		}
 	}
 
-	@Override
+    /**
+     *
+     * @param command
+     * @param e
+     * @param potentcy
+     */
+    @Override
 	public void triggerAbilities(String command, Entity e, int potentcy) {
 		for (Ability i : abilities) {
 			/*
@@ -64,7 +124,11 @@ public class Special implements HasAbility, Duplicable {
 		}
 	}
 
-	@Override
+    /**
+     *
+     * @return
+     */
+    @Override
 	public Object duplicate() {
 		// duplicate type
 		String[] outputType = new String[this.type.length];
@@ -84,7 +148,11 @@ public class Special implements HasAbility, Duplicable {
 				outputAbilities);
 	}
 
-	public String toString() {
+    /**
+     *
+     * @return
+     */
+    public String toString() {
 		String output = "[inInventory:";
 
 		// inInventory

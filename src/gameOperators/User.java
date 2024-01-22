@@ -5,26 +5,86 @@ import gameElements.Entity;
 import gameElements.Environment;
 import gameElements.Player;
 
+/**
+ *
+ * @author pc
+ */
 public abstract class User implements UI, UserUpdates {
 
 	private String uiType;
-	public boolean evil;
-	public String gameStatus;
-	public final int DELAY;
 
-	public Player evilPlayer;
-	public Player goodPlayer;
-	public Entity[] evilEntities = new Entity[5];
-	public int[] evilAttacks = new int[5];
-	public Entity[] goodEntities = new Entity[5];
-	public int[] goodAttacks = new int[5];
-	public Environment[] environments = new Environment[5];
-	public Deck evilDeck;
-	public Deck goodDeck;
+    /**
+     *
+     */
+    public boolean evil;
 
-	public Object lastReceivedObject;
+    /**
+     *
+     */
+    public String gameStatus;
 
-	public User(String uiType_, boolean evil_, int DELAY_) {
+    /**
+     *
+     */
+    public final int DELAY;
+
+    /**
+     *
+     */
+    public Player evilPlayer;
+
+    /**
+     *
+     */
+    public Player goodPlayer;
+
+    /**
+     *
+     */
+    public Entity[] evilEntities = new Entity[5];
+
+    /**
+     *
+     */
+    public int[] evilAttacks = new int[5];
+
+    /**
+     *
+     */
+    public Entity[] goodEntities = new Entity[5];
+
+    /**
+     *
+     */
+    public int[] goodAttacks = new int[5];
+
+    /**
+     *
+     */
+    public Environment[] environments = new Environment[5];
+
+    /**
+     *
+     */
+    public Deck evilDeck;
+
+    /**
+     *
+     */
+    public Deck goodDeck;
+
+    /**
+     *
+     */
+    public Object lastReceivedObject;
+
+    /**
+     *
+     * @param uiType_
+     * @param evil_
+     * @param DELAY_
+     */
+    public User(String uiType_, boolean evil_, int DELAY_) {
 		this.uiType = uiType_;
 		this.evil = evil_;
 		this.gameStatus = "ongoing";
@@ -39,19 +99,37 @@ public abstract class User implements UI, UserUpdates {
 
 	// VARIOUS ACCESSORS:
 
+    /**
+     *
+     * @return
+     */
+
 	public String getUiType() {
 		return uiType;
 	}
 
-	public boolean getEvil() {
+    /**
+     *
+     * @return
+     */
+    public boolean getEvil() {
 		return this.evil;
 	}
 
-	public String getGameStatus() {
+    /**
+     *
+     * @return
+     */
+    public String getGameStatus() {
 		return this.gameStatus;
 	}
 
-	public Player getPlayer(boolean evil) { // returns a reference to the Player, not a duplicate
+    /**
+     *
+     * @param evil
+     * @return
+     */
+    public Player getPlayer(boolean evil) { // returns a reference to the Player, not a duplicate
 		if (evil) {
 			return this.evilPlayer;
 		} else {
@@ -59,7 +137,12 @@ public abstract class User implements UI, UserUpdates {
 		}
 	}
 
-	public Entity[] getEntities(boolean evil) { // returns a reference to the Array and Entities, not duplicates
+    /**
+     *
+     * @param evil
+     * @return
+     */
+    public Entity[] getEntities(boolean evil) { // returns a reference to the Array and Entities, not duplicates
 		if (evil) {
 			return this.evilEntities;
 		} else {
@@ -67,7 +150,12 @@ public abstract class User implements UI, UserUpdates {
 		}
 	}
 
-	public int[] getAttacks(boolean evil) { // returns a reference to the Array, not a duplicate
+    /**
+     *
+     * @param evil
+     * @return
+     */
+    public int[] getAttacks(boolean evil) { // returns a reference to the Array, not a duplicate
 		if (evil) {
 			return this.evilAttacks;
 		} else {
@@ -75,11 +163,20 @@ public abstract class User implements UI, UserUpdates {
 		}
 	}
 
-	public Environment[] getEnvironments() { // returns a reference to the Array and Environments, not duplicates
+    /**
+     *
+     * @return
+     */
+    public Environment[] getEnvironments() { // returns a reference to the Array and Environments, not duplicates
 		return this.environments;
 	}
 
-	public Deck getDeck(boolean evil) {
+    /**
+     *
+     * @param evil
+     * @return
+     */
+    public Deck getDeck(boolean evil) {
 		if (evil) {
 			return this.evilDeck;
 		} else {
@@ -89,11 +186,23 @@ public abstract class User implements UI, UserUpdates {
 
 	// end: VARIOUS ACCESORS
 
+    /**
+     *
+     * @param message
+     * @return
+     */
+
 	public String getCommand(String message) {
 		return null;
 	}
 
-	public void updateEntity(String[] args, int entityUpdated, boolean evil) {
+    /**
+     *
+     * @param args
+     * @param entityUpdated
+     * @param evil
+     */
+    public void updateEntity(String[] args, int entityUpdated, boolean evil) {
 		// push changes
 
 		if (evil) {
@@ -117,7 +226,12 @@ public abstract class User implements UI, UserUpdates {
 		}
 	}
 
-	public void updatePlayer(String[] args, boolean evil) {
+    /**
+     *
+     * @param args
+     * @param evil
+     */
+    public void updatePlayer(String[] args, boolean evil) {
 		// push changes
 		if (evil) {
 			this.evilPlayer = (Player) lastReceivedObject;
@@ -144,7 +258,11 @@ public abstract class User implements UI, UserUpdates {
 		}
 	}
 
-	public void updateGameStatus(String[] args) {
+    /**
+     *
+     * @param args
+     */
+    public void updateGameStatus(String[] args) {
 		switch (args[0]) {
 		case "end":
 			this.playerDeath(args[1].equals("true"));

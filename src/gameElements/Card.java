@@ -1,17 +1,56 @@
 package gameElements;
 
+/**
+ *
+ * @author pc
+ */
 public class Card implements Duplicable {
 
 	private Entity entity;
 	private Special special;
 	private Environment environment;
-	public String id;
-	public String name;
-	public String[] type;
-	public int cost;
-	public final String RARITY;
+
+    /**
+     *
+     */
+    public String id;
+
+    /**
+     *
+     */
+    public String name;
+
+    /**
+     *
+     */
+    public String[] type;
+
+    /**
+     *
+     */
+    public int cost;
+
+    /**
+     *
+     */
+    public final String RARITY;
 
 	// Entity constructor
+
+    /**
+     *
+     * @param id_
+     * @param name_
+     * @param type_
+     * @param cost_
+     * @param RARITY_
+     * @param health_
+     * @param hpr_
+     * @param shield_
+     * @param aggressive_
+     * @param moves_
+     * @param abilities_
+     */
 	public Card(String id_, String name_, String[] type_, int cost_, String RARITY_, int health_, int hpr_, int shield_,
 			boolean aggressive_, Move[] moves_, Ability[] abilities_) {
 		this.id = id_;
@@ -32,6 +71,20 @@ public class Card implements Duplicable {
 	}
 
 	// Special constructor
+
+    /**
+     *
+     * @param id_
+     * @param name_
+     * @param type_
+     * @param cost_
+     * @param RARITY_
+     * @param charges_
+     * @param chargeRegen_
+     * @param sacrificial_
+     * @param move_
+     * @param abilities_
+     */
 	public Card(String id_, String name_, String[] type_, int cost_, String RARITY_, int charges_, int chargeRegen_,
 			String sacrificial_, Move move_, Ability[] abilities_) {
 		this.id = id_;
@@ -52,6 +105,18 @@ public class Card implements Duplicable {
 	}
 
 	// Environment constructor
+
+    /**
+     *
+     * @param id_
+     * @param name_
+     * @param type_
+     * @param cost_
+     * @param RARITY_
+     * @param moves_
+     * @param abilities_
+     * @param PERMANENT_
+     */
 	public Card(String id_, String name_, String[] type_, int cost_, String RARITY_, Move[] moves_,
 			Ability[] abilities_, boolean PERMANENT_) {
 		this.id = id_;
@@ -71,7 +136,11 @@ public class Card implements Duplicable {
 		this.special = special_;
 	}
 
-	@Override
+    /**
+     *
+     * @return
+     */
+    @Override
 	public Object duplicate() {
 		// duplicate type
 		String[] outputType = new String[this.type.length];
@@ -92,7 +161,11 @@ public class Card implements Duplicable {
 		}
 	}
 
-	public String getType() {
+    /**
+     *
+     * @return
+     */
+    public String getType() {
 		if (this.entity != null) {
 			return "en";
 		} else if (this.special != null) {
@@ -104,7 +177,11 @@ public class Card implements Duplicable {
 		}
 	}
 
-	public Object get() {
+    /**
+     *
+     * @return
+     */
+    public Object get() {
 		if (this.entity != null) {
 			return this.entity;
 		} else if (this.special != null) {
@@ -116,7 +193,11 @@ public class Card implements Duplicable {
 		}
 	}
 
-	public String toString() {
+    /**
+     *
+     * @return
+     */
+    public String toString() {
 		switch (this.getType()) {
 		case "en":
 			return "en:" + this.entity.toString();

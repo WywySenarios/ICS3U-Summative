@@ -20,22 +20,47 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+/**
+ *
+ * @author pc
+ */
 public class Data {
-	public final String TYPE;
-	public final String PATH;
-	protected JSONObject file;
+
+    /**
+     *
+     */
+    public final String TYPE;
+
+    /**
+     *
+     */
+    public final String PATH;
+
+    /**
+     *
+     */
+    protected JSONObject file;
 	private FileWriter fileWrite;
 	private PrintWriter fileOut;
 	private String output;
 	private boolean isEmpty;
 	
-	public Data(JSONObject file_) {
+    /**
+     *
+     * @param file_
+     */
+    public Data(JSONObject file_) {
 		this.file = file_;
 		this.TYPE = null;
 		this.PATH = null;
 	}
 
-	public Data(String type_, String path_) {
+    /**
+     *
+     * @param type_
+     * @param path_
+     */
+    public Data(String type_, String path_) {
 		this.TYPE = type_;
 		this.PATH = path_;
 		isEmpty = false;
@@ -77,7 +102,11 @@ public class Data {
 		return true;
 	}
 
-	public String getData() {
+    /**
+     *
+     * @return
+     */
+    public String getData() {
 		String output = "";
 
 		for (Object o : file.entrySet()) {
@@ -87,7 +116,11 @@ public class Data {
 		return output.substring(0, output.length() - 1);
 	}
 
-	public Object[] getDatapoints() {
+    /**
+     *
+     * @return
+     */
+    public Object[] getDatapoints() {
 		int size = file.entrySet().size();
 		int index = 0;
 		Object[] output = new Object[size];
@@ -100,7 +133,10 @@ public class Data {
 		return output;
 	}
 
-	public void pushData() {
+    /**
+     *
+     */
+    public void pushData() {
 		try {
 			fileWrite = new FileWriter(PATH);
 		} catch (IOException e) {
@@ -121,7 +157,12 @@ public class Data {
 		}
 	}
 
-	public Object isolateObject(String path_) {
+    /**
+     *
+     * @param path_
+     * @return
+     */
+    public Object isolateObject(String path_) {
 		// the String keys uses similar notation to file paths
 		// find and break up the different
 		int length = 0;
@@ -171,27 +212,57 @@ public class Data {
 		}
 	}
 	
-	public JSONObject isolateJSONObject(String path_) {
+    /**
+     *
+     * @param path_
+     * @return
+     */
+    public JSONObject isolateJSONObject(String path_) {
 		return (JSONObject) isolateObject(path_);
 	}
 
-	public String isolateString(String path_) {
+    /**
+     *
+     * @param path_
+     * @return
+     */
+    public String isolateString(String path_) {
 		return (String) isolateObject(path_);
 	}
 
-	public int isolateInt(String path_) {
+    /**
+     *
+     * @param path_
+     * @return
+     */
+    public int isolateInt(String path_) {
 		return (int) (long) isolateObject(path_);
 	}
 
-	public boolean isolateBoolean(String path_) {
+    /**
+     *
+     * @param path_
+     * @return
+     */
+    public boolean isolateBoolean(String path_) {
 		return (boolean) isolateObject(path_);
 	}
 
-	public long isolateLong(String path_) {
+    /**
+     *
+     * @param path_
+     * @return
+     */
+    public long isolateLong(String path_) {
 		return (long) isolateObject(path_);
 	}
 
-	public double isolateDouble(String path_) {
+    /**
+     *
+     * @param path_
+     * @return
+     */
+    public double isolateDouble(String path_) {
 		Object output = isolateObject(path_);
 
 		try {
@@ -201,7 +272,12 @@ public class Data {
 		}
 	}
 
-	public Object[] isolateArray(String path_) {
+    /**
+     *
+     * @param path_
+     * @return
+     */
+    public Object[] isolateArray(String path_) {
 		JSONArray JSONContents = isolateJSONArray(path_);
 
 		Object[] output = new Object[JSONContents.size()];
@@ -212,11 +288,21 @@ public class Data {
 		return output;
 	}
 
-	public JSONArray isolateJSONArray(String path_) {
+    /**
+     *
+     * @param path_
+     * @return
+     */
+    public JSONArray isolateJSONArray(String path_) {
 		return (JSONArray) isolateObject(path_);
 	}
 
-	public String[] isolateStringArray(String path_) {
+    /**
+     *
+     * @param path_
+     * @return
+     */
+    public String[] isolateStringArray(String path_) {
 		JSONArray JSONContents = isolateJSONArray(path_);
 
 		String[] output = new String[JSONContents.size()];
@@ -227,7 +313,12 @@ public class Data {
 		return output;
 	}
 
-	public int[] isolateIntArray(String path_) {
+    /**
+     *
+     * @param path_
+     * @return
+     */
+    public int[] isolateIntArray(String path_) {
 		JSONArray JSONContents = isolateJSONArray(path_);
 
 		int[] output = new int[JSONContents.size()];
@@ -238,7 +329,12 @@ public class Data {
 		return output;
 	}
 
-	public boolean[] isolateBooleanArray(String path_) {
+    /**
+     *
+     * @param path_
+     * @return
+     */
+    public boolean[] isolateBooleanArray(String path_) {
 		JSONArray JSONContents = isolateJSONArray(path_);
 
 		boolean[] output = new boolean[JSONContents.size()];
@@ -249,7 +345,12 @@ public class Data {
 		return output;
 	}
 
-	public long[] isolateLongArray(String path_) {
+    /**
+     *
+     * @param path_
+     * @return
+     */
+    public long[] isolateLongArray(String path_) {
 		JSONArray JSONContents = isolateJSONArray(path_);
 
 		long[] output = new long[JSONContents.size()];
@@ -260,7 +361,12 @@ public class Data {
 		return output;
 	}
 
-	public double[] isolateDoubleArray(String path_) {
+    /**
+     *
+     * @param path_
+     * @return
+     */
+    public double[] isolateDoubleArray(String path_) {
 		JSONArray JSONContents = isolateJSONArray(path_);
 
 		double[] output = new double[JSONContents.size()];
@@ -271,7 +377,12 @@ public class Data {
 		return output;
 	}
 
-	public boolean containsKey(Object key) {
+    /**
+     *
+     * @param key
+     * @return
+     */
+    public boolean containsKey(Object key) {
 		if (file.get(key) == null) {
 			return false;
 		} else {
@@ -279,17 +390,31 @@ public class Data {
 		}
 	}
 
-	public boolean isEmpty() { // accessor for isEmpty
+    /**
+     *
+     * @return
+     */
+    public boolean isEmpty() { // accessor for isEmpty
 		return isEmpty;
 	}
 
-	@SuppressWarnings("unchecked")
+    /**
+     *
+     * @param key
+     * @param o
+     */
+    @SuppressWarnings("unchecked")
 	protected void writeDatapoint(String key, Object o) {
 		file.putIfAbsent(key, o);
 		file.replace(key, o);
 	}
 	
-	public String[] getKeys() throws ClassCastException {
+    /**
+     *
+     * @return
+     * @throws ClassCastException
+     */
+    public String[] getKeys() throws ClassCastException {
 		String[] output = new String[file.keySet().size()];
 		
 		int currentIndex = 0;

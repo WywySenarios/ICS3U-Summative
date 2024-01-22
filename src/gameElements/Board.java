@@ -2,24 +2,69 @@ package gameElements;
 
 import gameOperators.Server;
 
+/**
+ *
+ * @author pc
+ */
 public class Board extends Data {
 
-	public static String fileLocation = "C:\\Java\\ICS3U Summative";
-	public Player evilPlayer;
-	public Player goodPlayer;
-	public Entity[] evilEntities = new Entity[5];
+    /**
+     *
+     */
+    public static String fileLocation = "C:\\Java\\ICS3U Summative";
+
+    /**
+     *
+     */
+    public Player evilPlayer;
+
+    /**
+     *
+     */
+    public Player goodPlayer;
+
+    /**
+     *
+     */
+    public Entity[] evilEntities = new Entity[5];
 	private int[] evilAttacks = new int[5];
 	private int[] evilSelection = { 0, 1, 2, 3, 4 }; // added
-	public Entity[] goodEntities = new Entity[5];
+
+    /**
+     *
+     */
+    public Entity[] goodEntities = new Entity[5];
 	private int[] goodAttacks = new int[5];
 	private int[] goodSelection = { 0, 1, 2, 3, 4 }; // added
-	public Environment[] environments = new Environment[5];
+
+    /**
+     *
+     */
+    public Environment[] environments = new Environment[5];
 	private Deck evilDeck;
 	private Deck goodDeck;
-	public Server server;
-	public boolean gameEnd = false;
 
-	public Board(boolean experimentalDeck, String evilDeckName, String goodDeckName, String evilUsername,
+    /**
+     *
+     */
+    public Server server;
+
+    /**
+     *
+     */
+    public boolean gameEnd = false;
+
+    /**
+     *
+     * @param experimentalDeck
+     * @param evilDeckName
+     * @param goodDeckName
+     * @param evilUsername
+     * @param evilName
+     * @param goodUsername
+     * @param goodName
+     */
+    public Board(boolean experimentalDeck, String evilDeckName, String goodDeckName, String evilUsername,
 			String evilName, String goodUsername, String goodName) {
 		super("Board", findFilePath(experimentalDeck));
 		this.evilDeck = new Deck(this, fileLocation + "\\DeckData\\" + evilDeckName + ".JSON", true);
@@ -50,7 +95,10 @@ public class Board extends Data {
 		}
 	}
 
-	public void preturns() {
+    /**
+     *
+     */
+    public void preturns() {
 		/*
 		 * Preturns handle: Card drawing. And literally nothing else lmao
 		 */
@@ -84,7 +132,10 @@ public class Board extends Data {
 		}
 	}
 
-	public void fight() {
+    /**
+     *
+     */
+    public void fight() {
 		Move temp;
 
 		// Entities fight first, then environments.
@@ -155,7 +206,10 @@ public class Board extends Data {
 		}
 	}
 
-	public void endTurn() {
+    /**
+     *
+     */
+    public void endTurn() {
 
 		/*
 		 * Here's the thing with end turns: apply/compute status effects apply/compute
@@ -229,7 +283,12 @@ public class Board extends Data {
 		}
 	}
 
-	public boolean addServer(Server server_) { // returns true upon successful server change.
+    /**
+     *
+     * @param server_
+     * @return
+     */
+    public boolean addServer(Server server_) { // returns true upon successful server change.
 		if (this.server == null) { // if there is not a server registered on this Board yet,
 			this.server = server_;
 			return true;
@@ -238,7 +297,16 @@ public class Board extends Data {
 		}
 	}
 
-	public boolean placeCard(int inventorySlot, int lane, boolean evil) throws Exception, ClassCastException { // returns
+    /**
+     *
+     * @param inventorySlot
+     * @param lane
+     * @param evil
+     * @return
+     * @throws Exception
+     * @throws ClassCastException
+     */
+    public boolean placeCard(int inventorySlot, int lane, boolean evil) throws Exception, ClassCastException { // returns
 																												// true
 																												// upon
 		// successful Card placement

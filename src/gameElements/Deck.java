@@ -7,6 +7,10 @@ import Move.*;
 
 import java.util.Random;
 
+/**
+ *
+ * @author pc
+ */
 public class Deck extends Data implements Duplicable {
 
 	private String[] originalDeck = new String[40];
@@ -15,7 +19,14 @@ public class Deck extends Data implements Duplicable {
 	private final Random RNG;
 	private boolean evil;
 
-	public Deck(Board board_, String path_, boolean evil_) throws NullPointerException {
+    /**
+     *
+     * @param board_
+     * @param path_
+     * @param evil_
+     * @throws NullPointerException
+     */
+    public Deck(Board board_, String path_, boolean evil_) throws NullPointerException {
 		super("Deck", path_);
 
 		this.evil = evil_;
@@ -82,7 +93,11 @@ public class Deck extends Data implements Duplicable {
 		this.RNG = RNG_;
 	}
 
-	@Override
+    /**
+     *
+     * @return
+     */
+    @Override
 	public Object duplicate() {
 		// duplicate decks
 		String[] outputOriginalDeck = new String[this.originalDeck.length];
@@ -100,7 +115,11 @@ public class Deck extends Data implements Duplicable {
 		return new Deck(this.thisBoard, this.PATH, this.evil, outputOriginalDeck, outputCurrentDeck, this.RNG);
 	}
 
-	public void addCard(String cardID) {
+    /**
+     *
+     * @param cardID
+     */
+    public void addCard(String cardID) {
 		String[] temp = currentDeck;
 		currentDeck = new String[currentDeck.length + 1];
 		int currentIndex = 0;
@@ -114,7 +133,11 @@ public class Deck extends Data implements Duplicable {
 		currentDeck[currentIndex] = cardID;
 	}
 
-	public void addCards(String[] cardIDs) {
+    /**
+     *
+     * @param cardIDs
+     */
+    public void addCards(String[] cardIDs) {
 		String[] temp = currentDeck;
 		currentDeck = new String[currentDeck.length + cardIDs.length];
 		int currentIndex = 0;
@@ -192,6 +215,11 @@ public class Deck extends Data implements Duplicable {
 
 	// this is a DEBUG function---this function lets me know what's REALLY inside a
 	// given deck.
+
+    /**
+     *
+     * @return
+     */
 	public String originalDeckToString() {
 		String output = "[";
 		for (String i : originalDeck) {
@@ -203,6 +231,11 @@ public class Deck extends Data implements Duplicable {
 
 	// this is a DEBUG function---this function lets me know what's REALLY inside a
 	// given deck.
+
+    /**
+     *
+     * @return
+     */
 	public String currentDeckToString() {
 		String output = "[";
 		for (String i : currentDeck) {
@@ -212,7 +245,11 @@ public class Deck extends Data implements Duplicable {
 		return output.substring(0, output.length() - 2) + "]";
 	}
 
-	public Card drawCard() {
+    /**
+     *
+     * @return
+     */
+    public Card drawCard() {
 		Card output;
 		int randomNumber = RNG.nextInt() % 40;
 		if (randomNumber > 0) {

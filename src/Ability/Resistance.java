@@ -3,18 +3,37 @@ package Ability;
 import gameElements.Ability;
 import gameElements.Entity;
 
+/**
+ *
+ * @author pc
+ */
 public class Resistance extends Ability {
 	
 	private String[] resistantTypes;
-	public int potency;
+
+    /**
+     *
+     */
+    public int potency;
 	
-	public Resistance(String[] resistantTypes_, int potency_) {
+    /**
+     *
+     * @param resistantTypes_
+     * @param potency_
+     */
+    public Resistance(String[] resistantTypes_, int potency_) {
 		super("AbilityReceiveDamage", true);
 		this.resistantTypes = resistantTypes_;
 		this.potency = potency_;
 	}
 	
-	public void trigger(Object abilityHolder, Entity attacker, int damage) {
+    /**
+     *
+     * @param abilityHolder
+     * @param attacker
+     * @param damage
+     */
+    public void trigger(Object abilityHolder, Entity attacker, int damage) {
 		if (attacker == null) { // this is for when a Special attacks
 			return;
 		}
@@ -48,7 +67,11 @@ public class Resistance extends Ability {
 		return false;
 	}
 
-	public Object duplicate() {
+    /**
+     *
+     * @return
+     */
+    public Object duplicate() {
 		return new Resistance(resistantTypes, potency);
 	}
 

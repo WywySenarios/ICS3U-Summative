@@ -12,16 +12,34 @@ import gameElements.Entity;
 import gameElements.Environment;
 import gameElements.Player;
 
+/**
+ *
+ * @author pc
+ */
 public class Server implements UI {
 
 	private String logPath;
 	private User evilUser;
 	private User goodUser;
-	protected Board b;
+
+    /**
+     *
+     */
+    protected Board b;
 	private String gameStatus = "ongoing";
 	private final int DELAY;
 
-	public Server(User user1_, User user2_, String evilDeckPath, String goodDeckPath, String logPath_, int DELAY_)
+    /**
+     *
+     * @param user1_
+     * @param user2_
+     * @param evilDeckPath
+     * @param goodDeckPath
+     * @param logPath_
+     * @param DELAY_
+     * @throws Exception
+     */
+    public Server(User user1_, User user2_, String evilDeckPath, String goodDeckPath, String logPath_, int DELAY_)
 			throws Exception {
 		this.logPath = logPath_;
 		this.DELAY = DELAY_;
@@ -51,7 +69,13 @@ public class Server implements UI {
 		logFile.createNewFile();
 	}
 
-	public void updateEntity(String[] args, int entityUpdated, boolean evil) {
+    /**
+     *
+     * @param args
+     * @param entityUpdated
+     * @param evil
+     */
+    public void updateEntity(String[] args, int entityUpdated, boolean evil) {
 		if (evil) {
 			distributeObjects(b.evilEntities[entityUpdated]);
 		} else {
@@ -90,7 +114,12 @@ public class Server implements UI {
 		}
 	}
 
-	public void updatePlayer(String[] args, boolean evil) {
+    /**
+     *
+     * @param args
+     * @param evil
+     */
+    public void updatePlayer(String[] args, boolean evil) {
 		if (evil) {
 			distributeObjects(b.evilPlayer);
 		} else {
@@ -128,7 +157,11 @@ public class Server implements UI {
 		}
 	}
 
-	public void updateGameStatus(String[] args) {
+    /**
+     *
+     * @param args
+     */
+    public void updateGameStatus(String[] args) {
 		/*Thread evilThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -184,7 +217,11 @@ public class Server implements UI {
 		}
 	}
 
-	public void play() throws Exception {
+    /**
+     *
+     * @throws Exception
+     */
+    public void play() throws Exception {
 		if (!gameStatus.equals("ongoing")) {
 			throw new Exception("Game already started");
 		}

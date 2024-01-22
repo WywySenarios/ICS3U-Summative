@@ -4,23 +4,46 @@ import java.util.Scanner;
 
 import gameElements.Player;
 
+/**
+ *
+ * @author pc
+ */
 public class LocalConsoleUser extends User {
 
 	private final boolean TEXTACKNOWLEDGEMENT;
-	public Scanner console = new Scanner(System.in);
 
-	public LocalConsoleUser(boolean evil_, int DELAY_) {
+    /**
+     *
+     */
+    public Scanner console = new Scanner(System.in);
+
+    /**
+     *
+     * @param evil_
+     * @param DELAY_
+     */
+    public LocalConsoleUser(boolean evil_, int DELAY_) {
 		super("LocalConsole", evil_, DELAY_);
 
 		this.TEXTACKNOWLEDGEMENT = this.DELAY <= 0;
 
 	}
 	
-	public Scanner getConsole() { // returns a reference to the Scanner, not a duplicate
+    /**
+     *
+     * @return
+     */
+    public Scanner getConsole() { // returns a reference to the Scanner, not a duplicate
 		return this.console;
 	}
 
-	@Override
+    /**
+     *
+     * @param lane
+     * @param evil
+     * @param damage
+     */
+    @Override
 	public void entityDamage(int lane, boolean evil, String damage) {
 		if (evil) { // evil entity
 			printOut("The evil entity at lane " + (lane + 1) + " has changed in health by " + damage + "!", true);
@@ -29,7 +52,12 @@ public class LocalConsoleUser extends User {
 		}
 	}
 
-	@Override
+    /**
+     *
+     * @param lane
+     * @param evil
+     */
+    @Override
 	public void entityDeath(int lane, boolean evil) {
 		if (evil) { // evil entity
 			printOut("The evil entity at lane " + lane + " has been slain!", true);
@@ -38,7 +66,12 @@ public class LocalConsoleUser extends User {
 		}
 	}
 
-	@Override
+    /**
+     *
+     * @param lane
+     * @param evil
+     */
+    @Override
 	public void summonEntity(int lane, boolean evil) {
 		if (evil) { // evil entity
 			printOut("The evil entity at lane " + lane + " has been placed!", true);
@@ -47,7 +80,12 @@ public class LocalConsoleUser extends User {
 		}
 	}
 
-	@Override
+    /**
+     *
+     * @param evil
+     * @param damage
+     */
+    @Override
 	public void playerDamage(boolean evil, String damage) {
 		if (evil) { // evil Player
 			printOut("The evil PLAYER has received " + damage + " damage!", true);
@@ -56,13 +94,20 @@ public class LocalConsoleUser extends User {
 		}
 	}
 
-	@Override
+    /**
+     *
+     * @param evil
+     */
+    @Override
 	public void summonPlayer(boolean evil) {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
+    /**
+     *
+     */
+    @Override
 	public void gameEnd() {
 		printOut("The game has ended!", true);
 
@@ -156,26 +201,49 @@ public class LocalConsoleUser extends User {
 		}
 	}
 
-	public String getCommand() {
+    /**
+     *
+     * @return
+     */
+    public String getCommand() {
 		return getCommand(null);
 	}
 
-	public String getCommand(String message) {
+    /**
+     *
+     * @param message
+     * @return
+     */
+    public String getCommand(String message) {
 		// clearConsole();
 		printOut("getCommand() has been called. Message: " + message, false);
 		System.out.println("Enter your input: ");
 		return console.nextLine();
 	}
 
-	@Override
+    /**
+     *
+     * @param inventoryIndex
+     * @param evil
+     */
+    @Override
 	public void inventoryRemoveCard(int inventoryIndex, boolean evil) {
 	}
 
-	@Override
+    /**
+     *
+     * @param inventoryIndex
+     * @param evil
+     */
+    @Override
 	public void inventoryAddCard(int inventoryIndex, boolean evil) {
 	}
 
-	@Override
+    /**
+     *
+     * @param evil
+     */
+    @Override
 	public void playerDeath(boolean evil) {
 		if (evil) {
 			System.out.println("The EVIL Player has died!");
@@ -190,7 +258,10 @@ public class LocalConsoleUser extends User {
 		}
 	}
 
-	@Override
+    /**
+     *
+     */
+    @Override
 	public void pregame() { // empty; nothing is needed.
 	}
 

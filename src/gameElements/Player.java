@@ -2,16 +2,49 @@ package gameElements;
 
 import java.util.Arrays;
 
+/**
+ *
+ * @author pc
+ */
 public class Player implements Duplicable {
 
-	public String username;
-	public String playerID;
-	public Card[] inventory = new Card[0];
-	public String[] type;
-	public int health = 1000;
-	public String status;
+    /**
+     *
+     */
+    public String username;
 
-	public Player(String username_, String playerID_, String[] type_) {
+    /**
+     *
+     */
+    public String playerID;
+
+    /**
+     *
+     */
+    public Card[] inventory = new Card[0];
+
+    /**
+     *
+     */
+    public String[] type;
+
+    /**
+     *
+     */
+    public int health = 1000;
+
+    /**
+     *
+     */
+    public String status;
+
+    /**
+     *
+     * @param username_
+     * @param playerID_
+     * @param type_
+     */
+    public Player(String username_, String playerID_, String[] type_) {
 		this.username = username_;
 		this.playerID = playerID_;
 		this.type = type_;
@@ -25,7 +58,11 @@ public class Player implements Duplicable {
 		this.status = status_;
 	}
 
-	@Override
+    /**
+     *
+     * @return
+     */
+    @Override
 	public Object duplicate() {
 		// duplicate inventory
 		if (!this.validInventory()) {
@@ -51,7 +88,11 @@ public class Player implements Duplicable {
 		return new Player(this.username, this.playerID, outputInventory, outputType, this.health, this.status);
 	}
 
-	public boolean isAlive() {
+    /**
+     *
+     * @return
+     */
+    public boolean isAlive() {
 		if (this.health > 0) {
 			return true;
 		} else {
@@ -59,7 +100,12 @@ public class Player implements Duplicable {
 		}
 	}
 
-	public int insertCard(Card newCard) { // returns the index that was updated
+    /**
+     *
+     * @param newCard
+     * @return
+     */
+    public int insertCard(Card newCard) { // returns the index that was updated
 		if (newCard == null) {
 			throw new NullPointerException("Attempted to insert a null value into a Player's inventory");
 		}
@@ -81,7 +127,11 @@ public class Player implements Duplicable {
 		}
 	}
 
-	public void removeCard(int index) {
+    /**
+     *
+     * @param index
+     */
+    public void removeCard(int index) {
 		Card[] temp = inventory;
 		this.inventory = new Card[this.inventory.length - 1];
 
@@ -99,7 +149,11 @@ public class Player implements Duplicable {
 		}
 	}
 
-	public boolean validInventory() {
+    /**
+     *
+     * @return
+     */
+    public boolean validInventory() {
 		// returns false if a "null" value is found for any of the Player's Cards
 		for (Card i : this.inventory) {
 			if (i == null) {
@@ -110,7 +164,11 @@ public class Player implements Duplicable {
 		return true;
 	}
 
-	@Override
+    /**
+     *
+     * @return
+     */
+    @Override
 	public String toString() {
 		String output = "Player[";
 

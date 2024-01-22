@@ -1,7 +1,29 @@
 package gameOperators;
 
+/**
+ *
+ * @author pc
+ */
 public interface UI {
-void updateEntity(String[] args, int entityUpdated, boolean evil);
-void updatePlayer(String[] args, boolean evil);
-void updateGameStatus(String[] args);
+
+    /**
+     *
+     * @param args
+     * @param entityUpdated
+     * @param evil
+     */
+    void updateEntity(String[] args, int entityUpdated, boolean evil);
+
+    /**
+     *
+     * @param args
+     * @param evil
+     */
+    void updatePlayer(String[] args, boolean evil);
+
+    /**
+     *
+     * @param args
+     */
+    void updateGameStatus(String[] args);
 }
