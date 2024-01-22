@@ -1,5 +1,7 @@
 package gameElements;
 
+import java.nio.file.Paths;
+
 import gameOperators.Server;
 
 /**
@@ -11,7 +13,7 @@ public class Board extends Data {
     /**
      * This stores the file location
      */
-    public static String fileLocation = "C:\\Java\\ICS3U Summative";
+    public static String fileLocation = Paths.get("").toAbsolutePath().toString();
 
     /**
      *
