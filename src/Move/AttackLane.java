@@ -6,7 +6,7 @@ import gameElements.Entity;
 import gameElements.Move;
 
 /**
- *
+ * Attacks all opposing targets in the given lane.
  * @author pc
  */
 public class AttackLane extends Move implements ChoiceMove {

@@ -11,7 +11,7 @@ public class Card implements Duplicable {
 	private Environment environment;
 
     /**
-     *
+     * Stores game recognized Card ID.
      */
     public String id;
 
@@ -38,7 +38,7 @@ public class Card implements Duplicable {
 	// Entity constructor
 
     /**
-     *
+     * This constructor makes the given Card create and store an Entity.
      * @param id_
      * @param name_
      * @param type_
@@ -73,7 +73,7 @@ public class Card implements Duplicable {
 	// Special constructor
 
     /**
-     *
+     * This constructor makes the given Card create and store a Special.
      * @param id_
      * @param name_
      * @param type_
@@ -107,7 +107,7 @@ public class Card implements Duplicable {
 	// Environment constructor
 
     /**
-     *
+     * This constructor makes the given Card create and store an Environment.
      * @param id_
      * @param name_
      * @param type_
@@ -163,7 +163,7 @@ public class Card implements Duplicable {
 
     /**
      *
-     * @return
+     * @return This method returns what this Card is holding (e.g. Entity), and returns null if this Card is invalid.
      */
     public String getType() {
 		if (this.entity != null) {
@@ -179,7 +179,7 @@ public class Card implements Duplicable {
 
     /**
      *
-     * @return
+     * @return This method gets what Object this Card is holding (e.g. Entity), and returns null if this Card is invalid.
      */
     public Object get() {
 		if (this.entity != null) {

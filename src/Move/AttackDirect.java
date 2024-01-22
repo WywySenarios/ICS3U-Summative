@@ -6,7 +6,7 @@ import gameElements.Entity;
 import gameElements.Move;
 
 /**
- *
+ * Attacks the opposing Entity in the given lane, and attacks the opposing Player if there is no opposing Entity in the given lane.
  * @author pc
  */
 public class AttackDirect extends Move implements ChoiceMove {

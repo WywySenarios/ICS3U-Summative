@@ -46,7 +46,7 @@ public class Data {
 	private boolean isEmpty;
 	
     /**
-     *
+     * Initializes a Data Object based on the given JSONObject. This constructor copies THE REFERENCE of the given file, so don't get any cool ideas about modifying the JSONObject afterward...
      * @param file_
      */
     public Data(JSONObject file_) {
@@ -56,7 +56,7 @@ public class Data {
 	}
 
     /**
-     *
+     * Initializes a Data Object based on the given file path.
      * @param type_
      * @param path_
      */
@@ -103,7 +103,7 @@ public class Data {
 	}
 
     /**
-     *
+     * This method is bad and should not be used---try executing .toString() on the "file" instance variable of this Class.
      * @return
      */
     public String getData() {
@@ -134,7 +134,7 @@ public class Data {
 	}
 
     /**
-     *
+     * Pushes the information held by this Data Object to the given file location.
      */
     public void pushData() {
 		try {
@@ -158,8 +158,8 @@ public class Data {
 	}
 
     /**
-     *
-     * @param path_
+     * Isolates an Object based on the 
+     * @param path_ Think of this parameter like you would for file paths---there's the String for the name of the current element and then a back slash denoting that you enter a new directory. For example, having a path = "wywy\is\amazing" goes from "wywy" to "is" to "amazing" and returns "amazing"'s value.
      * @return
      */
     public Object isolateObject(String path_) {
@@ -378,7 +378,7 @@ public class Data {
 	}
 
     /**
-     *
+     * This method returns true if the key is accessible in the root directory of the given Data's JSONObject.
      * @param key
      * @return
      */
@@ -412,7 +412,7 @@ public class Data {
     /**
      *
      * @return
-     * @throws ClassCastException
+     * @throws ClassCastException This exception only throws when there is a key that isn't a String.
      */
     public String[] getKeys() throws ClassCastException {
 		String[] output = new String[file.keySet().size()];

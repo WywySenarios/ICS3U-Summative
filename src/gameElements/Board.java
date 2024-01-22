@@ -3,13 +3,13 @@ package gameElements;
 import gameOperators.Server;
 
 /**
- *
+ * This class handles all the actions of the game, except for the main game loop. This class does NOT handle user input OR output.
  * @author pc
  */
 public class Board extends Data {
 
     /**
-     *
+     * This stores the file location
      */
     public static String fileLocation = "C:\\Java\\ICS3U Summative";
 
@@ -28,14 +28,14 @@ public class Board extends Data {
      */
     public Entity[] evilEntities = new Entity[5];
 	private int[] evilAttacks = new int[5];
-	private int[] evilSelection = { 0, 1, 2, 3, 4 }; // added
+	private int[] evilSelection = { 0, 1, 2, 3, 4 };
 
     /**
      *
      */
     public Entity[] goodEntities = new Entity[5];
 	private int[] goodAttacks = new int[5];
-	private int[] goodSelection = { 0, 1, 2, 3, 4 }; // added
+	private int[] goodSelection = { 0, 1, 2, 3, 4 };
 
     /**
      *
@@ -45,7 +45,7 @@ public class Board extends Data {
 	private Deck goodDeck;
 
     /**
-     *
+     * Stores which server this Board is linked to.
      */
     public Server server;
 
@@ -56,13 +56,13 @@ public class Board extends Data {
 
     /**
      *
-     * @param experimentalDeck
-     * @param evilDeckName
-     * @param goodDeckName
+     * @param experimentalDeck denotes whether or not this Board should draw Card data from CData or experimental CData files.
+     * @param evilDeckName this parameter is currently effectively useless.
+     * @param goodDeckName this parameter is currently effectively useless.
      * @param evilUsername
-     * @param evilName
+     * @param evilName denotes the ID of the Player (e.g. pls1)
      * @param goodUsername
-     * @param goodName
+     * @param goodName denotes the ID of the Player (e.g. plw1)
      */
     public Board(boolean experimentalDeck, String evilDeckName, String goodDeckName, String evilUsername,
 			String evilName, String goodUsername, String goodName) {
@@ -96,7 +96,7 @@ public class Board extends Data {
 	}
 
     /**
-     *
+     * This method handles pre-turn actions like drawing cards.
      */
     public void preturns() {
 		/*
@@ -133,7 +133,7 @@ public class Board extends Data {
 	}
 
     /**
-     *
+     * This method handles cards fighting each other.
      */
     public void fight() {
 		Move temp;
@@ -207,7 +207,7 @@ public class Board extends Data {
 	}
 
     /**
-     *
+     * This method handles post-fighting actions, like status effects and environmental hazards.
      */
     public void endTurn() {
 
@@ -284,7 +284,7 @@ public class Board extends Data {
 	}
 
     /**
-     *
+     * This method returns true upon succesfully registering a server. The Board may only hold one server at a time.
      * @param server_
      * @return
      */
@@ -299,20 +299,13 @@ public class Board extends Data {
 
     /**
      *
-     * @param inventorySlot
-     * @param lane
-     * @param evil
-     * @return
-     * @throws Exception
-     * @throws ClassCastException
+     * @param inventorySlot denotes which Card the Player is attempting to play from their inventory.
+     * @param lane denotes which lane the Card is being placed in
+     * @param evil denotes whether or not the Card being placed is "evil"
+     * @return This method returns true upon successful Card placement
+     * @throws Exception when attempting to place a Card with a value of "null"
      */
-    public boolean placeCard(int inventorySlot, int lane, boolean evil) throws Exception, ClassCastException { // returns
-																												// true
-																												// upon
-		// successful Card placement
-		// the ClassCastException is for if the currentCard.get() returns something
-		// invalid and the given exception occurs.
-
+    public boolean placeCard(int inventorySlot, int lane, boolean evil) throws Exception {
 		Card currentCard; // this stores the Card that will be placed
 		if (evil) { // evil Player is placing a Card
 			currentCard = evilPlayer.inventory[inventorySlot];

@@ -4,7 +4,7 @@ import gameElements.Ability;
 import gameElements.Entity;
 
 /**
- *
+ * Resistance is a damage reduction Ability that triggers when the Ability holder is being attacked by a Card with a type that the Ability holder is resistant to.
  * @author pc
  */
 public class Resistance extends Ability {
@@ -18,8 +18,8 @@ public class Resistance extends Ability {
 	
     /**
      *
-     * @param resistantTypes_
-     * @param potency_
+     * @param resistantTypes_ the types in which this Card is resistant to. (e.g. if card A is resistant to Stickmen and is attacked by one, this ability would trigger).
+     * @param potency_ the amount of damage reduction this ability offers when triggering.
      */
     public Resistance(String[] resistantTypes_, int potency_) {
 		super("AbilityReceiveDamage", true);

@@ -7,7 +7,7 @@ import gameElements.Move;
 import gameElements.Player;
 
 /**
- *
+ * Attacks a Player.
  * @author pc
  */
 public class AttackLeader extends Move implements ChoiceMove {

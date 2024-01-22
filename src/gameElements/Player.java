@@ -50,7 +50,6 @@ public class Player implements Duplicable {
 		this.type = type_;
 	}
 
-	@SuppressWarnings("unused")
 	private Player(String username_, String name_, Card[] inventory_, String[] type_, int health_, String status_) {
 		this(username_, name_, type_);
 		this.inventory = inventory_;
@@ -101,9 +100,9 @@ public class Player implements Duplicable {
 	}
 
     /**
-     *
+     * This method attempts to insert a Card in this Player's inventory.
      * @param newCard
-     * @return
+     * @return This method returns the index where the Card was inserted if the insertion was successful, and returns -1 otherwise.
      */
     public int insertCard(Card newCard) { // returns the index that was updated
 		if (newCard == null) {
@@ -128,8 +127,8 @@ public class Player implements Duplicable {
 	}
 
     /**
-     *
-     * @param index
+     * This method removes a Card at the given index of this Player's inventory.
+     * @param index denotes which index of the inventory should be removed
      */
     public void removeCard(int index) {
 		Card[] temp = inventory;

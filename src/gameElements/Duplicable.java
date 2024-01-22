@@ -7,7 +7,7 @@ package gameElements;
 public interface Duplicable {
 
     /**
-     *
+     * Duplicates and returns this Object.
      * @return
      */
     public Object duplicate();

@@ -6,7 +6,7 @@ import gameElements.Entity;
 import gameElements.Move;
 
 /**
- *
+ * Heals the given target.
  * @author pc
  */
 public class HealTarget extends Move implements ChoiceMove {

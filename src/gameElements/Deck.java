@@ -24,9 +24,8 @@ public class Deck extends Data implements Duplicable {
      * @param board_
      * @param path_
      * @param evil_
-     * @throws NullPointerException
      */
-    public Deck(Board board_, String path_, boolean evil_) throws NullPointerException {
+    public Deck(Board board_, String path_, boolean evil_) {
 		super("Deck", path_);
 
 		this.evil = evil_;

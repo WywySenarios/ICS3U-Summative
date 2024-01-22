@@ -7,7 +7,7 @@ package gameElements;
 public abstract class Move implements Duplicable {
 
     /**
-     *
+     * This stores what type of Move this Object holds, NOT WHAT TYPE IT IS. For example, this can store "AttackDirect", but it CANNOT store "wywy".
      */
     public String type;
 

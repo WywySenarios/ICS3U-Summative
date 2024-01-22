@@ -6,7 +6,7 @@ import gameElements.Entity;
 import gameElements.Move;
 
 /**
- *
+ * Attacks a specific, opposing target.
  * @author pc
  */
 public class AttackTarget extends Move implements ChoiceMove {
@@ -53,7 +53,7 @@ public class AttackTarget extends Move implements ChoiceMove {
      *
      * @param attacker
      * @param b
-     * @param selection
+     * @param selection denotes the target of this attack. Selections between 0--4 inclusive target lanes while a 5 will target a Player.
      */
     @Override
 	public void move(Entity attacker, Board b, int selection) {

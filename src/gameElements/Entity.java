@@ -4,7 +4,7 @@ package gameElements;
  *
  * @author pc
  */
-public class Entity implements HasAbility, Duplicable{
+public class Entity implements HasAbility, Duplicable {
 
     /**
      *
@@ -12,7 +12,7 @@ public class Entity implements HasAbility, Duplicable{
     public String id;
 
     /**
-     *
+     * a deprecated instance variable.
      */
     public boolean inInventory = true;
 
@@ -196,9 +196,9 @@ public class Entity implements HasAbility, Duplicable{
      *
      * @param attacker
      * @param damage
-     * @return
+     * @return This method returns true if this Entity has been killed by any means.
      */
-    public boolean receiveDamage(Entity attacker, int damage) { // returns true if the Enitty has 0- HP
+    public boolean receiveDamage(Entity attacker, int damage) { // returns true if the Entity has 0- HP
 		this.health -= damage;
 		this.triggerAbilities("AbilityReceiveDamage", attacker, damage);
 		

@@ -32,7 +32,7 @@ public class Special implements HasAbility, Duplicable {
     public int chargeRegen;
 
     /**
-     *
+     * Stores the type, ID, RARITY, or other field of the Card that needs to be satisfied in order to sacrifice for this Card.
      */
     public String sacrificial;
 
