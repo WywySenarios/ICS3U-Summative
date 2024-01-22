@@ -7,7 +7,6 @@
 		"inventoryStartingSize": 5,
 		"health": 1000
 	},
-	
 	"plw1": {
 		"type": [
 			"wywy",
@@ -16,14 +15,12 @@
 		"inventoryStartingSize": 5,
 		"health": 1000
 	},
-	
 	"ens1": {
 		"name": "StickmanEntity",
 		"type": [
 			"stickman",
 			"placeholder1"
 		],
-		
 		"cost": 1,
 		"rarity": "Common",
 		"health": 100,
@@ -32,11 +29,10 @@
 		"aggressive": true,
 		"moves": {
 			"AttackDirect": {
-				"damage": 100,
+				"damage": 1000,
 				"statusEffects": []
 			}
 		},
-		
 		"abilities": {
 			"Resistance": {
 				"resistantTypes": [
@@ -47,14 +43,12 @@
 			}
 		}
 	},
-	
 	"enw1": {
 		"name": "WywyEntity",
 		"type": [
 			"wywy",
 			"placeholder1"
 		],
-		
 		"cost": 1,
 		"rarity": "Common",
 		"health": 100,
@@ -67,7 +61,6 @@
 				"statusEffects": []
 			}
 		},
-		
 		"abilities": {
 			"Resistance": {
 				"resistantTypes": [
@@ -77,14 +70,12 @@
 			}
 		}
 	},
-	
 	"sps1": {
 		"name": "StickmanSpecial",
 		"type": [
 			"stickman",
 			"placeholder1"
 		],
-		
 		"cost": 2,
 		"rarity": "Common",
 		"charges": 1,
@@ -96,17 +87,16 @@
 				"statusEffects": []
 			}
 		},
-		
-		"abilities": {}
+		"abilities": {
+			
+		}
 	},
-	
 	"spw1": {
 		"name": "WywySpecial",
 		"type": [
 			"wywy",
 			"placeholder1"
 		],
-		
 		"cost": 2,
 		"rarity": "Common",
 		"charges": 1,
@@ -118,17 +108,16 @@
 				"statusEffects": []
 			}
 		},
-		
-		"abilities": {}
+		"abilities": {
+			
+		}
 	},
-	
 	"evs1": {
 		"name": "StickmanEnvironment",
 		"type": [
 			"stickman",
 			"placeholder1"
 		],
-		
 		"cost": 3,
 		"rarity": "Common",
 		"moves": {
@@ -140,18 +129,17 @@
 				]
 			}
 		},
-		
-		"abilities": {},
+		"abilities": {
+			
+		},
 		"permanent": false
 	},
-	
 	"evw1": {
 		"name": "WywyEnvironment",
 		"type": [
 			"wywy",
 			"placeholder1"
 		],
-		
 		"cost": 3,
 		"rarity": "Common",
 		"moves": {
@@ -163,8 +151,61 @@
 				]
 			}
 		},
-		
-		"abilities": {},
+		"abilities": {
+			
+		},
 		"permanent": false
+	},
+	"enwWywyHolyStatue": {
+		"name": "Animated Holy Wywy Statue",
+		"type": [
+			"wywy",
+			"placeholder1"
+		],
+		"cost": 1,
+		"rarity": "Mythic",
+		"health": 10000,
+		"hpr": 100,
+		"shield": 0,
+		"aggressive": true,
+		"moves": {
+			"AttackDirect": {
+				"damage": 10,
+				"statusEffects": [
+					"poison:d100/1"
+				]
+			}
+		},
+		"abilities": {
+			"Resistance": {
+				"resistantTypes": [
+					"stickman"
+				],
+				"potency": 100
+			}
+		}
+	},
+	"spwExampleSpecial": {
+		"name": "ExampleSpecial",
+		"type": [
+			"wywy",
+			"placeholder1"
+		],
+		"cost": 2,
+		"rarity": "Epic",
+		"charges": 1,
+		"chargeRegen": 0,
+		"sacrificial": null,
+		"move": {
+			"HealTarget": {
+				"target": 0,
+				"evil": false,
+				"health": 100,
+				"statusEffects": []
+			}
+		},
+		"abilities": {
+			
+		}
 	}
 }

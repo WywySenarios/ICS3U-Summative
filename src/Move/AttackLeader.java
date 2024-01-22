@@ -8,17 +8,17 @@ import gameElements.Player;
 
 public class AttackLeader extends Move implements ChoiceMove {
 	public int damage;
-	
+
 	public AttackLeader(int damage_, boolean evil_) {
 		super("AttackLeader", evil_);
 		this.damage = damage_;
 	}
-	
+
 	@Override
 	public Object duplicate() {
 		return new AttackLeader(this.damage, super.evil);
 	}
-	
+
 	@Override
 	public void move(Entity attacker, Board b, int selection) {
 
@@ -31,10 +31,10 @@ public class AttackLeader extends Move implements ChoiceMove {
 		 * Remember that STATUS EFFECTS don't affect PLAYERS Remember that KILLING
 		 * ENTITIES is NOT a part of this method's functionality.
 		 */
-		
+
 		Player attackedPlayer;
 		boolean evil; // this variable is for knowing which Player to broadcast to update.
-		
+
 		if (selection == 0) { // attack the evil leader
 			attackedPlayer = b.evilPlayer;
 			evil = true;
@@ -47,11 +47,22 @@ public class AttackLeader extends Move implements ChoiceMove {
 
 		// apply damage
 		attackedPlayer.health -= damage;
-		
+
 		// broadcast damage
-		String[] args = {"damage", "" + damage};
+		String[] args = { "damage", "" + damage };
 		b.server.updatePlayer(args, evil);
 
-		// if (attackedPlayer.health < 0) { gameEnd() }
+		if (attackedPlayer.health <= 0) {
+			args = new String[2];
+			args[0] = "end";
+
+			// args[1] is the String value for who won.
+			if (evil) {
+				args[1] = "false";
+			} else {
+				args[1] = "true";
+			}
+			b.server.updateGameStatus(args);
+		}
 	}
 }

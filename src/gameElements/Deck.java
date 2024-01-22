@@ -142,6 +142,8 @@ public class Deck extends Data implements Duplicable {
 		case "AttackTarget":
 			return new AttackTarget(container.isolateInt(name + "\\damage"),
 					container.isolateStringArray(name + "\\statusEffects"), this.evil);
+		case "HealTarget":
+			return new HealTarget(container.isolateInt(name + "\\health"), container.isolateInt(name + "\\target"), container.isolateBoolean(name + "\\evil"));
 		default:
 			return null;
 		}

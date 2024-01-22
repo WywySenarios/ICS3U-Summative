@@ -177,6 +177,17 @@ public class LocalConsoleUser extends User {
 
 	@Override
 	public void playerDeath(boolean evil) {
+		if (evil) {
+			System.out.println("The EVIL Player has died!");
+		} else {
+			System.out.println("The GOOD Player has died!");
+		}
+		
+		if (this.evil == evil) {
+			System.out.println("You lose! SKILL ISSUE KEK");
+		} else {
+			System.out.println("You won! YAYYYYYY!");
+		}
 	}
 
 	@Override

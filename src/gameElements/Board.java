@@ -17,6 +17,7 @@ public class Board extends Data {
 	private Deck evilDeck;
 	private Deck goodDeck;
 	public Server server;
+	public boolean gameEnd = false;
 
 	public Board(boolean experimentalDeck, String evilDeckName, String goodDeckName, String evilUsername,
 			String evilName, String goodUsername, String goodName) {
@@ -54,11 +55,11 @@ public class Board extends Data {
 		 * Preturns handle: Card drawing. And literally nothing else lmao
 		 */
 
-		String[] args = {"inventory", "add", ""};
+		String[] args = { "inventory", "add", "" };
 
 		Card temp = evilDeck.drawCard();
 		Card temp2 = goodDeck.drawCard();
-		
+
 		int evilPlayerCardDrawStatus = evilPlayer.insertCard(temp);
 		int goodPlayerCardDrawStatus = goodPlayer.insertCard(temp2);
 
@@ -67,7 +68,7 @@ public class Board extends Data {
 				throw new NullPointerException("DRAWING A CARD FAILED ME");
 			}
 			args[2] = "" + evilPlayerCardDrawStatus;
-			
+
 			// broadcast that a new Card has been added to the Evil Player's inventory
 			server.updatePlayer(args, true);
 		}
@@ -77,7 +78,7 @@ public class Board extends Data {
 				throw new NullPointerException("DRAWING A CARD FAILED ME");
 			}
 			args[2] = "" + goodPlayerCardDrawStatus;
-			
+
 			// broadcast that a new Card has been added to the Good Player's inventory
 			server.updatePlayer(args, false);
 		}
@@ -97,6 +98,10 @@ public class Board extends Data {
 				} else {
 					((NoChoiceMove) temp).move(evilEntities[i], this);
 				}
+
+				if (this.gameEnd) {
+					return;
+				}
 			} catch (NullPointerException e) {
 				// this happens when there is no evil Entity in the lane
 			}
@@ -109,6 +114,10 @@ public class Board extends Data {
 				} else {
 					((NoChoiceMove) temp).move(goodEntities[i], this);
 				}
+
+				if (this.gameEnd) {
+					return;
+				}
 			} catch (NullPointerException e) {
 				// this happens when there is no good Entity in the lane
 			}
@@ -116,11 +125,16 @@ public class Board extends Data {
 			// environments trigger
 
 			// kill necessary entities
-			String[] args = {"kill"};
+			String[] args = { "kill" };
 			try {
 				if (goodEntities[i].health <= 0) {
 					goodEntities[i] = null;
 					server.updateEntity(args, i, false);
+				}
+
+				if (this.gameEnd) { // this check is just for extra security, if somehow an Entity dying manages to
+									// kill a Player
+					return;
 				}
 			} catch (NullPointerException e) { // this happens when there is no good Entity in the lane
 			}
@@ -130,10 +144,14 @@ public class Board extends Data {
 					evilEntities[i] = null;
 					server.updateEntity(args, i, true);
 				}
+
+				if (this.gameEnd) { // this check is just for extra security, if somehow an Entity dying manages to
+									// kill a Player
+					return;
+				}
 			} catch (NullPointerException e) { // this happens when there is no evil Entity in the lane
 
 			}
-
 		}
 	}
 
@@ -204,9 +222,8 @@ public class Board extends Data {
 						statusEffects[i].substring(statusEffects[i].indexOf(":") + 2, statusEffects[i].indexOf("/")));
 				effectDuration = Integer.parseInt(statusEffects[i].substring(statusEffects[i].indexOf("/") + 1));
 
-				givenEntity.health -= Integer
-						.parseInt(statusEffects[i].substring(statusEffects[i].charAt(statusEffects[i].indexOf(":")),
-								statusEffects[i].charAt(statusEffects[i].indexOf("/"))));
+				givenEntity.health -= Integer.parseInt(
+						statusEffects[i].substring(statusEffects[i].indexOf(":") + 2, statusEffects[i].indexOf("/")));
 				statusEffects[i] = effectName + ':' + effectType + effectPotentcy + (effectDuration - 1);
 			}
 		}

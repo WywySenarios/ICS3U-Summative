@@ -75,7 +75,8 @@ public class Server implements UI {
 		evilThread.start();
 		goodThread.start();
 		try {
-			Thread.sleep((int) (DELAY * 1.02)); // compensate for Computer not synchronizing.
+			Thread.sleep((int) (DELAY * 1.02));
+			// compensate for Computer not synchronizing.
 		} catch (InterruptedException e) {
 		}
 
@@ -96,8 +97,30 @@ public class Server implements UI {
 			distributeObjects(b.goodPlayer);
 		}
 
-		evilUser.updatePlayer(args, evil);
-		goodUser.updatePlayer(args, evil);
+		Thread evilThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				evilUser.updatePlayer(args, evil);
+			}
+		}, "updatePlayer[evil=true,args=" + Arrays.toString(args) + "]");
+
+		Thread goodThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				goodUser.updatePlayer(args, evil);
+			}
+		}, "updatePlayer[evil=false,args=" + Arrays.toString(args) + "]");
+		
+		evilThread.start();
+		goodThread.start();
+		try {
+			Thread.sleep((int) (DELAY * 1.02));
+			// compensate for Computer not synchronizing.
+		} catch (InterruptedException e) {
+		}
+		
+		//evilUser.updatePlayer(args, evil);
+		//goodUser.updatePlayer(args, evil);
 		if (evil) {
 			log("Updated \"evil\" Player. args = " + Arrays.toString(args));
 		} else {
@@ -106,11 +129,34 @@ public class Server implements UI {
 	}
 
 	public void updateGameStatus(String[] args) {
+		/*Thread evilThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				evilUser.updateGameStatus(args);
+			}
+		}, "updateGameStatus[evil=true,args=" + Arrays.toString(args) + "]");
+
+		Thread goodThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				goodUser.updateGameStatus(args);
+			}
+		}, "updateGameStatus[evil=false,args=" + Arrays.toString(args) + "]");
+		
+		evilThread.start();
+		goodThread.start();
+		try {
+			Thread.sleep((int) (DELAY * 1.02));
+			// compensate for Computer not synchronizing.
+		} catch (InterruptedException e) {
+		}*/
+		
 		evilUser.updateGameStatus(args);
 		goodUser.updateGameStatus(args);
 
 		if (args[0].equals("end")) {
 			this.gameStatus = "end";
+			this.b.gameEnd = true;
 		}
 
 		String logOutput = "Updated Game Status to \"[";

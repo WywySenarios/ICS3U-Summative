@@ -1,7 +1,11 @@
 {
 	"contents": [
-		"enw1"
+		"enw1",
+		"enwWywyHolyStatue",
+		"spwExampleSpecial"
 	],
 	
-	"enw1": 40
+	"enw1": 20,
+	"enwWywyHolyStatue": 10,
+	"spwExampleSpecial": 10
 }

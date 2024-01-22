@@ -28,6 +28,7 @@ public class Card implements Duplicable {
 		this.type = type_;
 		this.cost = cost_;
 		this.RARITY = "";
+		this.entity = entity_;
 	}
 
 	// Special constructor

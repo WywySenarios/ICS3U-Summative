@@ -61,6 +61,8 @@ public class GUI extends javax.swing.JFrame implements UserUpdates, ActionListen
 	private volatile String[] userInputQueue = new String[0];
 	// private volatile String[] consoleInputQueue;
 
+	private JButton endScreen = new JButton();
+
 	// constants
 	private final int DELAY;
 	private final char ENDCHAR = '\\';
@@ -111,7 +113,7 @@ public class GUI extends javax.swing.JFrame implements UserUpdates, ActionListen
 		String command = action.getActionCommand();
 
 		if (this.userInputQueue.length > 2 && this.userInputQueue[this.userInputQueue.length - 2].equals("place")) {
-			if (command.substring(0, 5).equals("place")) {
+			if (command.length() > 4 && command.substring(0, 5).equals("place")) {
 				this.userInputQueue[this.userInputQueue.length - 1] = command.substring(5);
 				return;
 			} else {
@@ -293,7 +295,7 @@ public class GUI extends javax.swing.JFrame implements UserUpdates, ActionListen
 			this.evilPlayerHealth.setText("" + this.givenUser.evilPlayer.health);
 			this.evilPlayerHealth.setBounds((int) (this.segment * 2.4 + this.variableSegment), (int) (segment * 1.8),
 					playerWidth, (int) (segment * 0.1));
-			
+
 			if (this.givenUser.evil) {
 				this.evilUsername.setText("You");
 			} else {
@@ -309,27 +311,27 @@ public class GUI extends javax.swing.JFrame implements UserUpdates, ActionListen
 			this.goodPlayerHealth.setText("" + this.givenUser.goodPlayer.health);
 			this.goodPlayerHealth.setBounds((int) (this.segment * 0.2), (int) (segment * 1.8), playerWidth,
 					(int) (segment * 0.1));
-			
+
 			if (this.givenUser.evil) {
 				this.goodUsername.setText(this.givenUser.goodPlayer.username);
 			} else {
 				this.goodUsername.setText("You");
 			}
-			this.goodUsername.setBounds((int) (this.segment * 0.2), (int) (segment * 1.6),
-					playerWidth, (int) (segment * 0.1));
+			this.goodUsername.setBounds((int) (this.segment * 0.2), (int) (segment * 1.6), playerWidth,
+					(int) (segment * 0.1));
 		}
 	}
 
 	private void updatePlayer(boolean evil, String command) {
 		this.updatePlayer(evil);
-		
+
 		if (evil) {
 			this.evilPlayerHealth.setText(this.evilPlayerHealth.getText() + command);
 		} else {
 			this.goodPlayerHealth.setText(this.goodPlayerHealth.getText() + command);
 		}
 	}
-	
+
 	private void updateAllPlayers() {
 		this.updatePlayer(true);
 		this.updatePlayer(false);
@@ -479,6 +481,19 @@ public class GUI extends javax.swing.JFrame implements UserUpdates, ActionListen
 		this.pack();
 	}
 
+	private void playerAnimation(boolean evil, String command) {
+		this.updatePlayer(evil, command);
+		this.pack();
+
+		try {
+			Thread.sleep(DELAY);
+		} catch (InterruptedException e) {
+		}
+
+		this.updatePlayer(evil);
+		this.pack();
+	}
+
 	@Override
 	public void entityDamage(int lane, boolean evil, String damage) {
 		String[] args = { damage };
@@ -497,12 +512,23 @@ public class GUI extends javax.swing.JFrame implements UserUpdates, ActionListen
 
 	@Override
 	public void playerDamage(boolean evil, String damage) {
-		this.updatePlayer(evil, damage);
+		this.playerAnimation(evil, " - " + damage + "HP");
 	}
 
 	@Override
 	public void playerDeath(boolean evil) {
 		this.updatePlayer(evil);
+		if (evil == this.givenUser.evil) {
+			this.endScreen.setText("You lose! SKILL ISSUE KEK");
+		} else {
+			this.endScreen.setText("You won! YAYYYYYY!");
+		}
+
+		this.endScreen.setVisible(true);
+		this.endScreen.setBounds(0, 0, 1000, 1000);
+		// this.endScreen.setBounds((int) (this.width / 4), (int) (this.height / 4),
+		// (int) (this.width / 2), (int) (this.height / 2));
+		this.pack();
 	}
 
 	@Override
@@ -513,8 +539,16 @@ public class GUI extends javax.swing.JFrame implements UserUpdates, ActionListen
 
 	@Override
 	public void gameEnd() {
-		// TODO Auto-generated method stub
+		this.endScreen.setVisible(true);
+		this.endScreen.setBounds(0, 0, 1000, 1000);
 		this.pack();
+		
+		try {
+			Thread.sleep(DELAY * 3);
+		} catch (InterruptedException e) {
+		}
+		
+		this.dispose();
 	}
 
 	@Override
@@ -530,7 +564,7 @@ public class GUI extends javax.swing.JFrame implements UserUpdates, ActionListen
 		for (int i = inventoryIndex; i < inventoryLength + 1; i++) {
 			this.updateCard(evil, i);
 		}
-		
+
 		this.pack();
 	}
 
@@ -606,6 +640,9 @@ public class GUI extends javax.swing.JFrame implements UserUpdates, ActionListen
 
 		// this.updateBackground();
 		this.add(this.background);
+		this.add(this.endScreen);
+		this.endScreen.setVisible(false);
+		this.endScreen.setActionCommand("endeverything");
 
 		// this.updateDev();
 		this.add(this.developerConsole);

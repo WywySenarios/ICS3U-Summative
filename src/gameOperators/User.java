@@ -124,7 +124,7 @@ public abstract class User implements UI, UserUpdates {
 		} else {
 			this.goodPlayer = (Player) lastReceivedObject;
 		}
-		
+
 		switch (args[0]) {
 		case "pregame":
 			break;
@@ -147,6 +147,8 @@ public abstract class User implements UI, UserUpdates {
 	public void updateGameStatus(String[] args) {
 		switch (args[0]) {
 		case "end":
+			this.playerDeath(args[1].equals("true"));
+			
 			this.gameEnd();
 			break;
 		}
