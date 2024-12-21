@@ -54,9 +54,21 @@ public class Data {
 		this.TYPE = null;
 		this.PATH = null;
 	}
-
+    
     /**
      * Initializes a Data Object based on the given file path.
+     * @param type_
+     * @param path_
+     */
+    public Data(String path_) {
+    	this.TYPE = null;
+    	this.PATH = path_;
+    	isEmpty = false;
+    	initializeFile(); // this will throw ParseException when the END OF FILE token is at position 0
+    }
+
+    /**
+     * Initializes a Data Object based on the given file path. This constructor is designed with easy identification of subclasses in mind.
      * @param type_
      * @param path_
      */

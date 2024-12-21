@@ -19,13 +19,13 @@ public class Deck extends Data implements Duplicable {
 	private final Random RNG;
 	private boolean evil;
 
-    /**
-     *
-     * @param board_
-     * @param path_
-     * @param evil_
-     */
-    public Deck(Board board_, String path_, boolean evil_) {
+	/**
+	 *
+	 * @param board_
+	 * @param path_
+	 * @param evil_
+	 */
+	public Deck(Board board_, String path_, boolean evil_) {
 		super("Deck", path_);
 
 		this.evil = evil_;
@@ -92,11 +92,11 @@ public class Deck extends Data implements Duplicable {
 		this.RNG = RNG_;
 	}
 
-    /**
-     *
-     * @return
-     */
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
 	public Object duplicate() {
 		// duplicate decks
 		String[] outputOriginalDeck = new String[this.originalDeck.length];
@@ -114,11 +114,11 @@ public class Deck extends Data implements Duplicable {
 		return new Deck(this.thisBoard, this.PATH, this.evil, outputOriginalDeck, outputCurrentDeck, this.RNG);
 	}
 
-    /**
-     *
-     * @param cardID
-     */
-    public void addCard(String cardID) {
+	/**
+	 *
+	 * @param cardID
+	 */
+	public void addCard(String cardID) {
 		String[] temp = currentDeck;
 		currentDeck = new String[currentDeck.length + 1];
 		int currentIndex = 0;
@@ -132,11 +132,11 @@ public class Deck extends Data implements Duplicable {
 		currentDeck[currentIndex] = cardID;
 	}
 
-    /**
-     *
-     * @param cardIDs
-     */
-    public void addCards(String[] cardIDs) {
+	/**
+	 *
+	 * @param cardIDs
+	 */
+	public void addCards(String[] cardIDs) {
 		String[] temp = currentDeck;
 		currentDeck = new String[currentDeck.length + cardIDs.length];
 		int currentIndex = 0;
@@ -165,7 +165,8 @@ public class Deck extends Data implements Duplicable {
 			return new AttackTarget(container.isolateInt(name + "\\damage"),
 					container.isolateStringArray(name + "\\statusEffects"), this.evil);
 		case "HealTarget":
-			return new HealTarget(container.isolateInt(name + "\\health"), container.isolateInt(name + "\\target"), container.isolateBoolean(name + "\\evil"));
+			return new HealTarget(container.isolateInt(name + "\\health"), container.isolateInt(name + "\\target"),
+					container.isolateBoolean(name + "\\evil"));
 		default:
 			return null;
 		}
@@ -215,10 +216,10 @@ public class Deck extends Data implements Duplicable {
 	// this is a DEBUG function---this function lets me know what's REALLY inside a
 	// given deck.
 
-    /**
-     *
-     * @return
-     */
+	/**
+	 *
+	 * @return
+	 */
 	public String originalDeckToString() {
 		String output = "[";
 		for (String i : originalDeck) {
@@ -231,10 +232,10 @@ public class Deck extends Data implements Duplicable {
 	// this is a DEBUG function---this function lets me know what's REALLY inside a
 	// given deck.
 
-    /**
-     *
-     * @return
-     */
+	/**
+	 *
+	 * @return
+	 */
 	public String currentDeckToString() {
 		String output = "[";
 		for (String i : currentDeck) {
@@ -244,11 +245,11 @@ public class Deck extends Data implements Duplicable {
 		return output.substring(0, output.length() - 2) + "]";
 	}
 
-    /**
-     *
-     * @return
-     */
-    public Card drawCard() {
+	/**
+	 *
+	 * @return
+	 */
+	public Card drawCard() {
 		Card output;
 		int randomNumber = RNG.nextInt() % 40;
 		if (randomNumber > 0) {
@@ -256,7 +257,7 @@ public class Deck extends Data implements Duplicable {
 		} else {
 			output = createCard(currentDeck[randomNumber * -1]);
 		}
-		
+
 		if (output == null) {
 			throw new NullPointerException("Drew a Card with a value \"null\"");
 		} else {
@@ -267,20 +268,20 @@ public class Deck extends Data implements Duplicable {
 	private Card createCard(String cardID) {
 		switch (cardID.substring(0, 2)) {
 		case "en": // entity
-			return new Card(cardID, thisBoard.isolateString(cardID + "\\name"),
+			return new Entity(cardID, thisBoard.isolateString(cardID + "\\name"),
 					thisBoard.isolateStringArray(cardID + "\\type"), thisBoard.isolateInt(cardID + "\\cost"),
 					thisBoard.isolateString(cardID + "\\rarity"), thisBoard.isolateInt(cardID + "\\health"),
 					thisBoard.isolateInt(cardID + "\\hpr"), thisBoard.isolateInt(cardID + "\\shield"),
 					thisBoard.isolateBoolean(cardID + "\\aggressive"), this.isolateMoves(cardID),
 					this.isolateAbilities(cardID));
 		case "sp": // special
-			return new Card(cardID, thisBoard.isolateString(cardID + "\\name"),
+			return new Special(cardID, thisBoard.isolateString(cardID + "\\name"),
 					thisBoard.isolateStringArray(cardID + "\\type"), thisBoard.isolateInt(cardID + "\\cost"),
 					thisBoard.isolateString(cardID + "\\rarity"), thisBoard.isolateInt(cardID + "\\charges"),
 					thisBoard.isolateInt(cardID + "\\chargeRegen"), thisBoard.isolateString(cardID + "\\sacrificial"),
 					this.isolateMove(cardID), this.isolateAbilities(cardID));
 		case "ev": // environment
-			return new Card(cardID, thisBoard.isolateString(cardID + "\\name"),
+			return new Environment(cardID, thisBoard.isolateString(cardID + "\\name"),
 					thisBoard.isolateStringArray(cardID + "\\type"), thisBoard.isolateInt(cardID + "\\cost"),
 					thisBoard.isolateString(cardID + "\\rarity"), this.isolateMoves(cardID),
 					this.isolateAbilities(cardID), thisBoard.isolateBoolean(cardID + "\\permanent"));

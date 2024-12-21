@@ -4,62 +4,62 @@ package gameElements;
  *
  * @author pc
  */
-public class Special implements HasAbility, Duplicable {
+public class Special extends Card implements HasAbility, Duplicable {
 
-    /**
-     *
-     */
-    public String id;
+	/**
+	 *
+	 */
+	public String id;
 
-    /**
-     *
-     */
-    public boolean inInventory;
+	/**
+	 *
+	 */
+	public boolean inInventory;
 
-    /**
-     *
-     */
-    public String[] type;
+	/**
+	 *
+	 */
+	public String[] type;
 
-    /**
-     *
-     */
-    public int charges;
+	/**
+	 *
+	 */
+	public int charges;
 
-    /**
-     *
-     */
-    public int chargeRegen;
+	/**
+	 *
+	 */
+	public int chargeRegen;
 
-    /**
-     * Stores the type, ID, RARITY, or other field of the Card that needs to be satisfied in order to sacrifice for this Card.
-     */
-    public String sacrificial;
+	/**
+	 * Stores the type, ID, RARITY, or other field of the Card that needs to be
+	 * satisfied in order to sacrifice for this Card.
+	 */
+	public String sacrificial;
 
-    /**
-     *
-     */
-    public Move move;
+	/**
+	 *
+	 */
+	public Move move;
 
-    /**
-     *
-     */
-    public Ability[] abilities;
+	/**
+	 *
+	 */
+	public Ability[] abilities;
 
-    /**
-     *
-     * @param id_
-     * @param type_
-     * @param charges_
-     * @param chargeRegen_
-     * @param sacrificial_
-     * @param move_
-     * @param abilities_
-     */
-    public Special(String id_, String[] type_, int charges_, int chargeRegen_, String sacrificial_, Move move_,
-			Ability[] abilities_) {
-		this.id = id_;
-		this.type = type_;
+	/**
+	 *
+	 * @param id_
+	 * @param type_
+	 * @param charges_
+	 * @param chargeRegen_
+	 * @param sacrificial_
+	 * @param move_
+	 * @param abilities_
+	 */
+	public Special(String id_, String name_, String[] type_, int cost_, String RARITY_, int charges_, int chargeRegen_,
+			String sacrificial_, Move move_, Ability[] abilities_) {
+		super("sp", id_, name_, type_, cost_, RARITY_, true);
 		this.charges = charges_;
 		this.chargeRegen = chargeRegen_;
 		this.sacrificial = sacrificial_;
@@ -67,11 +67,11 @@ public class Special implements HasAbility, Duplicable {
 		this.abilities = abilities_;
 	}
 
-    /**
-     *
-     * @param command
-     */
-    @Override
+	/**
+	 *
+	 * @param command
+	 */
+	@Override
 	public void triggerAbilities(String command) {
 		for (Ability i : abilities) {
 			/*
@@ -85,12 +85,12 @@ public class Special implements HasAbility, Duplicable {
 		}
 	}
 
-    /**
-     *
-     * @param command
-     * @param e
-     */
-    @Override
+	/**
+	 *
+	 * @param command
+	 * @param e
+	 */
+	@Override
 	public void triggerAbilities(String command, Entity e) {
 		for (Ability i : abilities) {
 			/*
@@ -104,13 +104,13 @@ public class Special implements HasAbility, Duplicable {
 		}
 	}
 
-    /**
-     *
-     * @param command
-     * @param e
-     * @param potentcy
-     */
-    @Override
+	/**
+	 *
+	 * @param command
+	 * @param e
+	 * @param potentcy
+	 */
+	@Override
 	public void triggerAbilities(String command, Entity e, int potentcy) {
 		for (Ability i : abilities) {
 			/*
@@ -124,11 +124,11 @@ public class Special implements HasAbility, Duplicable {
 		}
 	}
 
-    /**
-     *
-     * @return
-     */
-    @Override
+	/**
+	 *
+	 * @return
+	 */
+	@Override
 	public Object duplicate() {
 		// duplicate type
 		String[] outputType = new String[this.type.length];
@@ -144,15 +144,15 @@ public class Special implements HasAbility, Duplicable {
 			outputAbilities[currentIndex++] = (Ability) i.duplicate();
 		}
 
-		return new Special(this.id, outputType, this.charges, this.chargeRegen, this.sacrificial, (Move) this.move.duplicate(),
-				outputAbilities);
+		return new Special(this.id, this.name, outputType, this.cost, this.RARITY, this.charges, this.chargeRegen,
+				this.sacrificial, (Move) this.move.duplicate(), outputAbilities);
 	}
 
-    /**
-     *
-     * @return
-     */
-    public String toString() {
+	/**
+	 *
+	 * @return
+	 */
+	public String toString() {
 		String output = "[inInventory:";
 
 		// inInventory

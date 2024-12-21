@@ -4,7 +4,7 @@ package gameElements;
  *
  * @author pc
  */
-public class Environment implements HasAbility, Duplicable {
+public class Environment extends Card implements HasAbility, Duplicable {
 
     /**
      *
@@ -44,9 +44,8 @@ public class Environment implements HasAbility, Duplicable {
      * @param abilities_
      * @param PERMANENT_
      */
-    public Environment(String id_, String[] type_, Move[] moves_, Ability[] abilities_, boolean PERMANENT_) {
-		this.id = id_;
-		this.type = type_;
+    public Environment(String id_, String name_, String[] type_, int cost_, String RARITY_, Move[] moves_, Ability[] abilities_, boolean PERMANENT_) {
+		super("ev", id_, name_, type_, cost_, RARITY_, true);
 		this.moves = moves_;
 		this.abilities = abilities_;
 		this.PERMANENT = PERMANENT_;
@@ -136,7 +135,7 @@ public class Environment implements HasAbility, Duplicable {
 			outputAbilities[currentIndex++] = (Ability) i.duplicate();
 		}
 
-		return new Environment(this.id, outputType, outputMoves, outputAbilities, this.PERMANENT);
+		return new Environment(this.id, this.name, outputType, this.cost, this.RARITY, outputMoves, outputAbilities, this.PERMANENT);
 	}
 
     /**

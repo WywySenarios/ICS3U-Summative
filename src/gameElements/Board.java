@@ -9,7 +9,7 @@ import gameOperators.Server;
  * @author pc
  */
 public class Board extends Data {
-
+	
     /**
      * This stores the file location
      */
@@ -321,18 +321,18 @@ public class Board extends Data {
 
 		// place the Card
 		String[] args;
-		switch (currentCard.getType()) {
+		switch (currentCard.cardType) {
 		case "en": // the Card is an Entity
 			// ensure there's an available slot to place the Entity
 			if (evil) {
 				if (evilEntities[lane] == null) { // place the Entity
-					evilEntities[lane] = (Entity) currentCard.get();
+					evilEntities[lane] = (Entity) currentCard;
 				} else {
 					return false;
 				}
 			} else {
 				if (goodEntities[lane] == null) { // place the Entity
-					goodEntities[lane] = (Entity) currentCard.get();
+					goodEntities[lane] = (Entity) currentCard;
 				} else {
 					return false;
 				}
@@ -357,7 +357,7 @@ public class Board extends Data {
 			server.updateEntity(args, lane, evil);
 			break;
 		case "sp": // the Card is a special
-			Special currentSpecial = (Special) currentCard.get();
+			Special currentSpecial = (Special) currentCard;
 
 			// execute the move
 			Move move = (currentSpecial).move;
@@ -398,7 +398,7 @@ public class Board extends Data {
 			if (environments[lane] != null && environments[lane].PERMANENT) {
 				return false;
 			} else {
-				environments[lane] = (Environment) currentCard.get();
+				environments[lane] = (Environment) currentCard;
 			}
 
 			// take away the Card from the player's inventory
